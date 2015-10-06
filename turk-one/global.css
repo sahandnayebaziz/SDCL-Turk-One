@@ -1,4 +1,8 @@
 /* CSS declarations go here */
+body {
+    background-color: #F2F2F2;
+}
+
 .btn-continue {
     letter-spacing: 3px;
     margin-top: 50px;

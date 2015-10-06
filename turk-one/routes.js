@@ -4,3 +4,7 @@
 Router.route('/', function () {
 	this.render('Home');
 });
+
+Router.route('/help', function () {
+	this.render('Help');
+});
