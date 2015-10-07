@@ -1,0 +1,33 @@
+<template name="tool">
+	<div class="container-fluid container-tool">
+		<div class="row">
+			<div class="col-lg-3 col-lg-offset-1">
+				<p class="lead">
+					MTurk CrowdDesign HIT
+				</p>
+			</div>
+			<div class="col-lg-8">
+				<div class="row">
+					<div class="col-lg-10 col-lg-offset-1" id="col-sketch">
+						<div class="sketch">
+							<canvas class="canvas-sketch" id="canvas-1"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<style>
+		.container-tool {
+			margin-top: 100px;
+		}
+
+		#canvas-1 {
+			display: block;
+			background: #FFFFFF;
+			box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.07);
+			border-radius: 5px;
+		}
+	</style>
+</template>

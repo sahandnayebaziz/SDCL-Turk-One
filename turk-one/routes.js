@@ -8,3 +8,7 @@ Router.route('/', function () {
 Router.route('/help', function () {
 	this.render('Help');
 });
+
+Router.route('/tool', function () {
+	this.render('Tool');
+});
