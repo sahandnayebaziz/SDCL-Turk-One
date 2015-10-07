@@ -7,14 +7,25 @@ if (Meteor.isClient) {
 
 			this._rendered = true;
 
-			var canvasHeightShouldBe = 500;
-			var canvasWidthShouldBe = $("#col-sketch").width();
-			$("#canvas-1").attr({"height":canvasHeightShouldBe, "width":canvasWidthShouldBe});
+			$(".canvas-sketch").each(function(index) {
+				var canvasHeightShouldBe = 500;
+				var canvasWidthShouldBe = $("#col-sketch").width();
+				$(this).attr({"height":canvasHeightShouldBe, "width":canvasWidthShouldBe});
 
-			canvas = new fabric.Canvas("canvas-1");
-			canvas.isDrawingMode = true;
-			canvas.freeDrawingBrush.width = 6
-			canvas.freeDrawingBrush.color = "black";
+				canvas = new fabric.Canvas($(this).attr('id'));
+				console.log($(this).attr('id'));
+				canvas.isDrawingMode = true;
+				canvas.freeDrawingBrush.width = 6;
+				canvas.freeDrawingBrush.color = "black";
+				canvas.setBackgroundColor("white").renderAll();
+			});
+
+			$(".form-description").each(function(index) {
+				var canvasWidthShouldBe = $("#col-sketch").width();
+				$(this).attr({"height":canvasHeightShouldBe, "width":canvasWidthShouldBe});
+			});
+
+
 
 			/*
 			 // MARK: Create Canvas and add hooks
