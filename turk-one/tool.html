@@ -19,7 +19,7 @@
 				<div class="row">
 					<div class="col-md-12 col-lg-10 col-lg-offset-1" id="col-sketch">
 						{{#each numberOfCanvasesToShow}}
-							<div class="container-canvas">
+							<div class="container-canvas animated fadeIn">
 								<canvas class="canvas-sketch" id="canvas-{{this}}"></canvas>
 								<div class="canvas-forms">
 									<div class="row">
@@ -49,7 +49,7 @@
 					</div>
 				</div>
 				{{#if shouldShowAddCanvasButton}}
-					<span class="col-md-12 text-center">
+					<span class="col-sm-12 text-center animated fadeInUp">
 						<button type="button" class="btn btn-primary btn-continue addCanvas"><span class="small">ADD SOLUTION</span></button>
 					</span>
 				{{/if}}
@@ -60,6 +60,11 @@
 	<style>
 		.container-tool {
 			margin-top: 100px;
+		}
+
+		.container-canvas {
+			-webkit-animation-duration: 0.5s;
+			-vendor-animation-delay: 0s;
 		}
 
 		canvas.canvas-sketch {
