@@ -12,3 +12,7 @@ Router.route('/help', function () {
 Router.route('/tool', function () {
 	this.render('Tool');
 });
+
+Router.route('/admin', function () {
+	this.render('Admin');
+});

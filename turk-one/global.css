@@ -6,4 +6,29 @@ body {
 .btn-continue {
     letter-spacing: 3px;
     margin-top: 50px;
+    text-transform: uppercase;
+}
+
+.top-buffer-100 {
+    margin-top: 100px;
+}
+
+.bottom-buffer-100 {
+    margin-bottom: 100px;
+}
+
+.top-buffer-50 {
+    margin-top: 50px;
+}
+
+.bottom-buffer-50 {
+    margin-bottom: 50px;
+}
+
+.top-buffer-25 {
+    margin-top: 25px;
+}
+
+.bottom-buffer-25 {
+    margin-bottom: 25px;
 }

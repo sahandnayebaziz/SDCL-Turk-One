@@ -1,0 +1,62 @@
+<template name="admin">
+	<div class="container-fluid top-buffer-100">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="row">
+					<div class="col-lg-6 col-lg-offset-1">
+						<h5 class="bottom-buffer-25">all</h5>
+
+						<div class="list-group">
+							{{#each decisions}}
+								{{> decisionPreview}}
+							{{/each}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="row">
+					<div class="col-lg-10 col-lg-offset-1">
+						<h5 class="bottom-buffer-25">insert</h5>
+						<form id="createDecision">
+							<fieldset class="form-group">
+								<input type="text" class="form-control" name="name" placeholder="Name">
+							</fieldset>
+							<fieldset class="form-group">
+								<input type="text" class="form-control" name="id" placeholder="ID #">
+							</fieldset>
+							<fieldset class="form-group">
+								<textarea class="form-control" name="description" rows="3" placeholder="Description"></textarea>
+							</fieldset>
+							<fieldset class="form-group">
+								<textarea class="form-control" name="requirements" rows="3" placeholder="Requirements"></textarea>
+							</fieldset>
+							<button type="submit" class="btn btn-primary btn-continue">Create</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row top-buffer-50">
+			<div class="col-lg-12">
+				{{#with decisionBeingPreviewed}}
+					{{> tool}}
+				{{/with}}
+			</div>
+		</div>
+	</div>
+
+
+</template>
+
+<template name="decisionPreview">
+	<li class="list-group-item">
+		<span class="text-muted">{{_id}} - </span>
+		{{name}}
+
+		<span class="pull-right">
+			<a href="#" class="preview text-muted">preview</a>
+			<a href="#" class="delete text-danger">delete</a>
+		</span>
+	</li>
+</template>
