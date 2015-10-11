@@ -3,6 +3,12 @@ body {
     background-color: #F2F2F2;
 }
 
+@media screen and (min-width: 62em) {
+    .md-fixed {
+        position: fixed;
+    }
+}
+
 .btn-continue {
     letter-spacing: 3px;
     text-transform: uppercase;

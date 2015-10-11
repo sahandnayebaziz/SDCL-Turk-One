@@ -1,7 +1,7 @@
 <template name="tool">
 	<div class="container-fluid container-tool">
 		<div class="row">
-			<div class="col-md-12 col-lg-4 bottom-buffer-50">
+			<div class="col-md-12 col-lg-4 bottom-buffer-50 md-fixed">
 				<div class="row">
 					<div class="col-md-12 col-lg-10 col-lg-offset-1">
 						<p class="lead">
@@ -15,7 +15,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-12 col-lg-8 bottom-buffer-100">
+			<div class="col-md-12 col-lg-8 col-lg-offset-4 bottom-buffer-100">
 				<div class="row">
 					<div class="col-md-12 col-lg-10 col-lg-offset-1" id="col-sketch">
 						{{#each numberOfCanvasesToShow}}
@@ -50,7 +50,11 @@
 				</div>
 				{{#if shouldShowAddCanvasButton}}
 					<span class="col-sm-12 text-center animated fadeInUp">
-						<button type="button" class="btn btn-primary btn-continue addCanvas"><span class="small">ADD SOLUTION</span></button>
+						<button type="button" class="btn btn-primary btn-continue addCanvas top-buffer-25"><span class="small">ADD SOLUTION</span></button>
+					</span>
+				{{else}}
+					<span class="col-sm-12 text-center animated fadeInUp">
+						<button type="button" class="btn btn-primary btn-continue disabled top-buffer-25"><span class="small">MAX 5 solutions added!</span></button>
 					</span>
 				{{/if}}
 			</div>
@@ -59,7 +63,7 @@
 
 	<style>
 		.container-tool {
-			margin-top: 100px;
+			margin-top: 60px;
 		}
 
 		.container-canvas {
