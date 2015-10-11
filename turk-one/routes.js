@@ -13,6 +13,14 @@ Router.route('/tool', function () {
 	this.render('Tool');
 });
 
+Router.route('/tool/:_id', function () {
+	this.render('Tool', {
+		data: function () {
+			return Decisions.findOne({_id: this.params._id});
+		}
+	});
+});
+
 Router.route('/admin', function () {
 	this.render('Admin');
 });

@@ -2,28 +2,37 @@
  * Created by sahand on 10/7/15.
  */
 if (Meteor.isClient) {
+	Template.tool.helpers({
+		numberOfCanvasesToShow: function () {
+			var numberOfIndexesToReturn = Session.get("numberOfCanvasesToShow");
+			var arrayOfIndexes = [];
+			for (var x = 1; x <= numberOfIndexesToReturn; x++) {
+				arrayOfIndexes.push(x);
+			}
+			return arrayOfIndexes;
+		},
+		shouldShowAddCanvasButton: function () {
+			if (Session.get("numberOfCanvasesToShow") == 5) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	});
+
+	Template.tool.events({
+		"click .addCanvas": function (event) {
+			event.preventDefault();
+			Session.set("numberOfCanvasesToShow", Session.get("numberOfCanvasesToShow") + 1);
+		}
+	});
+
 	Template.tool.rendered = function() {
 		if(!this._rendered) {
 
 			this._rendered = true;
 
-			$(".canvas-sketch").each(function(index) {
-				var canvasHeightShouldBe = 500;
-				var canvasWidthShouldBe = $("#col-sketch").width();
-				$(this).attr({"height":canvasHeightShouldBe, "width":canvasWidthShouldBe});
-
-				canvas = new fabric.Canvas($(this).attr('id'));
-				console.log($(this).attr('id'));
-				canvas.isDrawingMode = true;
-				canvas.freeDrawingBrush.width = 6;
-				canvas.freeDrawingBrush.color = "black";
-				canvas.setBackgroundColor("white").renderAll();
-			});
-
-			$(".form-description").each(function(index) {
-				var canvasWidthShouldBe = $("#col-sketch").width();
-				$(this).attr({"height":canvasHeightShouldBe, "width":canvasWidthShouldBe});
-			});
+			Session.set("numberOfCanvasesToShow", 1);
 
 
 

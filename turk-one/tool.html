@@ -1,9 +1,9 @@
 <template name="tool">
 	<div class="container-fluid container-tool">
 		<div class="row">
-			<div class="col-lg-3" style="position:fixed">
+			<div class="col-md-12 col-lg-4 bottom-buffer-50">
 				<div class="row">
-					<div class="col-lg-10 col-lg-offset-1">
+					<div class="col-md-12 col-lg-10 col-lg-offset-1">
 						<p class="lead">
 							MTurk CrowdDesign HIT<br><br>
 						</p>
@@ -15,12 +15,12 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-8 col-lg-offset-4">
+			<div class="col-md-12 col-lg-8 bottom-buffer-100">
 				<div class="row">
-					<div class="col-lg-10 col-lg-offset-1" id="col-sketch">
-						<div class="sketch">
+					<div class="col-md-12 col-lg-10 col-lg-offset-1" id="col-sketch">
+						{{#each numberOfCanvasesToShow}}
 							<div class="container-canvas">
-								<canvas class="canvas-sketch" id="canvas-1"></canvas>
+								<canvas class="canvas-sketch" id="canvas-{{this}}"></canvas>
 								<div class="canvas-forms">
 									<div class="row">
 										<div class="col-md-12"><input type="text" placeholder="Name this solution" class="form-control form-transparent form-name"></div>
@@ -32,61 +32,27 @@
 									</div>
 								</div>
 							</div>
-							<div class="container-canvas">
-								<canvas class="canvas-sketch" id="canvas-2"></canvas>
-								<div class="canvas-forms">
-									<div class="row">
-										<div class="col-md-12"><input type="text" placeholder="Name this solution" class="form-control form-transparent form-name"></div>
-									</div>
-									<div class="row">
-										<div class="col-md-12">
-											<textarea placeholder="Explain this solution" class="form-transparent form-control form-description"></textarea>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="container-canvas">
-								<canvas class="canvas-sketch" id="canvas-3"></canvas>
-								<div class="canvas-forms">
-									<div class="row">
-										<div class="col-md-12"><input type="text" placeholder="Name this solution" class="form-control form-transparent form-name"></div>
-									</div>
-									<div class="row">
-										<div class="col-md-12">
-											<textarea placeholder="Explain this solution" class="form-transparent form-control form-description"></textarea>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="container-canvas">
-								<canvas class="canvas-sketch" id="canvas-4"></canvas>
-								<div class="canvas-forms">
-									<div class="row">
-										<div class="col-md-12"><input type="text" placeholder="Name this solution" class="form-control form-transparent form-name"></div>
-									</div>
-									<div class="row">
-										<div class="col-md-12">
-											<textarea placeholder="Explain this solution" class="form-transparent form-control form-description"></textarea>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="container-canvas">
-								<canvas class="canvas-sketch" id="canvas-5"></canvas>
-								<div class="canvas-forms">
-									<div class="row">
-										<div class="col-md-12"><input type="text" placeholder="Name this solution" class="form-control form-transparent form-name"></div>
-									</div>
-									<div class="row">
-										<div class="col-md-12">
-											<textarea placeholder="Explain this solution" class="form-transparent form-control form-description"></textarea>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+							<script>
+								var idForNewCanvas = "canvas-" + {{this}};
+								var element = $("#" + idForNewCanvas);
+								var canvasHeightShouldBe = 500;
+								var canvasWidthShouldBe = $("#col-sketch").width();
+								$(element).attr({"height":canvasHeightShouldBe, "width":canvasWidthShouldBe});
+
+								canvas = new fabric.Canvas(idForNewCanvas);
+								canvas.isDrawingMode = true;
+								canvas.freeDrawingBrush.width = 6;
+								canvas.freeDrawingBrush.color = "black";
+								canvas.setBackgroundColor("white").renderAll();
+							</script>
+						{{/each}}
 					</div>
 				</div>
+				{{#if shouldShowAddCanvasButton}}
+					<span class="col-md-12 text-center">
+						<button type="button" class="btn btn-primary btn-continue addCanvas"><span class="small">ADD SOLUTION</span></button>
+					</span>
+				{{/if}}
 			</div>
 		</div>
 	</div>
@@ -100,10 +66,6 @@
 			display: block;
 			box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.04);
 			border-radius: 5px;
-		}
-
-		.container-canvas {
-			margin-bottom: 50px;
 		}
 
 		.form-transparent {
