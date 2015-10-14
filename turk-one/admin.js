@@ -11,6 +11,23 @@ if (Meteor.isClient) {
 			if (Session.get("IDRequestedForPreview")) {
 				return Decisions.findOne(Session.get("IDRequestedForPreview"));
 			}
+		},
+		hashForDecisionBeingPreviewed: function () {
+			if (Session.get("IDRequestedForPreview")) {
+				var id = Session.get("IDRequestedForPreview");
+				var key = "1234567890ABCDEF";
+
+				console.log("id is " + id);
+				console.log("key is " + key);
+
+				var encrypted = CryptoJS.AES.encrypt(id, key);
+				var hash = encrypted.toString().replace("/", "_");
+
+				console.log("hash is " + hash);
+				console.log("unfiltered hash is " + encrypted.toString());
+
+				return hash;
+			}
 		}
 	});
 
