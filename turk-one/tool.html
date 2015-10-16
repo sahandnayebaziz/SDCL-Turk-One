@@ -25,11 +25,12 @@
 						<div id="toolbarContainer" class="md-fixed">
 							<span class="buttonToolbar buttonColor" id="buttonBlack" data-color="#414141"></span>
 							<!--<span class="buttonColor" id="buttonWhite" data-color="#FFFFFF"></span>-->
-							<span class="buttonToolbar buttonColor" id="buttonBlue" data-color="#80D4FC"></span>
-							<span class="buttonToolbar buttonColor" id="buttonGreen" data-color="#A1F5AA"></span>
-							<span class="buttonToolbar buttonColor" id="buttonOrange" data-color="#F7B779"></span>
-							<span class="buttonToolbar buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
-							<span class="buttonToolbar buttonColor" id="buttonEraser"></span>
+							<span class="buttonToolbar deselectedTool buttonColor" id="buttonBlue" data-color="#80D4FC"></span>
+							<span class="buttonToolbar deselectedTool buttonColor" id="buttonGreen" data-color="#A1F5AA"></span>
+							<span class="buttonToolbar deselectedTool buttonColor" id="buttonOrange" data-color="#F7B779"></span>
+							<span class="buttonToolbar deselectedTool buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
+							<span class="buttonToolbar deselectedTool" id="buttonMove"></span>
+							<span class="buttonToolbar deselectedTool" id="buttonEraser"></span>
 							<img src="un-do.png" class="buttonToolbar" id="buttonUndo">
 							<img src="re-do.png" class="buttonToolbar" id="buttonRedo">
 						</div>
@@ -43,22 +44,26 @@
 							box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.14);
 							border-radius: 6px;
 							padding-top: 17px;
-							padding-bottom: 17px;
+							padding-bottom: 9px;
 							min-width: 50px;
 						}
 
 						.buttonToolbar {
-							height: 25px;
+							height: auto;
 							width: 25px;
 							display: block;
 							margin-left: auto;
 							margin-right: auto;
 							margin-bottom: 8px;
+						}
+
+						.deselectedTool {
 							opacity: 0.4;
 						}
 
 						.buttonColor {
 							border-radius: 50px;
+							height: 25px;
 						}
 
 						#buttonBlack {
@@ -91,9 +96,16 @@
 							border: 3px solid #E9BB35;
 						}
 
+						#buttonMove {
+							background-image: url("controls.png");
+							height: 28px;
+							width: 28px;
+							margin-top: 24px;
+						}
+
 						#buttonEraser {
 							background-image: url("eraser.png");
-							margin-top: 24px;
+							height: 25px;
 							margin-bottom: 24px;
 						}
 
@@ -132,8 +144,8 @@
 
 								// set canvas defaults
 								canvas.isDrawingMode = true;
-								canvas.freeDrawingBrush.width = 6;
-								canvas.freeDrawingBrush.color = "black";
+								canvas.freeDrawingBrush.width = 5;
+								canvas.freeDrawingBrush.color = Session.get("currentColor");
 								canvas.setBackgroundColor("white").renderAll();
 
 								// add hooks for undo and redo
