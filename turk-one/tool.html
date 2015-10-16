@@ -8,17 +8,102 @@
 							MTurk CrowdDesign HIT<br><br>
 						</p>
 						<p><a href="/review" class="btn btn-success btn-continue">REVIEW AND FINISH</a></p>
-						<p><button class="btn btn-secondary-outline btn-continue">QUIT</button></p>
 						<p>{{name}}<br></p>
 						<p>{{description}}</p>
 						<p><span class="small"><span class="text-muted small strong"><strong>REQUIREMENTS</strong></span><br></span>
 							{{requirements}}</p>
+
+						<!--modal for this button placed below-->
+						<button class="btn btn-danger btn-continue top-buffer-50" data-toggle="modal" data-target="#quitModal">QUIT</button>
+
 					</div>
 				</div>
 			</div>
 			<div class="col-md-12 col-lg-8 col-lg-offset-4 bottom-buffer-100">
 				<div class="row">
-					<div class="col-md-12 col-lg-10 col-lg-offset-1" id="col-sketch">
+					<div class="col-lg-1">
+						<div id="toolbarContainer" class="md-fixed">
+							<span class="buttonToolbar buttonColor" id="buttonBlack" data-color="#414141"></span>
+							<!--<span class="buttonColor" id="buttonWhite" data-color="#FFFFFF"></span>-->
+							<span class="buttonToolbar buttonColor" id="buttonBlue" data-color="#80D4FC"></span>
+							<span class="buttonToolbar buttonColor" id="buttonGreen" data-color="#A1F5AA"></span>
+							<span class="buttonToolbar buttonColor" id="buttonOrange" data-color="#F7B779"></span>
+							<span class="buttonToolbar buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
+							<span class="buttonToolbar buttonColor" id="buttonEraser"></span>
+							<img src="un-do.png" class="buttonToolbar" id="buttonUndo">
+							<img src="re-do.png" class="buttonToolbar" id="buttonRedo">
+						</div>
+					</div>
+
+					<style>
+						#toolbarContainer {
+							margin-right: 15px;
+							margin-top: 100px;
+							background: #CECECE;
+							box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.14);
+							border-radius: 6px;
+							padding-top: 17px;
+							padding-bottom: 17px;
+							min-width: 50px;
+						}
+
+						.buttonToolbar {
+							height: 25px;
+							width: 25px;
+							display: block;
+							margin-left: auto;
+							margin-right: auto;
+							margin-bottom: 8px;
+							opacity: 0.4;
+						}
+
+						.buttonColor {
+							border-radius: 50px;
+						}
+
+						#buttonBlack {
+							background: #414141;
+							border: 3px solid #000000;
+						}
+
+						#buttonWhite {
+							background: #FFFFFF;
+							border: 3px solid #BDBDBD;
+						}
+
+						#buttonBlue {
+							background: #80D4FC;
+							border: 3px solid #4B95B4;
+						}
+
+						#buttonGreen {
+							background: #A1F5AA;
+							border: 3px solid #6AB373;
+						}
+
+						#buttonOrange {
+							background: #F7B779;
+							border: 3px solid #DE8A6E;
+						}
+
+						#buttonYellow {
+							background: #FBDE9E;
+							border: 3px solid #E9BB35;
+						}
+
+						#buttonEraser {
+							background-image: url("eraser.png");
+							margin-top: 24px;
+							margin-bottom: 24px;
+						}
+
+						.selectedTool {
+							opacity: 1 !IMPORTANT;
+						}
+						
+						
+					</style>
+					<div class="col-lg-10" id="col-sketch">
 						{{#each numberOfCanvasesToShow}}
 							<div class="container-canvas animated fadeIn">
 								<canvas class="canvas-sketch" id="canvas-{{this}}"></canvas>
@@ -34,17 +119,57 @@
 								</div>
 							</div>
 							<script>
+								// format new canvas element in HTML
 								var idForNewCanvas = "canvas-" + {{this}};
 								var element = $("#" + idForNewCanvas);
 								var canvasHeightShouldBe = 500;
 								var canvasWidthShouldBe = $("#col-sketch").width();
 								$(element).attr({"height":canvasHeightShouldBe, "width":canvasWidthShouldBe});
 
-								canvas = new fabric.Canvas(idForNewCanvas);
+								// add reference to canvas to global array
+								var canvas = new fabric.Canvas(idForNewCanvas);
+								canvasArray.push(canvas);
+
+								// set canvas defaults
 								canvas.isDrawingMode = true;
 								canvas.freeDrawingBrush.width = 6;
 								canvas.freeDrawingBrush.color = "black";
 								canvas.setBackgroundColor("white").renderAll();
+
+								// add hooks for undo and redo
+								function saveState() {
+									if (canvasStateStack.length == 30) {
+										canvasStateStack.shift();
+									}
+									if (canvasRedoStack.length != 0) {
+										canvasRedoStack = [];
+									}
+									//canvasStateStack.push(JSON.stringify(canvas));
+									canvasStateStack.push([canvas, JSON.stringify(canvas)]);
+									console.log("saved state from " + idForNewCanvas);
+								}
+
+								canvas.on('object:added', function (e) {
+									if (recordingStates) {
+										saveState();
+									}
+								});
+
+								canvas.on('object:modified', function (e) {
+									if (recordingStates) {
+										saveState();
+									}
+								});
+
+								canvas.on('object:removed', function (e) {
+									if (recordingStates) {
+										saveState();
+									}
+								});
+
+								saveState();
+
+
 							</script>
 						{{/each}}
 					</div>
@@ -58,6 +183,68 @@
 						<button type="button" class="btn btn-primary btn-continue disabled top-buffer-25"><span class="small">MAX 5 solutions added!</span></button>
 					</span>
 				{{/if}}
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="quitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">Are you sure you want to quit this HIT?</h4>
+				</div>
+				<div class="modal-body">
+					<form id="quitForm" class="top-buffer-25">
+						<label>Why are you quitting this task?</label>
+						<!--- The task is to easy-->
+						<!--- The task is to hard-->
+						<!--- It is not clear to me what I need to do-->
+						<!--- The tool does not work like I would expect-->
+						<!--- Other, (provide textfield)-->
+						<div class="radio">
+							<label>
+								<input type="radio" name="quitReason" value="too easy">
+								The task is too easy
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" name="quitReason" value="too hard">
+								The task is too hard
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" name="quitReason" value="not clear">
+								It is not clear to me what I need to do
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" name="quitReason" value="tool doesn't work">
+								The tool does not work like I would expect
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" name="quitReason" value="Other">
+								Other (explained below)
+							</label>
+						</div>
+						<fieldset class="form-group top-buffer-50">
+							<label for="quitText">Do you have any feedback to improve this HIT?</label>
+							<textarea class="form-control" id="quitText" rows="3"></textarea>
+						</fieldset>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="submit" class="btn btn-danger disabled" disabled="true" id="quitSubmit">Quit this HIT</button>
+				</div>
+			</form>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -21,13 +21,19 @@ if (Meteor.isClient) {
 				console.log("key is " + key);
 
 				var encrypted = CryptoJS.AES.encrypt(id, key);
-				var hash = encrypted.toString().replace("/", "_");
+				var hash = encrypted.toString().replace("/", "_").replace("/", "_");
 
 				console.log("hash is " + hash);
 				console.log("unfiltered hash is " + encrypted.toString());
 
 				return hash;
 			}
+		},
+		exitSurveys: function () {
+			return ExitSurveys.find({}, {sort: {_id: 1}});
+		},
+		quitSurveys: function () {
+			return QuitSurveys.find({}, {sort: {_id: 1}});
 		}
 	});
 

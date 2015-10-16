@@ -19,11 +19,10 @@ Router.route('/tool/:_id', function () {
 
 			var unfilteredHash = this.params._id;
 			var correctedHash = this.params._id.replace("_","/");
+			var decrypted = CryptoJS.AES.decrypt(correctedHash, "1234567890ABCDEF");
 
 			console.log("original is " + unfilteredHash);
 			console.log("fixed is " + correctedHash);
-
-			var decrypted = CryptoJS.AES.decrypt(correctedHash, "1234567890ABCDEF");
 			console.log("decrypted to " + CryptoJS.AES.decrypt(correctedHash, "1234567890ABCDEF"));
 
 			return Decisions.findOne({_id: decrypted.toString(CryptoJS.enc.Utf8)});
