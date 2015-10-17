@@ -79,7 +79,6 @@ if (Meteor.isClient) {
 					this.freeDrawingBrush.color = colorChosen;
 					this.isDrawingMode = true;
 				});
-
 				disableEraser();
 			});
 
@@ -87,7 +86,7 @@ if (Meteor.isClient) {
 			$("#buttonEraser").click(function () {
 				setSelectedTool(this);
 				enableEraser();
-			})
+			});
 
 			function disableEraser() {
 				$.each(canvasArray, function() {
@@ -98,19 +97,21 @@ if (Meteor.isClient) {
 
 			function enableEraser() {
 				$.each(canvasArray, function() {
-					this.isDrawingMode = false;
-					this.on("mouse:down", function (e) {
+					var canvas = this;
+
+					canvas.isDrawingMode = false;
+					canvas.on("mouse:down", function (e) {
 						if (this.getActiveGroup()) {
 							recordingStates = false;
-							this.getActiveGroup().forEachObject(function (a) {
-								this.remove(a);
+							canvas.getActiveGroup().forEachObject(function (a) {
+								canvas.remove(a);
 							});
-							this.discardActiveGroup();
+							canvas.discardActiveGroup();
 							recordingStates = true;
 						} else {
-							this.remove(canvas.getActiveObject());
+							canvas.remove(canvas.getActiveObject());
 						}
-						this.renderAll();
+						canvas.renderAll();
 					});
 				});
 			}
