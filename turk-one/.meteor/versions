@@ -1,3 +1,4 @@
+altapp:aes@1.2.0
 autopublish@1.0.4
 autoupdate@1.2.3
 babel-compiler@5.8.24_1
@@ -52,6 +53,7 @@ mobile-experience@1.0.1
 mobile-status-bar@1.0.6
 mongo@1.1.2
 mongo-id@1.0.1
+natestrauser:animate-css@3.4.0
 npm-mongo@1.4.39_1
 observe-sequence@1.0.7
 ordered-dict@1.0.4

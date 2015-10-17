@@ -21,3 +21,5 @@ insecure                # Allow all DB writes from clients (for prototyping)
 iron:router
 chuikoff:bootstrap-4
 ryanswapp:fabricjs
+natestrauser:animate-css
+altapp:aes

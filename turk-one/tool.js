@@ -3,6 +3,9 @@
  */
 if (Meteor.isClient) {
 	Template.tool.helpers({
+		decisionPoint: function () {
+			return DecisionPoints.findOne(this.decisionPointId);
+		},
 		numberOfCanvasesToShow: function () {
 			var numberOfIndexesToReturn = Session.get("numberOfCanvasesToShow");
 			var arrayOfIndexes = [];
@@ -45,6 +48,9 @@ if (Meteor.isClient) {
 	Template.tool.rendered = function() {
 		if(!this._rendered) {
 			this._rendered = true;
+
+			// data check
+			console.log(this.data);
 
 			// setting the default number of canvases to show
 			Session.set("numberOfCanvasesToShow", 1);
