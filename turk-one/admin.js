@@ -53,6 +53,17 @@ if (Meteor.isClient) {
 				description: form.description.value,
 				requirements: form.requirements.value
 			});
+		},
+		"click .update": function () {
+
+			var form = $("#createDecision");
+
+			DecisionPoints.update(form.id.value, {
+				name: form.name.value,
+				_id: form.id.value,
+				description: form.description.value,
+				requirements: form.requirements.value
+			});
 		}
 	});
 
@@ -73,3 +84,11 @@ if (Meteor.isClient) {
 	})
 }
 
+//UI1  - 0WUsf+n+HrekmubKvXn+Zg==
+//UI2  - Nr1z8cMWSr3IgAbvKMRfzw==
+//UI3  - U+cyLQThmYLE7JnSw+rS6w==
+//UI4  - bzk5Afbz4KC9l5XJcYyCdw==
+//AR1 - dQ5qYzXliubw7mUkitb1fA==
+//AR2 - 6bKw33daL579xCOnxhVWDw==
+//AR3 - yihR+0VWNYbQ9w2z1ZeSbg==
+//AR4 - li5YkyMOyTUgNzNH+1EtQw==

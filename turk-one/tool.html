@@ -8,7 +8,7 @@
 			</div>
 			<div class="col-md-12 col-lg-8 col-lg-offset-4 bottom-buffer-100">
 				<div class="row">
-					<div class="col-lg-1">
+					<div class="col-lg-1 col-md-12">
 						<div id="toolbarContainer" class="md-fixed">
 							<span class="buttonToolbar buttonColor" id="buttonBlack" data-color="#414141"></span>
 							<!--<span class="buttonColor" id="buttonWhite" data-color="#FFFFFF"></span>-->
@@ -24,25 +24,82 @@
 					</div>
 
 					<style>
-						#toolbarContainer {
-							margin-right: 15px;
-							margin-top: 100px;
-							background: #CECECE;
-							box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.14);
-							border-radius: 6px;
-							padding-top: 17px;
-							padding-bottom: 9px;
-							min-width: 50px;
+						@media screen and (max-width: 62em) {
+							#toolbarContainer {
+								position: fixed;
+								bottom: 100px;
+								left: 50%;
+								margin-left: -170px;
+								display: block;
+								min-width: 340px;
+								height: 46px;
+								padding: 10px 9px 9px 17px;
+								background: #CECECE;
+								box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.24);
+								border-radius: 6px;
+								z-index: 2;
+							}
+
+							.buttonToolbar {
+								display: block;
+								float: left;
+								clear: none;
+								margin: 0px 8px 0px 0px;
+								height: auto;
+								width: 25px;
+							}
+
+						  #buttonMove {
+							  margin-left: 24px!IMPORTANT;
+						  }
+
+						  #buttonEraser {
+							  margin-right: 24px!IMPORTANT;
+						  }
+
+						  #buttonRedo, #buttonUndo {
+							  margin-top: 5px;
+						  }
 						}
 
-						.buttonToolbar {
-							height: auto;
-							width: 25px;
-							display: block;
-							margin-left: auto;
-							margin-right: auto;
-							margin-bottom: 8px;
+						@media screen and (min-width: 62em) {
+							#toolbarContainer {
+								margin-right: 15px;
+								margin-top: 100px;
+								background: #CECECE;
+								box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.14);
+								border-radius: 6px;
+								padding-top: 17px;
+								padding-bottom: 9px;
+								min-width: 50px;
+							}
+
+							.buttonToolbar {
+								height: auto;
+								width: 25px;
+								display: block;
+								margin-left: auto;
+								margin-right: auto;
+								margin-bottom: 8px;
+							}
+
+							#buttonMove {
+								background-image: url("/controls.png");
+								height: 28px;
+								width: 28px;
+								margin-top: 24px;
+							}
+
+							#buttonEraser {
+								background-image: url("/eraser.png");
+								height: 25px;
+								margin-bottom: 24px;
+							}
 						}
+
+
+
+
 
 						.deselectedTool {
 							opacity: 0.4;
@@ -87,17 +144,15 @@
 							background-image: url("/controls.png");
 							height: 28px;
 							width: 28px;
-							margin-top: 24px;
 						}
 
 						#buttonEraser {
 							background-image: url("/eraser.png");
 							height: 25px;
-							margin-bottom: 24px;
 						}
 
 						.selectedTool {
-							opacity: 1 !IMPORTANT;
+							opacity: 1!IMPORTANT;
 						}
 						
 						
@@ -186,6 +241,29 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="finishModal" tabindex="-1" role="dialog" aria-labelledby="Finish confirmation" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">Are you sure you're ready to finish?</h4>
+				</div>
+				<div class="modal-body">
+					<p class="modal-text">If you are finished, you will now have a chance to review your sketches and select which
+						you would like to submit.</p>
+					<p><strong>Once you click "review and finish", you will not have a chance to return and continue
+					sketching your solutions.</strong></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-success" id="finishConfirm">Review and finish</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="modal fade" id="quitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -293,10 +371,10 @@
 			<p class="lead">
 				MTurk CrowdDesign HIT<br><br>
 			</p>
-			<p><a href="/review" class="btn btn-success btn-continue">REVIEW AND FINISH</a></p>
-			<p>{{name}}<br></p>
+			<p><a data-toggle="modal" data-target="#finishModal" class="btn btn-success btn-continue">REVIEW AND FINISH</a></p>
+			<h4>{{name}}<br></h4>
 			<p>{{description}}</p>
-			<p><span class="small"><span class="text-muted small strong"><strong>REQUIREMENTS</strong></span><br></span>
+			<p><span class="text-muted"><strong>REQUIREMENTS</strong></span><br>
 				{{requirements}}</p>
 
 			<!--modal for this button placed below-->

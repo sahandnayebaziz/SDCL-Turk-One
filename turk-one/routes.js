@@ -17,6 +17,10 @@ Router.route('/help/:_id', function () {
 	this.render('Help', {
 		data: function () {
 			return WorkerTickets.findOne(this.params._id);
+		},
+		action: function () {
+			// render all templates and regions for this route
+			if (this.ready()) this.render()
 		}
 	})
 });

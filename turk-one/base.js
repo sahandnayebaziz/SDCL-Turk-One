@@ -3,24 +3,35 @@
  */
 if (Meteor.isClient) {
 	Template.home.helpers({
-
+		existingWorkerTicket: function () {
+			return WorkerTickets.findOne({
+				sessionId: this.sessionId,
+				workerId: this.workerId,
+				decisionPointId: this.decisionPointId
+			});
+		}
 	});
 
 	Template.home.events({
-
+		"click .btn-continue": function() {
+			Router.go("/help/" + this.workerId);
+		}
 	});
 
 	Template.home.rendered = function() {
 		if(!this._rendered) {
 			this._rendered = true;
 
-			console.log(this.data);
-
-			// TODO: Check if worker ID already made. Which values here are unique?
-			WorkerTickets.insert(this.data, function(error, id) {
+			//console.log(this.data);
+			this.data["visited"] = new Date();
+			WorkerTickets.insert({
+				_id: this.data.workerId,
+				workerId: this.data.workerId,
+				sessionId: this.data.sessionId,
+				decisionPointId: this.data.decisionPointId
+			}, function(error, id) {
 				if (!error) {
 					console.log("created a worker ticket successfully with id: " + id);
-					Session.set("ticketId", id);
 				}
 			})
 		}

@@ -42,6 +42,12 @@ if (Meteor.isClient) {
 			$('#quitModal').modal('hide')
 
 			Router.go("/");
+		},
+		"click #finishConfirm": function () {
+
+
+			// save each sketch
+			// move the user to the review phase where she will be able to mark each one as selected or not
 		}
 	});
 
