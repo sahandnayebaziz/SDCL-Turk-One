@@ -225,7 +225,7 @@
 									console.log("saved state from " + idForNewCanvas);
 								}
 
-								canvas.on('object:added', (function(j) {
+								canvas.on('object:added', (function(j, can) {
 									return function() {
 										if (canvasStateStack.length == 30) {
 											canvasStateStack.shift();
@@ -245,9 +245,9 @@
 											workerId: Session.get("ticketId")
 										});
 
-										lastCanvas = canvas;
+										lastCanvas = can;
 									};
-								})(idForNewCanvas));
+								})(idForNewCanvas, canvas));
 
 								canvas.on('object:modified', (function(j) {
 									return function() {
