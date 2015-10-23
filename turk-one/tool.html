@@ -197,6 +197,8 @@
 								canvas.freeDrawingBrush.color = Session.get("currentColor");
 								canvas.setBackgroundColor("white").renderAll();
 
+
+
 								// add hooks for undo and redo
 								function saveState() {
 									if (canvasStateStack.length == 30) {
@@ -210,34 +212,62 @@
 									console.log("saved state from " + idForNewCanvas);
 								}
 
-								function saveLatestWork() {
-									var stateOfCanvas = JSON.stringify(canvas);
+								canvas.on('object:added', (function(j) {
+									return function() {
+										if (canvasStateStack.length == 30) {
+											canvasStateStack.shift();
+										}
+										if (canvasRedoStack.length != 0) {
+											canvasRedoStack = [];
+										}
 
-									Solutions.upsert(Session.get("ticketId") + idForNewCanvas, {
-										state: stateOfCanvas
-									});
+										canvasStateStack.push([canvas, JSON.stringify(canvas)]);
+										console.log("saved state from " + j);
+
+										var stateOfCanvas = JSON.stringify(canvas);
+
+										Solutions.upsert(Session.get("ticketId") + j, {
+											state: stateOfCanvas,
+											dateUpdated: new Date(),
+											workerId: Session.get("ticketId")
+										});
+									};
+								})(idForNewCanvas));
+
+								canvas.on('object:modified', (function(j) {
+									return function() {
+										if (canvasStateStack.length == 30) {
+											canvasStateStack.shift();
+										}
+										if (canvasRedoStack.length != 0) {
+											canvasRedoStack = [];
+										}
+
+										canvasStateStack.push([canvas, JSON.stringify(canvas)]);
+									};
+								})(idForNewCanvas));
+
+								canvas.on('object:removed', (function(j) {
+									return function() {
+										if (canvasStateStack.length == 30) {
+											canvasStateStack.shift();
+										}
+										if (canvasRedoStack.length != 0) {
+											canvasRedoStack = [];
+										}
+
+										canvasStateStack.push([canvas, JSON.stringify(canvas)]);
+									};
+								})(idForNewCanvas));
+
+								if (canvasStateStack.length == 30) {
+									canvasStateStack.shift();
+								}
+								if (canvasRedoStack.length != 0) {
+									canvasRedoStack = [];
 								}
 
-								canvas.on('object:added', function (e) {
-									if (recordingStates) {
-										saveState();
-										saveLatestWork();
-									}
-								});
-
-								canvas.on('object:modified', function (e) {
-									if (recordingStates) {
-										saveState();
-									}
-								});
-
-								canvas.on('object:removed', function (e) {
-									if (recordingStates) {
-										saveState();
-									}
-								});
-
-								saveState();
+								canvasStateStack.push([canvas, JSON.stringify(canvas)]);
 
 
 							</script>
