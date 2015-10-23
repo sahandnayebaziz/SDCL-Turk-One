@@ -249,7 +249,7 @@
 									};
 								})(idForNewCanvas, canvas));
 
-								canvas.on('object:modified', (function(j) {
+								canvas.on('object:modified', (function(j, can) {
 									return function() {
 										if (canvasStateStack.length == 30) {
 											canvasStateStack.shift();
@@ -260,12 +260,12 @@
 
 										canvasStateStack.push([canvas, JSON.stringify(canvas)]);
 
-										lastCanvas = canvas;
+										lastCanvas = can;
 										console.log(lastCanvas);
 									};
-								})(idForNewCanvas));
+								})(idForNewCanvas, canvas));
 
-								canvas.on('object:removed', (function(j) {
+								canvas.on('object:removed', (function(j, can) {
 									return function() {
 										if (canvasStateStack.length == 30) {
 											canvasStateStack.shift();
@@ -276,9 +276,9 @@
 
 										canvasStateStack.push([canvas, JSON.stringify(canvas)]);
 
-										lastCanvas = canvas;
+										lastCanvas = can;
 									};
-								})(idForNewCanvas));
+								})(idForNewCanvas, canvas));
 
 
 								// initial save state
