@@ -23,6 +23,7 @@
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonGreen" data-color="#A1F5AA"></span>
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonOrange" data-color="#F7B779"></span>
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
+							<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText">
 							<span class="buttonToolbar deselectedTool" id="buttonMove"></span>
 							<span class="buttonToolbar deselectedTool" id="buttonEraser"></span>
 							<img src="/un-do.png" class="buttonToolbar" id="buttonUndo">
@@ -34,9 +35,9 @@
 						@media screen and (max-width: 62em) {
 							#toolbarContainer {
 								position: fixed;
-								bottom: 100px;
+								bottom: 50px;
 								left: 50%;
-								margin-left: -170px;
+								margin-left: -200px;
 								display: block;
 								min-width: 340px;
 								height: 46px;
@@ -56,7 +57,7 @@
 								width: 25px;
 							}
 
-						  #buttonMove {
+						  #buttonText {
 							  margin-left: 24px!IMPORTANT;
 						  }
 
@@ -90,11 +91,14 @@
 								margin-bottom: 8px;
 							}
 
+							#buttonText {
+								margin-top: 24px;
+							}
+
 							#buttonMove {
 								background-image: url("/controls.png");
 								height: 28px;
 								width: 28px;
-								margin-top: 24px;
 							}
 
 							#buttonEraser {
@@ -110,6 +114,10 @@
 
 						.deselectedTool {
 							opacity: 0.4;
+						}
+						
+						.deselectedTool:hover {
+							opacity: 0.8;
 						}
 
 						.buttonColor {
@@ -157,6 +165,10 @@
 							background-image: url("/eraser.png");
 							height: 25px;
 						}
+						
+						#buttonText {
+							height: 25px;
+						}
 
 						.selectedTool {
 							opacity: 1!IMPORTANT;
@@ -190,6 +202,7 @@
 								// add reference to canvas to global array
 								var canvas = new fabric.Canvas(idForNewCanvas);
 								canvasArray.push(canvas);
+								lastCanvas = canvas; // set this as current canvas
 
 								// set canvas defaults
 								canvas.isDrawingMode = true;
@@ -231,6 +244,8 @@
 											dateUpdated: new Date(),
 											workerId: Session.get("ticketId")
 										});
+
+										lastCanvas = canvas;
 									};
 								})(idForNewCanvas));
 
@@ -244,6 +259,9 @@
 										}
 
 										canvasStateStack.push([canvas, JSON.stringify(canvas)]);
+
+										lastCanvas = canvas;
+										console.log(lastCanvas);
 									};
 								})(idForNewCanvas));
 
@@ -257,9 +275,13 @@
 										}
 
 										canvasStateStack.push([canvas, JSON.stringify(canvas)]);
+
+										lastCanvas = canvas;
 									};
 								})(idForNewCanvas));
 
+
+								// initial save state
 								if (canvasStateStack.length == 30) {
 									canvasStateStack.shift();
 								}

@@ -68,6 +68,9 @@ if (Meteor.isClient) {
 			// actions to 'broadcast' the toolbar selects across the canvases
 			canvasArray = [];
 
+			// last canvas drawn on
+			lastCanvas = null;
+
 			// Set Black as default color in toolbar (set for each canvas at initialization in tool.html
 			Session.set("currentColor", "#414141");
 			$("#buttonBlack").addClass("selectedTool");
@@ -100,7 +103,6 @@ if (Meteor.isClient) {
 			function disableEraser() {
 				$.each(canvasArray, function() {
 					this.off("mouse:down");
-					this.isDrawingMode = true;
 				});
 			}
 
@@ -133,6 +135,17 @@ if (Meteor.isClient) {
 				$.each(canvasArray, function() {
 					this.isDrawingMode = false;
 				})
+			});
+
+			// text button clicked
+			$("#buttonText").click(function() {
+				var input = prompt("Please enter the text you would like to add to your canvas");
+				if (input != null) {
+					var textElement = new fabric.Text(input, { left: 100, top: 100 });
+					lastCanvas.isDrawingMode = false;
+					lastCanvas.add(textElement);
+				}
+				disableEraser();
 			});
 
 			// UNDO AND REDO
