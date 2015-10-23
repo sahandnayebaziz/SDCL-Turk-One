@@ -3,6 +3,9 @@
  */
 if (Meteor.isClient) {
 	Template.tool.helpers({
+		workerTicket: function () {
+			return WorkerTickets.findOne(this._id);
+		},
 		decisionPoint: function () {
 			return DecisionPoints.findOne(this.decisionPointId);
 		},
@@ -125,6 +128,7 @@ if (Meteor.isClient) {
 			// toolbar move controls clicked
 			$("#buttonMove").click(function() {
 				setSelectedTool(this);
+				disableEraser();
 
 				$.each(canvasArray, function() {
 					this.isDrawingMode = false;

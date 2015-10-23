@@ -28,7 +28,8 @@ if (Meteor.isClient) {
 				_id: this.data.workerId,
 				workerId: this.data.workerId,
 				sessionId: this.data.sessionId,
-				decisionPointId: this.data.decisionPointId
+				decisionPointId: this.data.decisionPointId,
+				visited: this.data.visited
 			}, function(error, id) {
 				if (!error) {
 					console.log("created a worker ticket successfully with id: " + id);

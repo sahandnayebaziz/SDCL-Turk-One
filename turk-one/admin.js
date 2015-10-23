@@ -10,6 +10,9 @@ if (Meteor.isClient) {
 			// find all decisions, sorted by id
 			return DecisionPoints.find({}, {sort: {_id: 1}});
 		},
+		solutions: function () {
+			return Solutions.find({}, {sort: {_id: 1}});
+		},
 		decisionBeingPreviewed: function () {
 			if (Session.get("IDRequestedForPreview")) {
 				return DecisionPoints.findOne(Session.get("IDRequestedForPreview"));

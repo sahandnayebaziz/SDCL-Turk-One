@@ -2,6 +2,13 @@
 	<div class="container-fluid container-tool">
 		<div class="row">
 			<div class="col-md-12 col-lg-4 bottom-buffer-50 md-fixed">
+				{{#with workerTicket}}
+					<script>
+						console.log({{_id}});
+						Session.set("ticketId", {{_id}});
+					</script>
+				{{/with}}
+
 				{{#with decisionPoint}}
 					{{>decisionPointInformationPanel}}
 				{{/with}}
@@ -203,9 +210,18 @@
 									console.log("saved state from " + idForNewCanvas);
 								}
 
+								function saveLatestWork() {
+									var stateOfCanvas = JSON.stringify(canvas);
+
+									Solutions.upsert(Session.get("ticketId") + idForNewCanvas, {
+										state: stateOfCanvas
+									});
+								}
+
 								canvas.on('object:added', function (e) {
 									if (recordingStates) {
 										saveState();
+										saveLatestWork();
 									}
 								});
 
