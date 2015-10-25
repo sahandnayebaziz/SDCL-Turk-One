@@ -61,11 +61,11 @@ if (Meteor.isClient) {
 			console.log(this.data);
 
 			// setting the default number of canvases to show
-			Session.set("numberOfCanvasesToShow", 1);
+			Session.set("numberOfCanvasesToShow", 5);
 
 			// this array will hold references to each Fabric canvas instance, and is looped through in the below toolbar
 			// actions to 'broadcast' the toolbar selects across the canvases
-			canvasArray = [];
+			canvases = [];
 
 			// last canvas drawn on
 			lastCanvas = null;
@@ -89,7 +89,7 @@ if (Meteor.isClient) {
 				var colorChosen = this.getAttribute("data-color");
 
 				Session.set("currentColor", colorChosen);
-				$.each(canvasArray, function() {
+				$.each(canvases, function() {
 					this.freeDrawingBrush.color = colorChosen;
 					this.isDrawingMode = true;
 				});
@@ -103,13 +103,13 @@ if (Meteor.isClient) {
 			});
 
 			function disableEraser() {
-				$.each(canvasArray, function() {
+				$.each(canvases, function() {
 					this.off("mouse:down");
 				});
 			}
 
 			function enableEraser() {
-				$.each(canvasArray, function() {
+				$.each(canvases, function() {
 					var canvas = this;
 
 					canvas.isDrawingMode = false;
@@ -134,7 +134,7 @@ if (Meteor.isClient) {
 				setSelectedTool(this);
 				disableEraser();
 
-				$.each(canvasArray, function() {
+				$.each(canvases, function() {
 					this.isDrawingMode = false;
 				})
 			});
@@ -143,7 +143,7 @@ if (Meteor.isClient) {
 			$("#buttonText").click(function() {
 				setSelectedTool(this);
 				disableEraser();
-				$.each(canvasArray, function() {
+				$.each(canvases, function() {
 					this.isDrawingMode = false;
 				});
 
@@ -161,7 +161,7 @@ if (Meteor.isClient) {
 					lastCanvas.setActiveObject(textObject);
 					textObject.enterEditing()
 					textObject.selectAll()
-					$.each(canvasArray, function() {
+					$.each(canvases, function() {
 						this.off("mouse:down");
 					});
 
@@ -265,6 +265,38 @@ if (Meteor.isClient) {
 					$("#quitSubmit").prop("disabled",false);
 				}
 			);
+
+
+			// guessing focus
+			function findFocus() {
+
+				var scrollPosition = $(window).scrollTop();
+				var focusDistance = 9999;
+				var focusGuess = null;
+
+				$.each($(".canvasContainer"), function() {
+					var positionAtTopOfCanvas = $(this).offset().top;
+					var distanceFromScrollPosition = Math.abs(scrollPosition - positionAtTopOfCanvas);
+					if ((scrollPosition < positionAtTopOfCanvas + 250) && (distanceFromScrollPosition < focusDistance)) {
+						focusDistance = distanceFromScrollPosition;
+						focusGuess = this;
+					}
+				});
+
+				$.each($(".canvasContainer"), function() {
+					if (this == focusGuess) {
+						console.log(this);
+						$(this).removeClass("unfocusedCanvas");
+						$(this).addClass("focusedCanvas");
+					} else {
+						$(this).removeClass("focusedCanvas");
+						$(this).addClass("unfocusedCanvas");
+					}
+				});
+			}
+
+			$(window).scroll(findFocus);
+			findFocus();
 
 		}
 	}
