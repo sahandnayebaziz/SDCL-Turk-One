@@ -70,9 +70,6 @@ if (Meteor.isClient) {
 			// focusedCanvas
 			canvasWithFocus = null;
 
-			// last canvas drawn on
-			lastCanvas = null;
-
 			// used for maintaing sanity while drawing straight or free-form lines
 			isDrawing = false;
 
@@ -87,6 +84,10 @@ if (Meteor.isClient) {
 			function setSelectedTool(tool) {
 				$(".selectedTool").removeClass("selectedTool").addClass("deselectedTool");
 				$(tool).addClass("selectedTool");
+
+				if ($(tool).attr("id") != "buttonEraser") {
+					disableEraser();
+				}
 			}
 
 			// toolbar color clicked
@@ -99,7 +100,6 @@ if (Meteor.isClient) {
 					this.freeDrawingBrush.color = colorChosen;
 					this.isDrawingMode = true;
 				});
-				disableEraser();
 			});
 
 			// toolbar eraser clicked
@@ -109,6 +109,8 @@ if (Meteor.isClient) {
 			});
 
 			function disableEraser() {
+				console.log("disabling eraser");
+
 				$.each(canvases, function() {
 					this.off("mouse:down");
 				});
@@ -138,7 +140,6 @@ if (Meteor.isClient) {
 			// toolbar move controls clicked
 			$("#buttonMove").click(function() {
 				setSelectedTool(this);
-				disableEraser();
 
 				$.each(canvases, function() {
 					this.isDrawingMode = false;
@@ -147,24 +148,25 @@ if (Meteor.isClient) {
 
 			// text button clicked
 			$("#buttonText").click(function() {
+
 				setSelectedTool(this);
-				disableEraser();
+
 				$.each(canvases, function() {
 					this.isDrawingMode = false;
 				});
 
-				lastCanvas.on("mouse:down", function (e) {
+				canvasWithFocus.on("mouse:down", function (e) {
 					var pointer = canvas.getPointer(event.e);
 
-					lastCanvas.add(new fabric.IText('Enter Text', {
+					canvasWithFocus.add(new fabric.IText('Enter Text', {
 						fontFamily: 'times black',
 						left: pointer.x,
 						top: pointer.y,
 						fontSize: 16
 					}));
 
-					var textObject = lastCanvas.item(lastCanvas.getObjects().length - 1);
-					lastCanvas.setActiveObject(textObject);
+					var textObject = canvasWithFocus.item(canvasWithFocus.getObjects().length - 1);
+					canvasWithFocus.setActiveObject(textObject);
 					textObject.enterEditing()
 					textObject.selectAll()
 					$.each(canvases, function() {
@@ -215,16 +217,16 @@ if (Meteor.isClient) {
 
 				var line, isDown;
 
-				lastCanvas.isDrawingMode = false;
-				lastCanvas.selection = false;
-				lastCanvas.forEachObject(function(o) {
+				canvasWithFocus.isDrawingMode = false;
+				canvasWithFocus.selection = false;
+				canvasWithFocus.forEachObject(function(o) {
 					o.selectable = false;
 				});
 
-				lastCanvas.on('mouse:down', function(o){
+				canvasWithFocus.on('mouse:down', function(o){
 					isDown = true;
 					isDrawing = true;
-					var pointer = lastCanvas.getPointer(o.e);
+					var pointer = canvasWithFocus.getPointer(o.e);
 					var points = [ pointer.x, pointer.y, pointer.x, pointer.y ];
 					line = new fabric.Line(points, {
 						strokeWidth: 5,
@@ -233,27 +235,27 @@ if (Meteor.isClient) {
 						originX: 'center',
 						originY: 'center',
 					});
-					lastCanvas.add(line);
+					canvasWithFocus.add(line);
 				});
 
-				lastCanvas.on('mouse:move', function(o){
+				canvasWithFocus.on('mouse:move', function(o){
 					if (!isDown) return;
-					var pointer = lastCanvas.getPointer(o.e);
+					var pointer = canvasWithFocus.getPointer(o.e);
 					line.set({ x2: pointer.x, y2: pointer.y });
-					lastCanvas.renderAll();
+					canvasWithFocus.renderAll();
 					line.selectable = true;
 				});
 
-				lastCanvas.on('mouse:up', function(o){
+				canvasWithFocus.on('mouse:up', function(o){
 					isDown = false;
 					isDrawing = false;
-					//lastCanvas.remove(lastCanvas.item(lastCanvas.getObjects().length - 1));
+					//canvasWithFocus.remove(canvasWithFocus.item(canvasWithFocus.getObjects().length - 1));
 				});
 			}, 'keydown');
 
 			Mousetrap.bind('shift', function () {
 				if (!isDrawing) {
-					c = lastCanvas;
+					c = canvasWithFocus;
 					c.off('mouse:down');
 					c.off('mouse:move');
 					c.off('mouse:up');
