@@ -70,6 +70,9 @@ if (Meteor.isClient) {
 			// last canvas drawn on
 			lastCanvas = null;
 
+			// used for maintaing sanity while drawing straight or free-form lines
+			isDrawing = false
+
 			// Set Black as default color in toolbar (set for each canvas at initialization in tool.html
 			Session.set("currentColor", "#414141");
 			$("#buttonBlack").addClass("selectedTool");
@@ -196,6 +199,64 @@ if (Meteor.isClient) {
 					recordingStates = true;
 				}
 			});
+
+			// drawing straight lines when pressing shift
+			Mousetrap.bind('shift', function () {
+
+				var line, isDown;
+
+				lastCanvas.isDrawingMode = false;
+				lastCanvas.selection = false;
+				lastCanvas.forEachObject(function(o) {
+					o.selectable = false;
+				});
+
+				lastCanvas.on('mouse:down', function(o){
+					isDown = true;
+					isDrawing = true;
+					var pointer = lastCanvas.getPointer(o.e);
+					var points = [ pointer.x, pointer.y, pointer.x, pointer.y ];
+					line = new fabric.Line(points, {
+						strokeWidth: 5,
+						fill: 'black',
+						stroke: 'black',
+						originX: 'center',
+						originY: 'center',
+					});
+					lastCanvas.add(line);
+				});
+
+				lastCanvas.on('mouse:move', function(o){
+					if (!isDown) return;
+					var pointer = lastCanvas.getPointer(o.e);
+					line.set({ x2: pointer.x, y2: pointer.y });
+					lastCanvas.renderAll();
+					line.selectable = true;
+				});
+
+				lastCanvas.on('mouse:up', function(o){
+					isDown = false;
+					isDrawing = false;
+					//lastCanvas.remove(lastCanvas.item(lastCanvas.getObjects().length - 1));
+				});
+			}, 'keydown');
+
+			Mousetrap.bind('shift', function () {
+				if (!isDrawing) {
+					c = lastCanvas;
+					c.off('mouse:down');
+					c.off('mouse:move');
+					c.off('mouse:up');
+
+					c.isDrawingMode = false;
+					c.selection = true;
+					c.forEachObject(function(o) {
+						o.selectable = true;
+					});
+
+					console.log("ran unbind");
+				}
+			}, 'keyup');
 
 			// enables the "submit" button in the quit survey once a reason is selected
 			$('input:radio').change(
