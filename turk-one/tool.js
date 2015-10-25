@@ -47,8 +47,7 @@ if (Meteor.isClient) {
 			Router.go("/");
 		},
 		"click #finishConfirm": function () {
-
-
+			Router.go("/review/" + Session.get("ticketId"));
 			// save each sketch
 			// move the user to the review phase where she will be able to mark each one as selected or not
 		}
@@ -139,13 +138,32 @@ if (Meteor.isClient) {
 
 			// text button clicked
 			$("#buttonText").click(function() {
-				var input = prompt("Please enter the text you would like to add to your canvas");
-				if (input != null) {
-					var textElement = new fabric.Text(input, { left: 100, top: 100 });
-					lastCanvas.isDrawingMode = false;
-					lastCanvas.add(textElement);
-				}
+				setSelectedTool(this);
 				disableEraser();
+				$.each(canvasArray, function() {
+					this.isDrawingMode = false;
+				});
+
+				lastCanvas.on("mouse:down", function (e) {
+					var pointer = canvas.getPointer(event.e);
+
+					lastCanvas.add(new fabric.IText('Enter Text', {
+						fontFamily: 'times black',
+						left: pointer.x,
+						top: pointer.y,
+						fontSize: 16
+					}));
+
+					var textObject = lastCanvas.item(lastCanvas.getObjects().length - 1);
+					lastCanvas.setActiveObject(textObject);
+					textObject.enterEditing()
+					textObject.selectAll()
+					$.each(canvasArray, function() {
+						this.off("mouse:down");
+					});
+
+					setSelectedTool("#buttonMove");
+				});
 			});
 
 			// UNDO AND REDO

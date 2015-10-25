@@ -33,8 +33,12 @@ Router.route('/tool/:_id', function () {
 	})
 });
 
-Router.route('/review', function () {
-	this.render('Review');
+Router.route('/review/:_id', function () {
+	this.render('Review', {
+		data: function () {
+			return WorkerTickets.findOne(this.params._id);
+		}
+	})
 });
 
 Router.route('/exit', function () {
