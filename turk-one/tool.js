@@ -71,7 +71,10 @@ if (Meteor.isClient) {
 			lastCanvas = null;
 
 			// used for maintaing sanity while drawing straight or free-form lines
-			isDrawing = false
+			isDrawing = false;
+
+			// state object for undo/redo stacks
+			canvasHistory = {};
 
 			// Set Black as default color in toolbar (set for each canvas at initialization in tool.html
 			Session.set("currentColor", "#414141");
@@ -285,7 +288,6 @@ if (Meteor.isClient) {
 
 				$.each($(".canvasContainer"), function() {
 					if (this == focusGuess) {
-						console.log(this);
 						$(this).removeClass("unfocusedCanvas");
 						$(this).addClass("focusedCanvas");
 					} else {
