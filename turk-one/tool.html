@@ -199,14 +199,17 @@
 								var canvasWidthShouldBe = $("#col-sketch").width();
 								$(element).attr({"height":canvasHeightShouldBe, "width":canvasWidthShouldBe});
 
-								// add reference to canvas to global array
+								// initialize Fabric canvas element
 								var canvas = new fabric.Canvas(idForNewCanvas);
 								canvas.CDIndex = {{this}};
-								console.log(canvas.CDIndex);
 
+								// add references to this canvas
 								canvases.push(canvas);
-								canvasHistory[canvas.CDIndex] = {backStates: [], forwardStates: [], recording: false};
-								lastCanvas = canvas; // set this as current canvas
+								canvasHistory[canvas.CDIndex] = {backStates: [], forwardStates: [], recording: true};
+
+								// force focus on the first canvas when all are initialized (this runs every time, but haven't found a
+								// lighter way to do this yet
+								forceFocus(1);
 
 								// set canvas defaults
 								canvas.isDrawingMode = true;
@@ -239,16 +242,20 @@
 										var index = canvas.CDIndex;
 										var back = canvasHistory[index].backStates;
 										var forward = canvasHistory[index].forwardStates;
+										var recording = canvasHistory[index].recording;
 
-										if (back.length == 30) {
-											back.shift();
+										if (recording) {
+
+											if (back.length == 30) {
+												back.shift();
+											}
+
+											if (back.length != 0) {
+												forward = [];
+											}
+
+											back.push(JSON.stringify(canvas));
 										}
-
-										if (back.length != 0) {
-											forward = [];
-										}
-
-										back.push(JSON.stringify(canvas));
 									}
 								})(canvas);
 

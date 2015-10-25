@@ -176,33 +176,37 @@ if (Meteor.isClient) {
 			});
 
 			// UNDO AND REDO
-			canvasStateStack = [];
-			canvasRedoStack = [];
-			recordingStates = true;
 
 			$("#buttonUndo").click(function () {
-				if (canvasStateStack.length > 1) {
-					recordingStates = false;
-					var currentState = canvasStateStack.pop();
-					canvasRedoStack.push(currentState);
 
-					var stateToReturnTo = canvasStateStack[canvasStateStack.length - 1];
-					canvas = stateToReturnTo[0];
-					canvas.loadFromJSON(stateToReturnTo[1]);
-					canvas.renderAll();
-					recordingStates = true;
+				var index = canvasWithFocus.CDIndex;
+				var back = canvasHistory[index].backStates;
+				var forward = canvasHistory[index].forwardStates;
+
+				if (back.length > 1) {
+					canvasHistory[index].recording = false;
+					var fromState = back.pop();
+					forward.push(fromState);
+					var toState = back[back.length - 1];
+					canvasWithFocus.loadFromJSON(toState);
+					canvasWithFocus.renderAll();
+					canvasHistory[index].recording = true;
 				}
 			});
 
 			$("#buttonRedo").click(function () {
-				if (canvasRedoStack.length > 0) {
-					recordingStates = false;
-					var stateToReturnTo = canvasRedoStack.pop();
-					canvasStateStack.push(stateToReturnTo);
-					canvas = stateToReturnTo[0];
-					canvas.loadFromJSON(stateToReturnTo[1]);
-					canvas.renderAll();
-					recordingStates = true;
+				var index = canvasWithFocus.CDIndex;
+				var back = canvasHistory[index].backStates;
+				var forward = canvasHistory[index].forwardStates;
+
+				if (forward.length > 0) {
+					canvasHistory[index].recording = false;
+					var toState = forward.pop();
+					back.push(toState);
+
+					canvasWithFocus.loadFromJSON(toState);
+					canvasWithFocus.renderAll();
+					canvasHistory[index].recording = true;
 				}
 			});
 
@@ -259,8 +263,6 @@ if (Meteor.isClient) {
 					c.forEachObject(function(o) {
 						o.selectable = true;
 					});
-
-					console.log("ran unbind");
 				}
 			}, 'keyup');
 
@@ -312,10 +314,10 @@ if (Meteor.isClient) {
 			$(window).scroll(findFocus);
 
 			// provide method for forcing focus
-			function forceFocus(index, canvasContainer) {
+			forceFocus = function(index) {
 
 				$.each($(".canvasContainer"), function() {
-					if (this == canvasContainer) {
+					if (parseInt($(this).attr("data-cdindex")) == index) {
 						$(this).removeClass("unfocusedCanvas");
 						$(this).addClass("focusedCanvas");
 					} else {
@@ -330,11 +332,11 @@ if (Meteor.isClient) {
 					}
 				});
 
-			}
+			};
 
 			$("#col-sketch").on("mousedown", ".canvasContainer", function () {
-				var index = parseInt($(this).attr("data-CDIndex"));
-				forceFocus(index, this);
+				var index = parseInt($(this).attr("data-cdindex"));
+				forceFocus(index);
 			});
 
 		}
