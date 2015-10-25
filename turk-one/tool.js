@@ -67,6 +67,9 @@ if (Meteor.isClient) {
 			// actions to 'broadcast' the toolbar selects across the canvases
 			canvases = [];
 
+			// focusedCanvas
+			canvasWithFocus = null;
+
 			// last canvas drawn on
 			lastCanvas = null;
 
@@ -276,6 +279,7 @@ if (Meteor.isClient) {
 				var scrollPosition = $(window).scrollTop();
 				var focusDistance = 9999;
 				var focusGuess = null;
+				var focusGuessIndex = 0;
 
 				$.each($(".canvasContainer"), function() {
 					var positionAtTopOfCanvas = $(this).offset().top;
@@ -290,15 +294,48 @@ if (Meteor.isClient) {
 					if (this == focusGuess) {
 						$(this).removeClass("unfocusedCanvas");
 						$(this).addClass("focusedCanvas");
+						focusGuessIndex = parseInt($(this).attr("data-CDIndex"));
 					} else {
 						$(this).removeClass("focusedCanvas");
 						$(this).addClass("unfocusedCanvas");
 					}
 				});
+
+				$.each(canvases, function () {
+					if (this.CDIndex == focusGuessIndex) {
+						canvasWithFocus = this;
+					}
+				});
 			}
 
+			// attach focus guessing to window scrolling
 			$(window).scroll(findFocus);
-			findFocus();
+
+			// provide method for forcing focus
+			function forceFocus(index, canvasContainer) {
+
+				$.each($(".canvasContainer"), function() {
+					if (this == canvasContainer) {
+						$(this).removeClass("unfocusedCanvas");
+						$(this).addClass("focusedCanvas");
+					} else {
+						$(this).removeClass("focusedCanvas");
+						$(this).addClass("unfocusedCanvas");
+					}
+				});
+
+				$.each(canvases, function () {
+					if (this.CDIndex == index) {
+						canvasWithFocus = this;
+					}
+				});
+
+			}
+
+			$("#col-sketch").on("mousedown", ".canvasContainer", function () {
+				var index = parseInt($(this).attr("data-CDIndex"));
+				forceFocus(index, this);
+			});
 
 		}
 	}

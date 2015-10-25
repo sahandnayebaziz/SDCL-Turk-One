@@ -178,7 +178,7 @@
 					</style>
 					<div class="col-lg-10 animated fadeIn" id="col-sketch">
 						{{#each numberOfCanvasesToShow}}
-							<div id="canvasContainer-{{this}}" class="canvasContainer">
+							<div class="canvasContainer" data-CDIndex="{{this}}">
 								<canvas class="canvas-sketch" id="canvas-{{this}}"></canvas>
 								<div class="canvas-forms">
 									<div class="row">
