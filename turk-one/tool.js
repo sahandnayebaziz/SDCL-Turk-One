@@ -183,12 +183,11 @@ if (Meteor.isClient) {
 
 				var index = canvasWithFocus.CDIndex;
 				var back = canvasHistory[index].backStates;
-				var forward = canvasHistory[index].forwardStates;
 
 				if (back.length > 1) {
 					canvasHistory[index].recording = false;
 					var fromState = back.pop();
-					forward.push(fromState);
+					canvasHistory[index].forwardStates.push(fromState);
 					var toState = back[back.length - 1];
 					canvasWithFocus.loadFromJSON(toState);
 					canvasWithFocus.renderAll();
@@ -198,13 +197,12 @@ if (Meteor.isClient) {
 
 			$("#buttonRedo").click(function () {
 				var index = canvasWithFocus.CDIndex;
-				var back = canvasHistory[index].backStates;
 				var forward = canvasHistory[index].forwardStates;
 
 				if (forward.length > 0) {
 					canvasHistory[index].recording = false;
 					var toState = forward.pop();
-					back.push(toState);
+					canvasHistory[index].backStates.push(toState);
 
 					canvasWithFocus.loadFromJSON(toState);
 					canvasWithFocus.renderAll();

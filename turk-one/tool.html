@@ -26,8 +26,8 @@
 							<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText">
 							<span class="buttonToolbar deselectedTool" id="buttonMove"></span>
 							<span class="buttonToolbar deselectedTool" id="buttonEraser"></span>
-							<img src="/un-do.png" class="buttonToolbar" id="buttonUndo">
-							<img src="/re-do.png" class="buttonToolbar" id="buttonRedo">
+							<img src="/un-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonUndo">
+							<img src="/re-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonRedo">
 						</div>
 					</div>
 
@@ -109,8 +109,10 @@
 						}
 
 
-
-
+						.buttonHistory {
+							padding-bottom: 3px;
+							padding-top: 3px;
+						}
 
 						.deselectedTool {
 							opacity: 0.4;
@@ -240,21 +242,15 @@
 								saveSelf = (function (canvas) {
 									return function() {
 										var index = canvas.CDIndex;
-										var back = canvasHistory[index].backStates;
-										var forward = canvasHistory[index].forwardStates;
 										var recording = canvasHistory[index].recording;
 
 										if (recording) {
-
-											if (back.length == 30) {
-												back.shift();
+											if (canvasHistory[index].backStates.length == 50) {
+												canvasHistory[index].backStates.shift();
 											}
 
-											if (back.length != 0) {
-												forward = [];
-											}
-
-											back.push(JSON.stringify(canvas));
+											canvasHistory[index].forwardStates = []
+											canvasHistory[index].backStates.push(JSON.stringify(canvas));
 										}
 									}
 								})(canvas);
