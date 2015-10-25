@@ -150,13 +150,12 @@ if (Meteor.isClient) {
 			$("#buttonText").click(function() {
 
 				setSelectedTool(this);
-
 				$.each(canvases, function() {
 					this.isDrawingMode = false;
 				});
 
 				canvasWithFocus.on("mouse:down", function (e) {
-					var pointer = canvas.getPointer(event.e);
+					var pointer = canvasWithFocus.getPointer(event.e);
 
 					canvasWithFocus.add(new fabric.IText('Enter Text', {
 						fontFamily: 'times black',
@@ -167,8 +166,10 @@ if (Meteor.isClient) {
 
 					var textObject = canvasWithFocus.item(canvasWithFocus.getObjects().length - 1);
 					canvasWithFocus.setActiveObject(textObject);
-					textObject.enterEditing()
-					textObject.selectAll()
+
+					//textObject.enterEditing(); this line was temporarily removed because it was causing the window to scroll
+
+					textObject.selectAll();
 					$.each(canvases, function() {
 						this.off("mouse:down");
 					});
@@ -178,7 +179,6 @@ if (Meteor.isClient) {
 			});
 
 			// UNDO AND REDO
-
 			$("#buttonUndo").click(function () {
 
 				var index = canvasWithFocus.CDIndex;
