@@ -223,9 +223,8 @@
 								createPersistSelf = (function (canvas) {
 									return function() {
 										if (Session.get("insertedSolutionFor" + canvas.CDIndex)) {
-											console.log("know I made something alreadey for " + canvas.CDIndex);
+
 										} else {
-											console.log("persisting canvas " + canvas.CDIndex);
 											Solutions.insert({
 												workerId: Session.get("ticket"),
 												state: JSON.stringify(canvas),
@@ -233,7 +232,6 @@
 												dateUpdated: new Date(),
 												canvasNumber: canvas.CDIndex
 											}, function(error, id) {
-												console.log("got an id of " + id + "for canvas " + canvas.CDIndex);
 												Session.setPersistent("objectId" + canvas.CDIndex, id);
 												Session.setPersistent("insertedSolutionFor" + canvas.CDIndex, "true");
 											});
@@ -242,25 +240,7 @@
 								})(canvas);
 								createPersistSelf();
 
-
-
-
-//								function saveLatestWork(number, canvas, name, explain) {
-//									var stateOfCanvas = JSON.stringify(canvas);
-//
-//									Solutions.upsert(Session.get("ticketId") + number, {
-//										workerId: Session.get("ticketId"),
-//										state: stateOfCanvas,
-//										dateUpdated: new Date(),
-//										name: name.val(),
-//										explain: explain.val()
-//									});
-//
-//									lastCanvas = canvas;
-//								}
-
-								// method definitions
-								saveSelf = (function (canvas) {
+								saveSelf = (function (canvas, name, explain) {
 									return function() {
 										var index = canvas.CDIndex;
 										var recording = canvasHistory[index].recording;
@@ -274,18 +254,19 @@
 											canvasHistory[index].backStates.push(JSON.stringify(canvas));
 										}
 
-										Solutions.update(Session.get("objectId" + canvas.CDIndex), {
-											$set: {
-												state: JSON.stringify(canvas),
-												dateUpdated: new Date()
-											}
-										}, function(error, number) {
-											if (!error) {
-												console.log("updated for canvas " + canvas.CDIndex);
-											}
-										});
+//										Solutions.update(Session.get("objectId" + canvas.CDIndex), {
+//											$set: {
+//												state: JSON.stringify(canvas),
+//												dateUpdated: new Date(),
+//												name: name.val(),
+//												explain: explain.val()
+//											}
+//										}, function(error, number) {
+//											if (!error) {
+//											}
+//										});
 									}
-								})(canvas);
+								})(canvas, nameForThisCanvas, explainForThisCanvas);
 
 								// event hooks
 								canvas.on('object:added', saveSelf);
@@ -297,6 +278,11 @@
 
 							</script>
 						{{/each}}
+						{{#if existingSolution 1}}
+							<script>
+								console.log({{this.state}});
+							</script>
+						{{/if}}
 					</div>
 				</div>
 				<!--{{#if shouldShowAddCanvasButton}}-->
@@ -447,7 +433,8 @@
 				MTurk CrowdDesign HIT<br><br>
 			</p>
 			<p><a data-toggle="modal" data-target="#finishModal" class="btn btn-success btn-continue">REVIEW AND FINISH</a></p>
-			<h4>{{name}}<br></h4>
+			<h4 data-toggle="tooltip" data-placement="top" title="Tooltip on top">{{name}}<br></h4>
+			<a href="#" data-toggle="tooltip" title="Some tooltip text!">Hover over me</a>
 			<p>{{description}}</p>
 			<p><span class="text-muted"><strong>REQUIREMENTS</strong></span><br>
 				{{requirements}}</p>

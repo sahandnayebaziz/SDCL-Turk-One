@@ -24,8 +24,9 @@ if (Meteor.isClient) {
 				return true;
 			}
 		},
-		existingSolutions: function () {
-			return WorkerTickets.find({workerId: this.workerId});
+		existingSolution: function (canvasNumber) {
+			console.log("trying to find existing solution");
+			return Solutions.findOne({workerId: Session.get("ticket"), canvasNumber: canvasNumber});
 		}
 	});
 
@@ -342,6 +343,7 @@ if (Meteor.isClient) {
 				forceFocus(index);
 			});
 
+			$('[data-toggle="tooltip"]').tooltip("show");
 		}
 	}
 }
