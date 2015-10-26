@@ -22,6 +22,7 @@ if (Meteor.isClient) {
 		if(!this._rendered) {
 			this._rendered = true;
 
+			workerId = this.data.workerId;
 			//console.log(this.data);
 			this.data["visited"] = new Date();
 			WorkerTickets.insert({
@@ -33,6 +34,7 @@ if (Meteor.isClient) {
 			}, function(error, id) {
 				if (!error) {
 					console.log("created a worker ticket successfully with id: " + id);
+					Session.setPersistent("ticket", workerId);
 				}
 			})
 		}

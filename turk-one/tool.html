@@ -3,13 +3,6 @@
 	<div class="container-fluid container-tool">
 		<div class="row">
 			<div class="col-md-12 col-lg-4 bottom-buffer-50 md-fixed">
-				{{#with workerTicket}}
-					<script>
-						console.log({{_id}});
-						Session.set("ticketId", {{_id}});
-					</script>
-				{{/with}}
-
 				{{#with decisionPoint}}
 					{{>decisionPointInformationPanel}}
 				{{/with}}
@@ -205,7 +198,7 @@
 
 								// initialize Fabric canvas element
 								var canvas = new fabric.Canvas(idForNewCanvas);
-								canvas.CDIndex = {{this}};
+								canvas.CDIndex = {{this}};git
 
 								// add references to this canvas
 								canvases.push(canvas);
@@ -227,22 +220,28 @@
 
 								// create initial save to mongoDB and stash the objectID for each canvas
 								// so we can make updates in the future
-								persistSelf = (function (canvas) {
+								createPersistSelf = (function (canvas) {
 									return function() {
-										console.log("persisting canvas " + canvas.CDIndex);
-										Solutions.insert({
-											workerId: Session.get("ticketId"),
-											state: JSON.stringify(canvas),
-											createdAt: new Date(),
-											dateUpdated: new Date(),
-											canvasNumber: canvas.CDIndex
-										}, function(error, id) {
-											console.log("got an id of " + id + "for canvas " + canvas.CDIndex);
-											Session.set("objectId" + canvas.CDIndex, id);
-										});
+										if (Session.get("insertedSolutionFor" + canvas.CDIndex)) {
+											console.log("know I made something alreadey for " + canvas.CDIndex);
+										} else {
+											console.log("persisting canvas " + canvas.CDIndex);
+											Solutions.insert({
+												workerId: Session.get("ticket"),
+												state: JSON.stringify(canvas),
+												createdAt: new Date(),
+												dateUpdated: new Date(),
+												canvasNumber: canvas.CDIndex
+											}, function(error, id) {
+												console.log("got an id of " + id + "for canvas " + canvas.CDIndex);
+												Session.setPersistent("objectId" + canvas.CDIndex, id);
+												Session.setPersistent("insertedSolutionFor" + canvas.CDIndex, "true");
+											});
+										}
 									}
 								})(canvas);
-								persistSelf();
+								createPersistSelf();
+
 
 
 
