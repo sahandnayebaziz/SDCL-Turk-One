@@ -67,6 +67,9 @@ if (Meteor.isClient) {
 				description: form.description.value,
 				requirements: form.requirements.value
 			});
+		},
+		"click .deleteSolution": function () {
+			Solutions.remove(this._id);
 		}
 	});
 

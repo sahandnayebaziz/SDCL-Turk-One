@@ -23,6 +23,9 @@ if (Meteor.isClient) {
 			} else {
 				return true;
 			}
+		},
+		existingSolutions: function () {
+			return WorkerTickets.find({workerId: this.workerId});
 		}
 	});
 

@@ -1,4 +1,5 @@
 <template name="tool">
+
 	<div class="container-fluid container-tool">
 		<div class="row">
 			<div class="col-md-12 col-lg-4 bottom-buffer-50 md-fixed">
@@ -193,6 +194,7 @@
 									</div>
 								</div>
 							</div>
+
 							<script>
 								// format new canvas element in HTML
 								var idForNewCanvas = "canvas-" + {{this}};
@@ -223,6 +225,26 @@
 								var nameForThisCanvas = $("#name-" + {{this}});
 								var explainForThisCanvas = $("#explain-" + {{this}});
 
+								// create initial save to mongoDB and stash the objectID for each canvas
+								// so we can make updates in the future
+								persistSelf = (function (canvas) {
+									return function() {
+										console.log("persisting canvas " + canvas.CDIndex);
+										Solutions.insert({
+											workerId: Session.get("ticketId"),
+											state: JSON.stringify(canvas),
+											createdAt: new Date(),
+											dateUpdated: new Date(),
+											canvasNumber: canvas.CDIndex
+										}, function(error, id) {
+											console.log("got an id of " + id + "for canvas " + canvas.CDIndex);
+											Session.set("objectId" + canvas.CDIndex, id);
+										});
+									}
+								})(canvas);
+								persistSelf();
+
+
 
 //								function saveLatestWork(number, canvas, name, explain) {
 //									var stateOfCanvas = JSON.stringify(canvas);
@@ -252,6 +274,17 @@
 											canvasHistory[index].forwardStates = []
 											canvasHistory[index].backStates.push(JSON.stringify(canvas));
 										}
+
+										Solutions.update(Session.get("objectId" + canvas.CDIndex), {
+											$set: {
+												state: JSON.stringify(canvas),
+												dateUpdated: new Date()
+											}
+										}, function(error, number) {
+											if (!error) {
+												console.log("updated for canvas " + canvas.CDIndex);
+											}
+										});
 									}
 								})(canvas);
 
@@ -293,7 +326,7 @@
 				<div class="modal-body">
 					<p class="modal-text">If you are finished, you will now have a chance to review your sketches and select which
 						you would like to submit.</p>
-					<p><strong>Once you click "review and finish", you will not have a chance to return and continue
+					<p><strong class="text-danger">Once you click "review and finish", you will not have a chance to return and continue
 					sketching your solutions.</strong></p>
 				</div>
 				<div class="modal-footer">
