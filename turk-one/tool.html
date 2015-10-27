@@ -10,7 +10,7 @@
 			<div class="col-md-12 col-lg-8 col-lg-offset-4 bottom-buffer-100">
 				<div class="row">
 					<div class="col-lg-1 col-md-12">
-						<div id="toolbarContainer" class="md-fixed">
+						<div id="toolbarContainer" class="md-fixed" data-placement="top" href="#" data-trigger="manual" data-toggle="tooltip" title="Sketch toolbar">
 							<span class="buttonToolbar buttonColor" id="buttonBlack" data-color="#414141"></span>
 							<!--<span class="buttonColor" id="buttonWhite" data-color="#FFFFFF"></span>-->
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonBlue" data-color="#80D4FC"></span>
@@ -462,12 +462,11 @@
 								<div class="canvas-forms">
 									<div class="row">
 										<div class="col-md-12"><input id="name-{{canvasNumber}}" type="text" placeholder="Name this solution" class="form-control form-transparent form-name"
-                                                                      data-placement="left" href="#" data-trigger="manual" data-toggle="tooltip" title="Name your solution here"></div>
+                                                                      data-placement="top" href="#" data-trigger="manual" data-toggle="tooltip" title="Explain and name your solution here "></div>
 									</div>
 									<div class="row">
 										<div class="col-md-12">
-											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution" class="form-transparent form-control form-description"
-                                                      data-placement="left" href="#" data-trigger="manual" data-toggle="tooltip" title="Explain your solution here"></textarea>
+											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution" class="form-transparent form-control form-description"></textarea>
 										</div>
 									</div>
 								</div>
@@ -739,12 +738,12 @@
                 </p>
                 <h4 href="#" data-trigger="manual" data-toggle="tooltip" title="This is the decision point you have to design">{{name}}<br></h4>
                 <p>{{description}}</p>
-                <p><span class="text-muted"><strong data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="These are the requirements for your solutions">REQUIREMENTS</strong></span><br>
+                <p><span class="text-muted"><strong data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="These are the requirements for your designs">REQUIREMENTS</strong></span><br>
                     {{requirements}}</p>
             </div>
             <div class="row">
                 <!--modal for review and finish -->
-                <div class="pull-left top-buffer-50" data-placement="bottom" href="#" data-trigger="manual" data-toggle="tooltip" title="When you have designed all your solutions click here to review and submit them">
+                <div class="pull-left top-buffer-50" data-placement="bottom" href="#" data-trigger="manual" data-toggle="tooltip" title="When you are finished with designing your solutions click here submit them">
                     <a data-toggle="modal" data-target="#finishModal" class="btn btn-success btn-continue">REVIEW AND FINISH</a>
                 </div>
 
@@ -753,8 +752,8 @@
                     <button class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">QUIT</button>
                 </div>
 
-                <div class="col-xs-3 col-centered top-buffer-50" data-placement="top" href="#" data-trigger="manual" data-toggle="tooltip" title="Toggle tips On/Off">
-                <button class="btn tooltips-toggle" id="tips-toggle">TOGGLE TIPS</button>
+                <div class="col-xs-3 col-centered top-buffer-50">
+                <button class="btn tooltips-toggle ban-continue" id="tips-toggle" title="toggle tips on/off">TIPS ON/OFF</button>
                 </div>
             </div>
 		</div>
@@ -763,13 +762,27 @@
     <script>
         $("#tips-toggle").click(function() {
             $('[data-toggle="tooltip"]').tooltip('toggle');
-            console.log("pressed the motha fing button bitch!")
+            console.log("pressed the fucking toggle button bitch!");
+
+            $("#canvas-2").tooltip('hide');
+            $("#canvas-3").tooltip('hide');
+            $("#canvas-4").tooltip('hide');
+            $("#canvas-5").tooltip('hide');
+            $("#name-2").tooltip('hide');
+            $("#name-3").tooltip('hide');
+            $("#name-4").tooltip('hide');
+            $("#name-5").tooltip('hide');
+
         });
     </script>
 
     <style>
+
         .tooltip-inner {
-            max-width: 300px;
+            border: solid 1px #000000;
+            background-color: #ededed;
+            color: #000000;
+            max-width: 310px;
             /* If max-width does not work, try using width instead */
             /*width: 350px;*/
         }
