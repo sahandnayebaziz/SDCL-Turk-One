@@ -14,14 +14,14 @@
 							<span class="buttonToolbar buttonColor" id="buttonBlack" data-color="#414141"></span>
 							<!--<span class="buttonColor" id="buttonWhite" data-color="#FFFFFF"></span>-->
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonBlue" data-color="#80D4FC"></span>
-							<span class="buttonToolbar deselectedTool buttonColor" id="buttonGreen" data-color="#A1F5AA"></span>
+							<span class="buttonToolbar deselectedTool buttonColor" id="buttonGreen" data-color="#A1F5AA" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Select the colour of your brush"></span>
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonRed" data-color="#F78479"></span>
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
-							<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText">
-							<span class="buttonToolbar deselectedTool" id="buttonMove"></span>
-							<span class="buttonToolbar deselectedTool" id="buttonEraser"></span>
-							<img src="/un-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonUndo">
-							<img src="/re-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonRedo">
+							<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Add text to your sketch">
+							<span class="buttonToolbar deselectedTool" id="buttonMove" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Sketch object selector and mover"></span>
+							<span class="buttonToolbar deselectedTool" id="buttonEraser" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Eraser"></span>
+							<img src="/un-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonUndo" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Undo">
+							<img src="/re-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonRedo" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Redo">
 						</div>
 					</div>
 
@@ -453,21 +453,21 @@
 							forceFocus(index);
 						});
 
-						$('[data-toggle="tooltip"]').tooltip("show");
-
 					</script>
 
 					<div class="col-lg-10 animated fadeIn" id="col-sketch">
 						{{#each solutions}}
 							<div class="canvasContainer" data-CDIndex="{{canvasNumber}}">
-								<canvas class="canvas-sketch" id="canvas-{{canvasNumber}}"></canvas>
+								<canvas class="canvas-sketch" id="canvas-{{canvasNumber}}" data-placement="top" href="#" data-trigger="manual" data-toggle="tooltip" title="This is one of your five sketch canvases to use for drawing out your solutions"></canvas>
 								<div class="canvas-forms">
 									<div class="row">
-										<div class="col-md-12"><input id="name-{{canvasNumber}}" type="text" placeholder="Name this solution" class="form-control form-transparent form-name"></div>
+										<div class="col-md-12"><input id="name-{{canvasNumber}}" type="text" placeholder="Name this solution" class="form-control form-transparent form-name"
+                                                                      data-placement="left" href="#" data-trigger="manual" data-toggle="tooltip" title="Name your solution here"></div>
 									</div>
 									<div class="row">
 										<div class="col-md-12">
-											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution" class="form-transparent form-control form-description"></textarea>
+											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution" class="form-transparent form-control form-description"
+                                                      data-placement="left" href="#" data-trigger="manual" data-toggle="tooltip" title="Explain your solution here"></textarea>
 										</div>
 									</div>
 								</div>
@@ -733,19 +733,46 @@
 <template name="decisionPointInformationPanel">
 	<div class="row">
 		<div class="col-md-12 col-lg-10 col-lg-offset-1">
-			<p class="lead">
-				MTurk CrowdDesign HIT<br><br>
-			</p>
-			<p><a data-toggle="modal" data-target="#finishModal" class="btn btn-success btn-continue">REVIEW AND FINISH</a></p>
-			<h4 data-toggle="tooltip" data-placement="top" title="Tooltip on top">{{name}}<br></h4>
-			<a href="#" data-toggle="tooltip" title="Some tooltip text!">Hover over me</a>
-			<p>{{description}}</p>
-			<p><span class="text-muted"><strong>REQUIREMENTS</strong></span><br>
-				{{requirements}}</p>
+            <div class="pull-left row">
+                <p class="lead">
+                    MTurk CrowdDesign HIT<br><br>
+                </p>
+                <h4 href="#" data-trigger="manual" data-toggle="tooltip" title="This is the decision point you have to design">{{name}}<br></h4>
+                <p>{{description}}</p>
+                <p><span class="text-muted"><strong data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="These are the requirements for your solutions">REQUIREMENTS</strong></span><br>
+                    {{requirements}}</p>
+            </div>
+            <div class="row">
+                <!--modal for review and finish -->
+                <div class="pull-left top-buffer-50" data-placement="bottom" href="#" data-trigger="manual" data-toggle="tooltip" title="When you have designed all your solutions click here to review and submit them">
+                    <a data-toggle="modal" data-target="#finishModal" class="btn btn-success btn-continue">REVIEW AND FINISH</a>
+                </div>
 
-			<!--modal for this button placed below-->
-			<button class="btn btn-danger btn-continue top-buffer-50" data-toggle="modal" data-target="#quitModal">QUIT</button>
+                <!--modal for this button placed below-->
+                <div class="pull-right top-buffer-50" data-placement="bottom" href="#" data-trigger="manual" data-toggle="tooltip" title="Please click here if you want to quit">
+                    <button class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">QUIT</button>
+                </div>
 
+                <div class="col-xs-3 col-centered top-buffer-50" data-placement="top" href="#" data-trigger="manual" data-toggle="tooltip" title="Toggle tips On/Off">
+                <button class="btn tooltips-toggle" id="tips-toggle">TOGGLE TIPS</button>
+                </div>
+            </div>
 		</div>
 	</div>
+
+    <script>
+        $("#tips-toggle").click(function() {
+            $('[data-toggle="tooltip"]').tooltip('toggle');
+            console.log("pressed the motha fing button bitch!")
+        });
+    </script>
+
+    <style>
+        .tooltip-inner {
+            max-width: 300px;
+            /* If max-width does not work, try using width instead */
+            /*width: 350px;*/
+        }
+    </style>
+
 </template>
