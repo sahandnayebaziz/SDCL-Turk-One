@@ -18,7 +18,7 @@
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonRed" data-color="#F78479"></span>
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
 							<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Add text to your sketch">
-							<span class="buttonToolbar deselectedTool" id="buttonMove" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Sketch object selector and mover"></span>
+							<span class="buttonToolbar deselectedTool" id="buttonMove" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="You can move, resize or rotate every object"></span>
 							<span class="buttonToolbar deselectedTool" id="buttonEraser" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Eraser"></span>
 							<img src="/un-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonUndo" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Undo">
 							<img src="/re-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonRedo" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Redo">
@@ -281,7 +281,7 @@
 								var textObject = canvasWithFocus.item(canvasWithFocus.getObjects().length - 1);
 								canvasWithFocus.setActiveObject(textObject);
 
-								//textObject.enterEditing(); this line was temporarily removed because it was causing the window to scroll
+								//textObject.enterEditing(); causing the window to scroll is sortof a bug of fabricjs
 
 								textObject.selectAll();
 								$.each(canvases, function() {
@@ -466,13 +466,22 @@
 									</div>
 									<div class="row">
 										<div class="col-md-12">
-											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution" class="form-transparent form-control form-description"></textarea>
+											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution" class="explain form-transparent form-control form-description"></textarea>
 										</div>
 									</div>
 								</div>
 							</div>
 
 							<script>
+
+                                $("#canvas-2").attr({"title": "This is another sketch canvas where you can design an alternative solution, you can make up to 5 alternative solutions"});
+                                $("#name-2").attr({"title": "This is where you explain and name the alternative solution"});
+
+                                // autosize of textarea's for the explaination fields
+                                $(function(){
+                                    $(".explain").autosize()
+                                });
+
 								console.log("throwing down");
 								// format new canvas element in HTML
 								var idForNewCanvas = "canvas-" + {{canvasNumber}};
@@ -760,15 +769,17 @@
 	</div>
 
     <script>
+        $(function(){
+            $('textarea').autosize()
+        });
+
         $("#tips-toggle").click(function() {
             $('[data-toggle="tooltip"]').tooltip('toggle');
             console.log("pressed the fucking toggle button bitch!");
 
-            $("#canvas-2").tooltip('hide');
             $("#canvas-3").tooltip('hide');
             $("#canvas-4").tooltip('hide');
             $("#canvas-5").tooltip('hide');
-            $("#name-2").tooltip('hide');
             $("#name-3").tooltip('hide');
             $("#name-4").tooltip('hide');
             $("#name-5").tooltip('hide');
