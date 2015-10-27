@@ -14,7 +14,7 @@ if (Meteor.isClient) {
 
 	Template.home.events({
 		"click .btn-continue": function() {
-			Router.go("/help/" + this.workerId);
+			Router.go("/help/" + Session.get("ticket"));
 		}
 	});
 
@@ -25,18 +25,22 @@ if (Meteor.isClient) {
 			workerId = this.data.workerId;
 			//console.log(this.data);
 			this.data["visited"] = new Date();
-			WorkerTickets.insert({
-				_id: this.data.workerId,
-				workerId: this.data.workerId,
-				sessionId: this.data.sessionId,
-				decisionPointId: this.data.decisionPointId,
-				visited: this.data.visited
-			}, function(error, id) {
-				if (!error) {
-					console.log("created a worker ticket successfully with id: " + id);
-					Session.setPersistent("ticket", workerId);
-				}
-			})
+			if (Session.get("ticketedFor" + workerId)) {
+				console.log("ticket exists");
+			} else {
+				WorkerTickets.insert({
+					workerId: this.data.workerId,
+					sessionId: this.data.sessionId,
+					decisionPointId: this.data.decisionPointId,
+					visited: this.data.visited
+				}, function(error, id) {
+					if (!error) {
+						console.log("created a worker ticket successfully with id: " + id);
+						Session.setPersistent("ticket", id);
+						Session.setPersistent("ticketedFor" + workerId, "true");
+					}
+				})
+			}
 		}
 	}
 }

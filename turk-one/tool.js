@@ -83,7 +83,7 @@ if (Meteor.isClient) {
 							speed: 500 // unavailable - no need
 						}
 					});
-					Router.go("/exit");
+					Router.go("/exit/" + Session.get("ticket"));
 				}).modal('hide');
 		},
 		"click #finishCancel": function () {

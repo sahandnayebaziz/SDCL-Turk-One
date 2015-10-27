@@ -10,6 +10,24 @@ if (Meteor.isClient) {
 				$("#exitConfirm").removeClass("disabled");
 				$("#exitConfirm").prop("disabled", false);
 			}
+		},
+		"submit #exitForm": function (event) {
+			console.log("submitting form");
+			event.preventDefault();
+
+			var taskDifficulty = $("#exitForm input[name=taskDifficulty]:checked").val();
+			var decisionDifficulty = $("#exitForm input[name=decisionPointDifficulty]:checked").val();
+			var toolDifficulty = $("#exitForm input[name=toolDifficulty]:checked").val();
+			var feedback = $("#feedbackText").val();
+
+			ExitSurveys.insert({
+				workerTicket: Session.get("ticket"),
+				task: taskDifficulty,
+				decision: decisionDifficulty,
+				tool: toolDifficulty
+			}, function() {
+				$('#finalModal').modal("show");
+			});
 		}
 	});
 }

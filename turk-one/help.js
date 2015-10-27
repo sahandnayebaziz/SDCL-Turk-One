@@ -4,7 +4,7 @@
 if (Meteor.isClient) {
 	Template.help.events({
 		'click .btn-continue': function (event, template, doc) {
-			Router.go('/tool/' + template.data._id);
+			Router.go('/tool/' + Session.get("ticket"));
 		}
 	});
 
