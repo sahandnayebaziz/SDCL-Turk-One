@@ -10,18 +10,27 @@
 			<div class="col-md-12 col-lg-8 col-lg-offset-4 bottom-buffer-100">
 				<div class="row">
 					<div class="col-lg-1 col-md-12">
-						<div id="toolbarContainer" class="md-fixed" data-placement="top" href="#" data-trigger="manual" data-toggle="tooltip" title="Sketch toolbar">
+						<div id="toolbarContainer" class="md-fixed" data-placement="top" href="#" data-trigger="manual"
+						     data-toggle="tooltip" title="Sketch toolbar">
 							<span class="buttonToolbar buttonColor" id="buttonBlack" data-color="#414141"></span>
 							<!--<span class="buttonColor" id="buttonWhite" data-color="#FFFFFF"></span>-->
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonBlue" data-color="#80D4FC"></span>
-							<span class="buttonToolbar deselectedTool buttonColor" id="buttonGreen" data-color="#A1F5AA" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Select the colour of your brush"></span>
+							<span class="buttonToolbar deselectedTool buttonColor" id="buttonGreen" data-color="#A1F5AA"
+							      data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip"
+							      title="Select the colour of your brush"></span>
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonRed" data-color="#F78479"></span>
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
-							<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Add text to your sketch">
-							<span class="buttonToolbar deselectedTool" id="buttonMove" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="You can move, resize or rotate every object"></span>
-							<span class="buttonToolbar deselectedTool" id="buttonEraser" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Eraser"></span>
-							<img src="/un-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonUndo" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Undo">
-							<img src="/re-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonRedo" data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Redo">
+							<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText" data-placement="right" href="#"
+							     data-trigger="manual" data-toggle="tooltip" title="Add text to your sketch">
+							<span class="buttonToolbar deselectedTool" id="buttonMove" data-placement="right" href="#"
+							      data-trigger="manual" data-toggle="tooltip"
+							      title="You can move, resize or rotate every object"></span>
+							<span class="buttonToolbar deselectedTool" id="buttonEraser" data-placement="right" href="#"
+							      data-trigger="manual" data-toggle="tooltip" title="Eraser"></span>
+							<img src="/un-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonUndo"
+							     data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Undo">
+							<img src="/re-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonRedo"
+							     data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Redo">
 						</div>
 					</div>
 
@@ -37,7 +46,7 @@
 								height: 46px;
 								padding: 10px 9px 9px 17px;
 								background: #CECECE;
-								box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.24);
+								box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.24);
 								border-radius: 6px;
 								z-index: 2;
 							}
@@ -51,17 +60,17 @@
 								width: 25px;
 							}
 
-						  #buttonText {
-							  margin-left: 24px!IMPORTANT;
-						  }
+							#buttonText {
+								margin-left: 24px !IMPORTANT;
+							}
 
-						  #buttonEraser {
-							  margin-right: 24px!IMPORTANT;
-						  }
+							#buttonEraser {
+								margin-right: 24px !IMPORTANT;
+							}
 
-						  #buttonRedo, #buttonUndo {
-							  margin-top: 5px;
-						  }
+							#buttonRedo, #buttonUndo {
+								margin-top: 5px;
+							}
 						}
 
 						@media screen and (min-width: 62em) {
@@ -69,7 +78,7 @@
 								margin-right: 15px;
 								margin-top: 100px;
 								background: #CECECE;
-								box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.14);
+								box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.14);
 								border-radius: 6px;
 								padding-top: 17px;
 								padding-bottom: 9px;
@@ -102,7 +111,6 @@
 							}
 						}
 
-
 						.buttonHistory {
 							padding-bottom: 3px;
 							padding-top: 3px;
@@ -111,7 +119,7 @@
 						.deselectedTool {
 							opacity: 0.4;
 						}
-						
+
 						.deselectedTool:hover {
 							opacity: 0.8;
 						}
@@ -161,16 +169,16 @@
 							background-image: url("/eraser.png");
 							height: 25px;
 						}
-						
+
 						#buttonText {
 							height: 25px;
 						}
 
 						.selectedTool {
-							opacity: 1!IMPORTANT;
+							opacity: 1 !IMPORTANT;
 						}
-						
-						
+
+
 					</style>
 					<script>
 						// set up for canvases
@@ -210,7 +218,7 @@
 							var colorChosen = this.getAttribute("data-color");
 
 							Session.set("currentColor", colorChosen);
-							$.each(canvases, function() {
+							$.each(canvases, function () {
 								this.freeDrawingBrush.color = colorChosen;
 								this.isDrawingMode = true;
 							});
@@ -225,13 +233,13 @@
 						function disableEraser() {
 							console.log("disabling eraser");
 
-							$.each(canvases, function() {
+							$.each(canvases, function () {
 								this.off("mouse:down");
 							});
 						}
 
 						function enableEraser() {
-							$.each(canvases, function() {
+							$.each(canvases, function () {
 								var canvas = this;
 
 								canvas.isDrawingMode = false;
@@ -252,19 +260,19 @@
 						}
 
 						// toolbar move controls clicked
-						$("#buttonMove").click(function() {
+						$("#buttonMove").click(function () {
 							setSelectedTool(this);
 
-							$.each(canvases, function() {
+							$.each(canvases, function () {
 								this.isDrawingMode = false;
 							})
 						});
 
 						// text button clicked
-						$("#buttonText").click(function() {
+						$("#buttonText").click(function () {
 
 							setSelectedTool(this);
-							$.each(canvases, function() {
+							$.each(canvases, function () {
 								this.isDrawingMode = false;
 							});
 
@@ -284,7 +292,7 @@
 								//textObject.enterEditing(); causing the window to scroll is sortof a bug of fabricjs
 
 								textObject.selectAll();
-								$.each(canvases, function() {
+								$.each(canvases, function () {
 									this.off("mouse:down");
 								});
 
@@ -331,15 +339,15 @@
 
 							canvasWithFocus.isDrawingMode = false;
 							canvasWithFocus.selection = false;
-							canvasWithFocus.forEachObject(function(o) {
+							canvasWithFocus.forEachObject(function (o) {
 								o.selectable = false;
 							});
 
-							canvasWithFocus.on('mouse:down', function(o){
+							canvasWithFocus.on('mouse:down', function (o) {
 								isDown = true;
 								isDrawing = true;
 								var pointer = canvasWithFocus.getPointer(o.e);
-								var points = [ pointer.x, pointer.y, pointer.x, pointer.y ];
+								var points = [pointer.x, pointer.y, pointer.x, pointer.y];
 								line = new fabric.Line(points, {
 									strokeWidth: 5,
 									fill: 'black',
@@ -350,15 +358,15 @@
 								canvasWithFocus.add(line);
 							});
 
-							canvasWithFocus.on('mouse:move', function(o){
+							canvasWithFocus.on('mouse:move', function (o) {
 								if (!isDown) return;
 								var pointer = canvasWithFocus.getPointer(o.e);
-								line.set({ x2: pointer.x, y2: pointer.y });
+								line.set({x2: pointer.x, y2: pointer.y});
 								canvasWithFocus.renderAll();
 								line.selectable = true;
 							});
 
-							canvasWithFocus.on('mouse:up', function(o){
+							canvasWithFocus.on('mouse:up', function (o) {
 								isDown = false;
 								isDrawing = false;
 								//canvasWithFocus.remove(canvasWithFocus.item(canvasWithFocus.getObjects().length - 1));
@@ -374,19 +382,11 @@
 
 								c.isDrawingMode = false;
 								c.selection = true;
-								c.forEachObject(function(o) {
+								c.forEachObject(function (o) {
 									o.selectable = true;
 								});
 							}
 						}, 'keyup');
-
-						// enables the "submit" button in the quit survey once a reason is selected
-						$('input:radio').change(
-							function(){
-								$("#quitSubmit").removeClass("disabled");
-								$("#quitSubmit").prop("disabled",false);
-							}
-						);
 
 
 						// guessing focus
@@ -397,7 +397,7 @@
 							var focusGuess = null;
 							var focusGuessIndex = 0;
 
-							$.each($(".canvasContainer"), function() {
+							$.each($(".canvasContainer"), function () {
 								var positionAtTopOfCanvas = $(this).offset().top;
 								var distanceFromScrollPosition = Math.abs(scrollPosition - positionAtTopOfCanvas);
 								if ((scrollPosition < positionAtTopOfCanvas + 250) && (distanceFromScrollPosition < focusDistance)) {
@@ -406,7 +406,7 @@
 								}
 							});
 
-							$.each($(".canvasContainer"), function() {
+							$.each($(".canvasContainer"), function () {
 								if (this == focusGuess) {
 									$(this).removeClass("unfocusedCanvas");
 									$(this).addClass("focusedCanvas");
@@ -428,9 +428,9 @@
 						$(window).scroll(findFocus);
 
 						// provide method for forcing focus
-						forceFocus = function(index) {
+						forceFocus = function (index) {
 
-							$.each($(".canvasContainer"), function() {
+							$.each($(".canvasContainer"), function () {
 								if (parseInt($(this).attr("data-cdindex")) == index) {
 									$(this).removeClass("unfocusedCanvas");
 									$(this).addClass("focusedCanvas");
@@ -458,15 +458,22 @@
 					<div class="col-lg-10 animated fadeIn" id="col-sketch">
 						{{#each solutions}}
 							<div class="canvasContainer" data-CDIndex="{{canvasNumber}}">
-								<canvas class="canvas-sketch" id="canvas-{{canvasNumber}}" data-placement="top" href="#" data-trigger="manual" data-toggle="tooltip" title="This is one of your five sketch canvases to use for drawing out your solutions"></canvas>
+								<canvas class="canvas-sketch" id="canvas-{{canvasNumber}}" data-placement="top" href="#"
+								        data-trigger="manual" data-toggle="tooltip"
+								        title="This is one of your five sketch canvases to use for drawing out your solutions"></canvas>
 								<div class="canvas-forms">
 									<div class="row">
-										<div class="col-md-12"><input id="name-{{canvasNumber}}" type="text" placeholder="Name this solution" class="form-control form-transparent form-name"
-                                                                      data-placement="top" href="#" data-trigger="manual" data-toggle="tooltip" title="Explain and name your solution here "></div>
+										<div class="col-md-12"><input id="name-{{canvasNumber}}" type="text"
+										                              placeholder="Name this solution"
+										                              class="form-control form-transparent form-name"
+										                              data-placement="top" href="#" data-trigger="manual"
+										                              data-toggle="tooltip" title="Explain and name your solution here ">
+										</div>
 									</div>
 									<div class="row">
 										<div class="col-md-12">
-											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution" class="explain form-transparent form-control form-description"></textarea>
+											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution"
+											          class="explain form-transparent form-control form-description"></textarea>
 										</div>
 									</div>
 								</div>
@@ -474,13 +481,13 @@
 
 							<script>
 
-                                $("#canvas-2").attr({"title": "This is another sketch canvas where you can design an alternative solution, you can make up to 5 alternative solutions"});
-                                $("#name-2").attr({"title": "This is where you explain and name the alternative solution"});
+								$("#canvas-2").attr({"title": "This is another sketch canvas where you can design an alternative solution, you can make up to 5 alternative solutions"});
+								$("#name-2").attr({"title": "This is where you explain and name the alternative solution"});
 
-                                // autosize of textarea's for the explaination fields
-                                $(function(){
-                                    $(".explain").autosize()
-                                });
+								// autosize of textarea's for the explaination fields
+								$(function () {
+									$(".explain").autosize()
+								});
 
 								console.log("throwing down");
 								// format new canvas element in HTML
@@ -488,7 +495,7 @@
 								var element = $("#" + idForNewCanvas);
 								var canvasHeightShouldBe = 500;
 								var canvasWidthShouldBe = $("#col-sketch").width();
-								$(element).attr({"height":canvasHeightShouldBe, "width":canvasWidthShouldBe});
+								$(element).attr({"height": canvasHeightShouldBe, "width": canvasWidthShouldBe});
 
 								// initialize Fabric canvas element
 								var canvas = new fabric.Canvas(idForNewCanvas);
@@ -531,30 +538,8 @@
 								var nameForThisCanvas = $("#name-" + {{canvasNumber}});
 								var explainForThisCanvas = $("#explain-" + {{canvasNumber}});
 
-								// create initial save to mongoDB and stash the objectID for each canvas
-								// so we can make updates in the future
-//								createPersistSelf = (function (canvas) {
-//									return function() {
-//										if (Session.get("insertedSolutionFor" + canvas.CDIndex)) {
-//
-//										} else {
-//											Solutions.insert({
-//												workerId: Session.get("ticket"),
-//												state: JSON.stringify(canvas),
-//												createdAt: new Date(),
-//												dateUpdated: new Date(),
-//												canvasNumber: canvas.CDIndex
-//											}, function(error, id) {
-//												Session.setPersistent("objectId" + canvas.CDIndex, id);
-//												Session.setPersistent("insertedSolutionFor" + canvas.CDIndex, "true");
-//											});
-//										}
-//									}
-//								})(canvas);
-//								createPersistSelf();
-
 								saveSelf = (function (canvas, name, explain) {
-									return function() {
+									return function () {
 										var index = canvas.CDIndex;
 										var recording = canvasHistory[index].recording;
 
@@ -574,7 +559,7 @@
 												name: name.val(),
 												explain: explain.val()
 											}
-										}, function(error, number) {
+										}, function (error, number) {
 											if (!error) {
 											}
 										});
@@ -598,19 +583,20 @@
 					</div>
 				</div>
 				<!--{{#if shouldShowAddCanvasButton}}-->
-					<!--<span class="col-sm-12 text-center animated fadeInUp">-->
-						<!--<button type="button" class="btn btn-primary btn-continue addCanvas top-buffer-25"><span class="small">ADD SOLUTION</span></button>-->
-					<!--</span>-->
+				<!--<span class="col-sm-12 text-center animated fadeInUp">-->
+				<!--<button type="button" class="btn btn-primary btn-continue addCanvas top-buffer-25"><span class="small">ADD SOLUTION</span></button>-->
+				<!--</span>-->
 				<!--{{else}}-->
-					<!--<span class="col-sm-12 text-center animated fadeInUp">-->
-						<!--<button type="button" class="btn btn-primary btn-continue disabled top-buffer-25"><span class="small">MAX 5 solutions added!</span></button>-->
-					<!--</span>-->
+				<!--<span class="col-sm-12 text-center animated fadeInUp">-->
+				<!--<button type="button" class="btn btn-primary btn-continue disabled top-buffer-25"><span class="small">MAX 5 solutions added!</span></button>-->
+				<!--</span>-->
 				<!--{{/if}}-->
 			</div>
 		</div>
 	</div>
 
-	<div class="modal fade" id="finishModal" tabindex="-1" role="dialog" aria-labelledby="Finish confirmation" aria-hidden="true">
+	<div class="modal fade" id="finishModal" tabindex="-1" role="dialog" aria-labelledby="Finish confirmation"
+	     aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -621,18 +607,42 @@
 					<h4 class="modal-title">Are you sure you're ready to finish?</h4>
 				</div>
 				<div class="modal-body">
-					<p class="modal-text">If you are finished, you will now have a chance to review your sketches and select which
+					<p class="modal-text">If you are finished, review your sketches below and select which
 						you would like to submit.</p>
-					<p><strong class="text-danger">Once you click "review and finish", you will not have a chance to return and continue
-					sketching your solutions.</strong></p>
+
+					<p><strong class="text-danger">Once you click "review and finish", you will not have a chance to return and
+						continue
+						sketching your solutions.</strong></p>
+
+					<div class="row">
+						<div class="col-xs-12">
+							<h5 class="bottom-buffer-25">Sketches</h5>
+							{{#if shouldGenerateReviews}}
+								{{#each solutions}}
+									<div class="bottom-buffer-50">
+										<img class="img-responsive img-rounded img-review" src="{{imageForCanvas canvasNumber}}">
+										<div class="checkbox">
+											<label class="text-center">
+												<input type="checkbox" class="reviewCheck" value="" aria-checked="false">
+												Submit this sketch
+											</label>
+										</div>
+									</div>
+								{{/each}}
+							{{/if}}
+						</div>
+					</div>
 				</div>
+
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" onclick="$('#finishModal').modal('hide');" class="btn btn-secondary" data-dismiss="modal" id="finishCancel">Cancel</button>
 					<button type="button" class="btn btn-success" id="finishConfirm">Review and finish</button>
 				</div>
 			</div>
 		</div>
 	</div>
+
+
 	<div class="modal fade" id="quitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -685,11 +695,12 @@
 							<label for="quitText">Do you have any feedback to improve this HIT?</label>
 							<textarea class="form-control" id="quitText" rows="3"></textarea>
 						</fieldset>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-					<button type="submit" class="btn btn-danger disabled" disabled="true" id="quitSubmit">Quit this HIT</button>
-				</div>
-			</form>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+							<button type="submit" class="btn btn-danger disabled" disabled="true" id="quitSubmit">Quit this HIT
+							</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -704,14 +715,14 @@
 			opacity: 0.4;
 			transition: opacity .13s ease-out;
 		}
-		
+
 		.canvasContainer.focusedCanvas {
 			opacity: 1;
 		}
 
 		canvas.canvas-sketch {
 			display: block;
-			box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.04);
+			box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.04);
 			border-radius: 5px;
 		}
 
@@ -735,68 +746,82 @@
 			height: 80px;
 			resize: none;
 		}
+
+		.img-review {
+			display: block;
+			box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.09);
+			border-radius: 5px;
+			margin-bottom: 20px;
+		}
 	</style>
 </template>
 
 <template name="decisionPointInformationPanel">
 	<div class="row">
 		<div class="col-md-12 col-lg-10 col-lg-offset-1">
-            <div class="pull-left row">
-                <p class="lead">
-                    MTurk CrowdDesign HIT<br><br>
-                </p>
-                <h4 href="#" data-trigger="manual" data-toggle="tooltip" title="This is the decision point you have to design">{{name}}<br></h4>
-                <p>{{description}}</p>
-                <p><span class="text-muted"><strong data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="These are the requirements for your designs">REQUIREMENTS</strong></span><br>
-                    {{requirements}}</p>
-            </div>
-            <div class="row">
-                <!--modal for review and finish -->
-                <div class="pull-left top-buffer-50" data-placement="bottom" href="#" data-trigger="manual" data-toggle="tooltip" title="When you are finished with designing your solutions click here submit them">
-                    <a data-toggle="modal" data-target="#finishModal" class="btn btn-success btn-continue">REVIEW AND FINISH</a>
-                </div>
+			<div class="pull-left row">
+				<p class="lead">
+					MTurk CrowdDesign HIT<br><br>
+				</p>
+				<h4 href="#" data-trigger="manual" data-toggle="tooltip"
+				    title="This is the decision point you have to design">{{name}}<br></h4>
 
-                <!--modal for this button placed below-->
-                <div class="pull-right top-buffer-50" data-placement="bottom" href="#" data-trigger="manual" data-toggle="tooltip" title="Please click here if you want to quit">
-                    <button class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">QUIT</button>
-                </div>
+				<p>{{description}}</p>
 
-                <div class="col-xs-3 col-centered top-buffer-50">
-                <button class="btn tooltips-toggle ban-continue" id="tips-toggle" title="toggle tips on/off">TIPS ON/OFF</button>
-                </div>
-            </div>
+				<p><span class="text-muted"><strong data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip"
+				                                    title="These are the requirements for your designs">REQUIREMENTS</strong></span><br>
+					{{requirements}}</p>
+			</div>
+			<div class="row">
+				<!--modal for review and finish -->
+				<div class="pull-left top-buffer-50" data-placement="bottom" href="#" data-trigger="manual"
+				     data-toggle="tooltip" title="When you are finished with designing your solutions click here submit them">
+					<a data-toggle="modal" data-target="#finishModal" id="finishRequest" class="btn btn-success btn-continue">REVIEW AND FINISH</a>
+				</div>
+
+				<!--modal for this button placed below-->
+				<div class="pull-right top-buffer-50" data-placement="bottom" href="#" data-trigger="manual"
+				     data-toggle="tooltip" title="Please click here if you want to quit">
+					<button class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">QUIT</button>
+				</div>
+
+				<div class="col-xs-3 col-centered top-buffer-50">
+					<button class="btn tooltips-toggle ban-continue" id="tips-toggle" title="toggle tips on/off">TIPS ON/OFF
+					</button>
+				</div>
+			</div>
 		</div>
 	</div>
 
-    <script>
-        $(function(){
-            $('textarea').autosize()
-        });
+	<script>
+		$(function () {
+			$('textarea').autosize()
+		});
 
-        $("#tips-toggle").click(function() {
-            $('[data-toggle="tooltip"]').tooltip('toggle');
-            console.log("pressed the fucking toggle button bitch!");
+		$("#tips-toggle").click(function () {
+			$('[data-toggle="tooltip"]').tooltip('toggle');
+			console.log("pressed the fucking toggle button bitch!");
 
-            $("#canvas-3").tooltip('hide');
-            $("#canvas-4").tooltip('hide');
-            $("#canvas-5").tooltip('hide');
-            $("#name-3").tooltip('hide');
-            $("#name-4").tooltip('hide');
-            $("#name-5").tooltip('hide');
+			$("#canvas-3").tooltip('hide');
+			$("#canvas-4").tooltip('hide');
+			$("#canvas-5").tooltip('hide');
+			$("#name-3").tooltip('hide');
+			$("#name-4").tooltip('hide');
+			$("#name-5").tooltip('hide');
 
-        });
-    </script>
+		});
+	</script>
 
-    <style>
+	<style>
 
-        .tooltip-inner {
-            border: solid 1px #000000;
-            background-color: #ededed;
-            color: #000000;
-            max-width: 310px;
-            /* If max-width does not work, try using width instead */
-            /*width: 350px;*/
-        }
-    </style>
+		.tooltip-inner {
+			border: solid 1px #000000;
+			background-color: #ededed;
+			color: #000000;
+			max-width: 310px;
+			/* If max-width does not work, try using width instead */
+			/*width: 350px;*/
+		}
+	</style>
 
 </template>

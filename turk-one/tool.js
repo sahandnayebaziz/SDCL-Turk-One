@@ -26,6 +26,20 @@ if (Meteor.isClient) {
 			} else {
 				return true;
 			}
+		},
+		shouldGenerateReviews: function () {
+			return Session.get("shouldGenerateReviews");
+		},
+		imageForCanvas: function (canvasNumber) {
+			function isCanvasWithIndex(canvas) {
+				return canvas.CDIndex == canvasNumber;
+			}
+
+			var canvasFound = canvases.filter(isCanvasWithIndex);
+			return canvasFound[0].toDataURL({
+				format: 'jpeg',
+				quality: 0.8
+			});
 		}
 	});
 
@@ -33,6 +47,10 @@ if (Meteor.isClient) {
 		"click .addCanvas": function (event) {
 			event.preventDefault();
 			Session.set("numberOfCanvasesToShow", Session.get("numberOfCanvasesToShow") + 1);
+		},
+		"change input[name=quitReason]": function () {
+			$("#quitSubmit").removeClass("disabled");
+			$("#quitSubmit").prop("disabled", false);
 		},
 		"submit #quitForm": function (event) {
 			event.preventDefault();
@@ -45,18 +63,52 @@ if (Meteor.isClient) {
 				feedback: feedback
 			});
 
-			$('#quitModal').modal('hide')
-
-			Router.go("/");
+			$('#quitModal').on('hidden.bs.modal', function () {
+				window.location.href = 'http://www.google.com';
+			}).modal('hide')
 		},
 		"click #finishConfirm": function () {
-			Router.go("/review/" + Session.get("ticketId"));
-			// save each sketch
-			// move the user to the review phase where she will be able to mark each one as selected or not
+			$('#finishModal').on('hidden.bs.modal',
+				function () {
+					var n = noty({
+						text: 'Success! Your work has been submitted.',
+						layout: 'topRight',
+						theme: 'relax', // or 'relax'
+						type: 'success',
+						timeout: 4000,
+						animation: {
+							open: 'animated bounceInRight', // Animate.css class names
+							close: 'animated bounceOutRight', // Animate.css class names
+							easing: 'swing', // unavailable - no need
+							speed: 500 // unavailable - no need
+						}
+					});
+					Router.go("/exit");
+				}).modal('hide');
+		},
+		"click #finishCancel": function () {
+			Session.set("shouldGenerateReviews", true);
+		},
+		"change .reviewCheck": function (event) {
+			Solutions.update(Session.get("objectId" + canvas.CDIndex), {
+				$set: {
+					submitted: event.target.checked
+				}
+			}, function (error, number) {
+				if (!error) {
+					console.log("set to " + event.target.checked);
+				}
+			});
 		}
 	});
 
-	Template.tool.rendered = function() {
+	Template.decisionPointInformationPanel.events({
+		"click #finishRequest": function () {
+			Session.set("shouldGenerateReviews", true);
+		}
+	});
+
+	Template.tool.rendered = function () {
 		if (!this._rendered) {
 			this._rendered = true;
 
@@ -88,4 +140,5 @@ if (Meteor.isClient) {
 			createPersistSelf(5);
 		}
 	}
-};
+}
+;
