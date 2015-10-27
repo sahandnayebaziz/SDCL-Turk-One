@@ -10,7 +10,7 @@ if (Meteor.isClient) {
 			return DecisionPoints.findOne(this.decisionPointId);
 		},
 		solutions: function () {
-			return Solutions.find({workerId: Session.get("ticket")});
+			return Solutions.find({workerId: Session.get("ticket")}, {sort: {canvasNumber: 1}});
 		},
 		numberOfCanvasesToShow: function () {
 			var numberOfIndexesToReturn = Session.get("numberOfCanvasesToShow");
@@ -26,10 +26,6 @@ if (Meteor.isClient) {
 			} else {
 				return true;
 			}
-		},
-		existingSolution: function (canvasNumber) {
-			console.log("trying to find existing solution");
-			return Solutions.findOne({workerId: Session.get("ticket"), canvasNumber: canvasNumber});
 		}
 	});
 
