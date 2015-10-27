@@ -9,6 +9,9 @@ if (Meteor.isClient) {
 		decisionPoint: function () {
 			return DecisionPoints.findOne(this.decisionPointId);
 		},
+		solutions: function () {
+			return Solutions.find({workerId: Session.get("ticket")});
+		},
 		numberOfCanvasesToShow: function () {
 			var numberOfIndexesToReturn = Session.get("numberOfCanvasesToShow");
 			var arrayOfIndexes = [];
@@ -63,6 +66,32 @@ if (Meteor.isClient) {
 
 			// data check
 			console.log(this.data);
+
+			// create persistent objects in database for these sketches
+			function createPersistSelf(canvasNumber) {
+				if (Session.get("insertedSolutionFor" + canvasNumber)) {
+
+				} else {
+					Solutions.insert({
+						workerId: Session.get("ticket"),
+						state: "",
+						createdAt: new Date(),
+						dateUpdated: new Date(),
+						canvasNumber: canvasNumber
+					}, function(error, id) {
+						Session.setPersistent("objectId" + canvasNumber, id);
+						Session.setPersistent("insertedSolutionFor" + canvasNumber, "true");
+						console.log("set persistence for " + canvasNumber);
+					});
+				}
+			}
+
+			createPersistSelf(1);
+			createPersistSelf(2);
+			createPersistSelf(3);
+			createPersistSelf(4);
+			createPersistSelf(5);
+
 
 			// setting the default number of canvases to show
 			Session.set("numberOfCanvasesToShow", 5);

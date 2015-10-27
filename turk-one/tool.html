@@ -173,16 +173,16 @@
 						
 					</style>
 					<div class="col-lg-10 animated fadeIn" id="col-sketch">
-						{{#each numberOfCanvasesToShow}}
-							<div class="canvasContainer" data-CDIndex="{{this}}">
-								<canvas class="canvas-sketch" id="canvas-{{this}}"></canvas>
+						{{#each solutions}}
+							<div class="canvasContainer" data-CDIndex="{{canvasNumber}}">
+								<canvas class="canvas-sketch" id="canvas-{{canvasNumber}}"></canvas>
 								<div class="canvas-forms">
 									<div class="row">
-										<div class="col-md-12"><input id="name-{{this}}" type="text" placeholder="Name this solution" class="form-control form-transparent form-name"></div>
+										<div class="col-md-12"><input id="name-{{canvasNumber}}" type="text" placeholder="Name this solution" class="form-control form-transparent form-name"></div>
 									</div>
 									<div class="row">
 										<div class="col-md-12">
-											<textarea id="explain-{{this}}" placeholder="Explain this solution" class="form-transparent form-control form-description"></textarea>
+											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution" class="form-transparent form-control form-description"></textarea>
 										</div>
 									</div>
 								</div>
@@ -190,7 +190,7 @@
 
 							<script>
 								// format new canvas element in HTML
-								var idForNewCanvas = "canvas-" + {{this}};
+								var idForNewCanvas = "canvas-" + {{canvasNumber}};
 								var element = $("#" + idForNewCanvas);
 								var canvasHeightShouldBe = 500;
 								var canvasWidthShouldBe = $("#col-sketch").width();
@@ -198,47 +198,54 @@
 
 								// initialize Fabric canvas element
 								var canvas = new fabric.Canvas(idForNewCanvas);
-								canvas.CDIndex = {{this}};
+								canvas.CDIndex = {{canvasNumber}};
 
 								// add references to this canvas
 								canvases.push(canvas);
 								canvasHistory[canvas.CDIndex] = {backStates: [], forwardStates: [], recording: true};
 
-								// force focus on the first canvas when all are initialized (this runs every time, but haven't found a
-								// lighter way to do this yet
-								forceFocus(1);
 
 								// set canvas defaults
 								canvas.isDrawingMode = true;
 								canvas.freeDrawingBrush.width = 5;
 								canvas.freeDrawingBrush.color = Session.get("currentColor");
 								canvas.setBackgroundColor("white").renderAll();
+							</script>
+
+							{{#if state}}
+								<script>
+									canvas.loadFromJSON({{state}});
+									canvas.renderAll();
+								</script>
+							{{/if}}
+
+							<script>
 
 								// create connections to name and explain values
-								var nameForThisCanvas = $("#name-" + {{this}});
-								var explainForThisCanvas = $("#explain-" + {{this}});
+								var nameForThisCanvas = $("#name-" + {{canvasNumber}});
+								var explainForThisCanvas = $("#explain-" + {{canvasNumber}});
 
 								// create initial save to mongoDB and stash the objectID for each canvas
 								// so we can make updates in the future
-								createPersistSelf = (function (canvas) {
-									return function() {
-										if (Session.get("insertedSolutionFor" + canvas.CDIndex)) {
-
-										} else {
-											Solutions.insert({
-												workerId: Session.get("ticket"),
-												state: JSON.stringify(canvas),
-												createdAt: new Date(),
-												dateUpdated: new Date(),
-												canvasNumber: canvas.CDIndex
-											}, function(error, id) {
-												Session.setPersistent("objectId" + canvas.CDIndex, id);
-												Session.setPersistent("insertedSolutionFor" + canvas.CDIndex, "true");
-											});
-										}
-									}
-								})(canvas);
-								createPersistSelf();
+//								createPersistSelf = (function (canvas) {
+//									return function() {
+//										if (Session.get("insertedSolutionFor" + canvas.CDIndex)) {
+//
+//										} else {
+//											Solutions.insert({
+//												workerId: Session.get("ticket"),
+//												state: JSON.stringify(canvas),
+//												createdAt: new Date(),
+//												dateUpdated: new Date(),
+//												canvasNumber: canvas.CDIndex
+//											}, function(error, id) {
+//												Session.setPersistent("objectId" + canvas.CDIndex, id);
+//												Session.setPersistent("insertedSolutionFor" + canvas.CDIndex, "true");
+//											});
+//										}
+//									}
+//								})(canvas);
+//								createPersistSelf();
 
 								saveSelf = (function (canvas, name, explain) {
 									return function() {
@@ -250,21 +257,21 @@
 												canvasHistory[index].backStates.shift();
 											}
 
-											canvasHistory[index].forwardStates = []
+											canvasHistory[index].forwardStates = [];
 											canvasHistory[index].backStates.push(JSON.stringify(canvas));
 										}
 
-//										Solutions.update(Session.get("objectId" + canvas.CDIndex), {
-//											$set: {
-//												state: JSON.stringify(canvas),
-//												dateUpdated: new Date(),
-//												name: name.val(),
-//												explain: explain.val()
-//											}
-//										}, function(error, number) {
-//											if (!error) {
-//											}
-//										});
+										Solutions.update(Session.get("objectId" + canvas.CDIndex), {
+											$set: {
+												state: JSON.stringify(canvas),
+												dateUpdated: new Date(),
+												name: name.val(),
+												explain: explain.val()
+											}
+										}, function(error, number) {
+											if (!error) {
+											}
+										});
 									}
 								})(canvas, nameForThisCanvas, explainForThisCanvas);
 
@@ -276,13 +283,12 @@
 								// initial save state
 								saveSelf();
 
+								// force focus on the first canvas when all are initialized (this runs every time, but haven't found a
+								// lighter way to do this yet
+								forceFocus(1);
+
 							</script>
 						{{/each}}
-						{{#if existingSolution 1}}
-							<script>
-								console.log({{this.state}});
-							</script>
-						{{/if}}
 					</div>
 				</div>
 				<!--{{#if shouldShowAddCanvasButton}}-->
