@@ -474,7 +474,8 @@
 									<div class="row">
 										<div class="col-md-12">
 											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution"
-											          class="explain form-transparent form-control form-description" value="{{explain}}"></textarea>
+											          class="explain form-transparent form-control form-description"
+											          value="{{explain}}"></textarea>
 										</div>
 									</div>
 								</div>
@@ -611,26 +612,40 @@
 					<h4 class="modal-title">Are you sure you're ready to finish?</h4>
 				</div>
 				<div class="modal-body">
-					<p class="modal-text">You are about to submit [[number]] sketches. If you are finished, scroll down and confirm. </p>
+					{{#if shouldGenerateReviews}}
+						<p class="modal-text">You are about to submit {{numberComplexEnough}} out of a possible 5 sketches.</p>
 
-					<p><strong class="text-danger">Once you click "confirm", you will not have a chance to return and
-						continue sketching your solutions.</strong></p>
+						<p><strong class="text-danger">Once you click "confirm", you will not have a chance to return and
+							continue sketching your solutions.</strong></p>
 
-					<div class="row">
-						<div class="col-xs-12">
-							<h5 class="bottom-buffer-25">Sketches</h5>
-							{{#if shouldGenerateReviews}}
+						<p>As a reminder, your sketches will be reviewed using the following criteria:</p>
+
+						<p>
+						<ul class="small">
+							<li>It is specified in English</li>
+							<li>It has a proper name and textual explanation</li>
+							<li>It has a sensible accompanying sketch that shows the alternative solution</li>
+							<li>It is relevant to the decision point.</li>
+						</ul>
+						</p>
+
+						<div class="row">
+							<div class="col-xs-12">
+								<h5 class="bottom-buffer-25">Sketches</h5>
 								{{#each solutions}}
 									{{#if canvasIsComplexEnough canvasNumber}}
 										<div class="bottom-buffer-50">
 											<img class="img-responsive img-rounded img-review" src="{{imageForCanvas canvasNumber}}">
-											<p>{{name}}</p>
+
+											<div class="text-center">
+												<p>{{name}}</p>
+											</div>
 										</div>
 									{{/if}}
 								{{/each}}
-							{{/if}}
+							</div>
 						</div>
-					</div>
+					{{/if}}
 				</div>
 
 				<div class="modal-footer">

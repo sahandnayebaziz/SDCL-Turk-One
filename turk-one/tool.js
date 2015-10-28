@@ -48,6 +48,14 @@ if (Meteor.isClient) {
 
 			var canvasFound = canvases.filter(isCanvasWithIndex);
 			return canvasFound[0]._objects.length > 0;
+		},
+		numberComplexEnough: function () {
+			function isCanvasComplex(canvas) {
+				console.log(canvas._objects.length);
+				return canvas._objects.length > 0;
+			}
+
+			return canvases.filter(isCanvasComplex).length;
 		}
 	});
 
@@ -95,7 +103,7 @@ if (Meteor.isClient) {
 				}).modal('hide');
 		},
 		"click #finishCancel": function () {
-			Session.set("shouldGenerateReviews", true);
+			Session.set("shouldGenerateReviews", false);
 		}
 	});
 
