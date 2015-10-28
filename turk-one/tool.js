@@ -121,7 +121,7 @@ if (Meteor.isClient) {
 
 			// create persistent objects in database for these sketches
 			function createPersistSelf(canvasNumber) {
-				if (Session.get("insertedSolutionFor" + canvasNumber)) {
+				if (Session.get("insertedSolutionFor" + Session.get("ticket") + canvasNumber)) { //TODO: make this worker-id dependent
 
 				} else {
 					Solutions.insert({
@@ -131,9 +131,9 @@ if (Meteor.isClient) {
 						dateUpdated: new Date(),
 						canvasNumber: canvasNumber
 					}, function (error, id) {
-						Session.setPersistent("objectId" + canvasNumber, id);
-						Session.setPersistent("insertedSolutionFor" + canvasNumber, "true");
-						console.log("set persistence for " + canvasNumber);
+						Session.setPersistent("objectId" + Session.get("ticket") + canvasNumber, id);
+						Session.setPersistent("insertedSolutionFor" + Session.get("ticket") + canvasNumber, "true");
+						console.log("set persistence for user" + Session.get("ticket") + " canvas: " + canvasNumber);
 					});
 				}
 			}

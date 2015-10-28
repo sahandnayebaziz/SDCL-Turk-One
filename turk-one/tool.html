@@ -463,12 +463,13 @@
 								        title="This is one of your five sketch canvases to use for drawing out your solutions"></canvas>
 								<div class="canvas-forms">
 									<div class="row">
-										<div class="col-md-12"><input id="name-{{canvasNumber}}" type="text"
-										                              placeholder="Name this solution"
-										                              class="form-control form-transparent form-name"
-										                              data-placement="top" href="#" data-trigger="manual"
-										                              data-toggle="tooltip" title="Explain and name your solution here "
-										                              value="{{name}}">
+										<div class="col-md-12">
+											<input id="name-{{canvasNumber}}" type="text"
+											       placeholder="Name this solution"
+											       class="form-control form-transparent form-name"
+											       data-placement="top" href="#" data-trigger="manual"
+											       data-toggle="tooltip" title="Explain and name your solution here "
+											       value="{{name}}">
 										</div>
 									</div>
 									<div class="row">
@@ -554,7 +555,7 @@
 											canvasHistory[index].backStates.push(JSON.stringify(canvas));
 										}
 
-										Solutions.update(Session.get("objectId" + canvas.CDIndex), {
+										Solutions.update(Session.get("objectId" + Session.get("ticket") + canvas.CDIndex), {
 											$set: {
 												state: JSON.stringify(canvas),
 												dateUpdated: new Date(),
@@ -587,15 +588,6 @@
 						{{/each}}
 					</div>
 				</div>
-				<!--{{#if shouldShowAddCanvasButton}}-->
-				<!--<span class="col-sm-12 text-center animated fadeInUp">-->
-				<!--<button type="button" class="btn btn-primary btn-continue addCanvas top-buffer-25"><span class="small">ADD SOLUTION</span></button>-->
-				<!--</span>-->
-				<!--{{else}}-->
-				<!--<span class="col-sm-12 text-center animated fadeInUp">-->
-				<!--<button type="button" class="btn btn-primary btn-continue disabled top-buffer-25"><span class="small">MAX 5 solutions added!</span></button>-->
-				<!--</span>-->
-				<!--{{/if}}-->
 			</div>
 		</div>
 	</div>

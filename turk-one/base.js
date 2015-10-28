@@ -26,7 +26,8 @@ if (Meteor.isClient) {
 			//console.log(this.data);
 			this.data["visited"] = new Date();
 			if (Session.get("ticketedFor" + workerId)) {
-				console.log("ticket exists");
+				Session.setPersistent("ticket", Session.get("ticketedFor" + workerId));
+				console.log("ticket exists and was set");
 			} else {
 				WorkerTickets.insert({
 					workerId: this.data.workerId,
@@ -37,7 +38,7 @@ if (Meteor.isClient) {
 					if (!error) {
 						console.log("created a worker ticket successfully with id: " + id);
 						Session.setPersistent("ticket", id);
-						Session.setPersistent("ticketedFor" + workerId, "true");
+						Session.setPersistent("ticketedFor" + workerId, id);
 					}
 				})
 			}
