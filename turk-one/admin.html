@@ -20,27 +20,7 @@
 				<!-- Tab panes -->
 				<div class="tab-content">
 					<div role="tabpanel" class="tab-pane active" id="workers">
-						<div class="row">
-							<div class="col-sm-12 top-buffer-25">
-								<table class="table table-sm table-bordered table-striped">
-									<thead>
-									<tr>
-										<th>worker</th>
-										<th>session</th>
-										<th># of solutions</th>
-										<th>decision point</th>
-										<th># accepted</th>
-										<th>actions</th>
-									</tr>
-									</thead>
-									<tbody>
-									{{#each workerTickets}}
-										{{> workerTicketRow}}
-									{{/each}}
-									</tbody>
-								</table>
-							</div>
-						</div>
+						{{> adminWorkers}}
 					</div>
 					<div role="tabpanel" class="tab-pane" id="decisionPoints">
 						<div class="row top-buffer-25">
@@ -179,23 +159,6 @@
 			</div>
 		</div>
 	</div>
-</template>
-
-<template name="workerTicketRow">
-	<tr>
-		<td>{{workerId}}</td>
-		<td>{{sessionId}}</td>
-		<td>{{numberOfSolutionsComplexEnough}}</td>
-		<td>{{decisionPointId}}</td>
-		{{#if reviewed}}
-			<td>{{numberOfSolutionsAccepted}}</td>
-		{{else}}
-			<td></td>
-		{{/if}}
-		<td>
-			<button class="btn btn-sm btn-danger delete">delete</button>
-		</td>
-	</tr>
 </template>
 
 <template name="decisionPreview">
