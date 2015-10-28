@@ -15,13 +15,16 @@ caching-html-compiler@1.0.2
 callback-hook@1.0.4
 check@1.0.6
 chuikoff:bootstrap-4@0.0.1
+coffeescript@1.0.10
 copleykj:jquery-autosize@1.17.8
+cosmos:browserify@0.5.1
 ddp@1.2.2
 ddp-client@1.2.1
 ddp-common@1.2.1
 ddp-server@1.2.1
 deps@1.0.9
 diff-sequence@1.0.1
+djedi:sanitize-html-client@1.11.1
 ecmascript@0.1.5
 ecmascript-collections@0.1.6
 ejson@1.0.7
