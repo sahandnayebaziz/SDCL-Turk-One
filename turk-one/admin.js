@@ -4,7 +4,7 @@
 if (Meteor.isClient) {
 	Template.admin.helpers({
 		workerTickets: function () {
-			return WorkerTickets.find({}, {sort: {_id: 1}});
+			return WorkerTickets.find({}, {sort: {workerId: -1}});
 		},
 		decisionPoints: function () {
 			// find all decisions, sorted by id
@@ -83,11 +83,8 @@ if (Meteor.isClient) {
 		}
 	});
 
-	Template.workerTicketRow.events({
-		"click .delete": function () {
-			WorkerTickets.remove(this._id);
-		}
-	});
+
+
 
 	Template.solutionVisual.rendered = function() {
 		if(!this._rendered) {
@@ -95,7 +92,6 @@ if (Meteor.isClient) {
 
 			canvasArray = [];
 
-			console.log(this.data.workerId);
 			var idForNewCanvas = "canvas" + this.data._id;
 			var element = $("#" + idForNewCanvas);
 			var canvas = new fabric.Canvas(idForNewCanvas);
@@ -107,13 +103,22 @@ if (Meteor.isClient) {
 			canvas.loadFromJSON(this.data.state, canvas.renderAll.bind(canvas));
 		}
 	}
-}
 
-//UI1  - 0WUsf+n+HrekmubKvXn+Zg==
-//UI2  - Nr1z8cMWSr3IgAbvKMRfzw==
-//UI3  - U+cyLQThmYLE7JnSw+rS6w==
-//UI4  - bzk5Afbz4KC9l5XJcYyCdw==
-//AR1 - dQ5qYzXliubw7mUkitb1fA==
-//AR2 - 6bKw33daL579xCOnxhVWDw==
-//AR3 - yihR+0VWNYbQ9w2z1ZeSbg==
-//AR4 - li5YkyMOyTUgNzNH+1EtQw==
+
+
+	// worker review page
+	Template.workerTicketRow.events({
+		"click .delete": function () {
+			WorkerTickets.remove(this._id);
+		}
+	});
+
+	Template.workerTicketRow.helpers({
+		numberOfSolutionsComplexEnough: function () {
+			return Solutions.find({workerId: this._id, complexity: {$gt: 0}}).count();
+		},
+		numberOfSolutionsAccepted: function () {
+			return Solutions.find({workerId: this._id, accepted: true}).count();
+		}
+	})
+}

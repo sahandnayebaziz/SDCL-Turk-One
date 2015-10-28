@@ -41,13 +41,8 @@ if (Meteor.isClient) {
 				quality: 0.8
 			});
 		},
-		canvasIsComplexEnough: function (canvasNumber) {
-			function isCanvasWithIndex(canvas) {
-				return canvas.CDIndex == canvasNumber;
-			}
-
-			var canvasFound = canvases.filter(isCanvasWithIndex);
-			return canvasFound[0]._objects.length > 0;
+		canvasIsComplexEnough: function () {
+			return this.complexity > 0;
 		},
 		numberComplexEnough: function () {
 			function isCanvasComplex(canvas) {
@@ -126,10 +121,10 @@ if (Meteor.isClient) {
 				} else {
 					Solutions.insert({
 						workerId: Session.get("ticket"),
-						state: "",
 						createdAt: new Date(),
 						dateUpdated: new Date(),
-						canvasNumber: canvasNumber
+						canvasNumber: canvasNumber,
+						accepted: false
 					}, function (error, id) {
 						Session.setPersistent("objectId" + Session.get("ticket") + canvasNumber, id);
 						Session.setPersistent("insertedSolutionFor" + Session.get("ticket") + canvasNumber, "true");
