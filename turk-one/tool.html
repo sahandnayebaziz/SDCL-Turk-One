@@ -467,13 +467,14 @@
 										                              placeholder="Name this solution"
 										                              class="form-control form-transparent form-name"
 										                              data-placement="top" href="#" data-trigger="manual"
-										                              data-toggle="tooltip" title="Explain and name your solution here ">
+										                              data-toggle="tooltip" title="Explain and name your solution here "
+										                              value="{{name}}">
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-md-12">
 											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution"
-											          class="explain form-transparent form-control form-description"></textarea>
+											          class="explain form-transparent form-control form-description" value="{{explain}}"></textarea>
 										</div>
 									</div>
 								</div>
@@ -571,6 +572,9 @@
 								canvas.on('object:modified', saveSelf);
 								canvas.on('object:removed', saveSelf);
 
+								nameForThisCanvas.on("change", saveSelf);
+								explainForThisCanvas.on("change", saveSelf);
+
 								// initial save state
 								saveSelf();
 
@@ -607,28 +611,22 @@
 					<h4 class="modal-title">Are you sure you're ready to finish?</h4>
 				</div>
 				<div class="modal-body">
-					<p class="modal-text">If you are finished, review your sketches below and select which
-						you would like to submit.</p>
+					<p class="modal-text">You are about to submit [[number]] sketches. If you are finished, scroll down and confirm. </p>
 
-					<p><strong class="text-danger">Once you click "review and finish", you will not have a chance to return and
-						continue
-						sketching your solutions.</strong></p>
+					<p><strong class="text-danger">Once you click "confirm", you will not have a chance to return and
+						continue sketching your solutions.</strong></p>
 
 					<div class="row">
 						<div class="col-xs-12">
 							<h5 class="bottom-buffer-25">Sketches</h5>
 							{{#if shouldGenerateReviews}}
 								{{#each solutions}}
-									<div class="bottom-buffer-50">
-										<img class="img-responsive img-rounded img-review" src="{{imageForCanvas canvasNumber}}">
-
-										<div class="checkbox">
-											<label class="text-center">
-												<input type="checkbox" class="reviewCheck" value="" aria-checked="false">
-												Submit this sketch
-											</label>
+									{{#if canvasIsComplexEnough canvasNumber}}
+										<div class="bottom-buffer-50">
+											<img class="img-responsive img-rounded img-review" src="{{imageForCanvas canvasNumber}}">
+											<p>{{name}}</p>
 										</div>
-									</div>
+									{{/if}}
 								{{/each}}
 							{{/if}}
 						</div>
@@ -639,7 +637,7 @@
 					<button type="button" onclick="$('#finishModal').modal('hide');" class="btn btn-secondary"
 					        data-dismiss="modal" id="finishCancel">Cancel
 					</button>
-					<button type="button" class="btn btn-success" id="finishConfirm">Review and finish</button>
+					<button type="button" class="btn btn-success" id="finishConfirm">Confirm</button>
 				</div>
 			</div>
 		</div>

@@ -40,6 +40,14 @@ if (Meteor.isClient) {
 				format: 'jpeg',
 				quality: 0.8
 			});
+		},
+		canvasIsComplexEnough: function (canvasNumber) {
+			function isCanvasWithIndex(canvas) {
+				return canvas.CDIndex == canvasNumber;
+			}
+
+			var canvasFound = canvases.filter(isCanvasWithIndex);
+			return canvasFound[0]._objects.length > 0;
 		}
 	});
 
@@ -88,17 +96,6 @@ if (Meteor.isClient) {
 		},
 		"click #finishCancel": function () {
 			Session.set("shouldGenerateReviews", true);
-		},
-		"change .reviewCheck": function (event) {
-			Solutions.update(Session.get("objectId" + canvas.CDIndex), {
-				$set: {
-					submitted: event.target.checked
-				}
-			}, function (error, number) {
-				if (!error) {
-					console.log("set to " + event.target.checked);
-				}
-			});
 		}
 	});
 
