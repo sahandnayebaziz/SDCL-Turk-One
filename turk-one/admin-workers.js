@@ -20,7 +20,16 @@ if (Meteor.isClient) {
 			return Solutions.find({workerId: this._id, complexity: {$gt: 0}}).count();
 		},
 		numberOfSolutionsAccepted: function () {
-			return Solutions.find({workerId: this._id, accepted: true}).count();
+			return Solutions.find({workerId: this._id, status: "accepted"}).count();
+		},
+		decisionPoint: function () {
+			return DecisionPoints.findOne(this.decisionPointId);
+		},
+		viewStatus: function () {
+			if (this.reviewed) {
+				return "text-success";
+			}
+			return "";
 		}
 	});
 
@@ -35,7 +44,67 @@ if (Meteor.isClient) {
 			return Solutions.find({workerId: this._id, complexity: {$gt: 0}}).count();
 		},
 		numberOfSolutionsAccepted: function () {
-			return Solutions.find({workerId: this._id, accepted: true}).count();
+			return Solutions.find({workerId: this._id, status: "accepted"}).count();
+		},
+		isComplexEnough: function() {
+			return this.complexity > 0;
+		}
+	});
+
+	Template.worker.events({
+		"click .reviewed": function() {
+			WorkerTickets.update(this._id, {
+				$set: {
+					reviewed: true
+				}
+			})
+		},
+		"click .cancelReviewed": function() {
+			WorkerTickets.update(this._id, {
+				$set: {
+					reviewed: false
+				}
+			})
 		}
 	})
+
+	Template.solutionReviewModule.helpers({
+		viewStatus: function() {
+			switch (this.status) {
+				case "pending":
+					return "";
+				case "accepted":
+					return "bg-success";
+				case "rejected":
+					return "bg-danger";
+				default:
+					return "";
+			}
+		}
+	});
+
+	Template.solutionReviewModule.events({
+		"click .cancel": function() {
+			Solutions.update(this._id, {
+				$set: {
+					status: "pending"
+				}
+			})
+		},
+		"click .accept": function() {
+			Solutions.update(this._id, {
+				$set: {
+					status: "accepted"
+				}
+			})
+		},
+		"click .reject": function() {
+			Solutions.update(this._id, {
+				$set: {
+					status: "rejected"
+				}
+			})
+		}
+
+	});
 }

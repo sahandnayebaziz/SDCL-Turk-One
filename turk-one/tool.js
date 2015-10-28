@@ -124,7 +124,7 @@ if (Meteor.isClient) {
 						createdAt: new Date(),
 						dateUpdated: new Date(),
 						canvasNumber: canvasNumber,
-						accepted: false
+						status: "pending"
 					}, function (error, id) {
 						Session.setPersistent("objectId" + Session.get("ticket") + canvasNumber, id);
 						Session.setPersistent("insertedSolutionFor" + Session.get("ticket") + canvasNumber, "true");
