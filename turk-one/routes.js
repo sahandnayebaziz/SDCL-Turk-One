@@ -45,3 +45,11 @@ Router.route('/exit/:_id', function () {
 Router.route('/admin', function () {
 	this.render('Admin');
 });
+
+Router.route('/worker/:_id', function () {
+	this.render('worker', {
+		data: function () {
+			return WorkerTickets.findOne(this.params._id);
+		}
+	})
+});

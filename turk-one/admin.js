@@ -3,9 +3,6 @@
  */
 if (Meteor.isClient) {
 	Template.admin.helpers({
-		workerTickets: function () {
-			return WorkerTickets.find({}, {sort: {workerId: -1}});
-		},
 		decisionPoints: function () {
 			// find all decisions, sorted by id
 			return DecisionPoints.find({}, {sort: {_id: 1}});
@@ -102,23 +99,5 @@ if (Meteor.isClient) {
 
 			canvas.loadFromJSON(this.data.state, canvas.renderAll.bind(canvas));
 		}
-	}
-
-
-
-	// worker review page
-	Template.workerTicketRow.events({
-		"click .delete": function () {
-			WorkerTickets.remove(this._id);
-		}
-	});
-
-	Template.workerTicketRow.helpers({
-		numberOfSolutionsComplexEnough: function () {
-			return Solutions.find({workerId: this._id, complexity: {$gt: 0}}).count();
-		},
-		numberOfSolutionsAccepted: function () {
-			return Solutions.find({workerId: this._id, accepted: true}).count();
-		}
-	})
+	};
 }
