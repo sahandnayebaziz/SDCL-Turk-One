@@ -621,6 +621,7 @@
 								{{#each solutions}}
 									<div class="bottom-buffer-50">
 										<img class="img-responsive img-rounded img-review" src="{{imageForCanvas canvasNumber}}">
+
 										<div class="checkbox">
 											<label class="text-center">
 												<input type="checkbox" class="reviewCheck" value="" aria-checked="false">
@@ -635,7 +636,9 @@
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" onclick="$('#finishModal').modal('hide');" class="btn btn-secondary" data-dismiss="modal" id="finishCancel">Cancel</button>
+					<button type="button" onclick="$('#finishModal').modal('hide');" class="btn btn-secondary"
+					        data-dismiss="modal" id="finishCancel">Cancel
+					</button>
 					<button type="button" class="btn btn-success" id="finishConfirm">Review and finish</button>
 				</div>
 			</div>
@@ -759,35 +762,45 @@
 <template name="decisionPointInformationPanel">
 	<div class="row">
 		<div class="col-md-12 col-lg-10 col-lg-offset-1">
-			<div class="pull-left row">
-				<p class="lead">
-					MTurk CrowdDesign HIT<br><br>
-				</p>
-				<h4 href="#" data-trigger="manual" data-toggle="tooltip"
-				    title="This is the decision point you have to design">{{name}}<br></h4>
-
-				<p>{{description}}</p>
-
-				<p><span class="text-muted"><strong data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip"
-				                                    title="These are the requirements for your designs">REQUIREMENTS</strong></span><br>
-					{{requirements}}</p>
-			</div>
 			<div class="row">
-				<!--modal for review and finish -->
-				<div class="pull-left top-buffer-50" data-placement="bottom" href="#" data-trigger="manual"
-				     data-toggle="tooltip" title="When you are finished with designing your solutions click here submit them">
-					<a data-toggle="modal" data-target="#finishModal" id="finishRequest" class="btn btn-success btn-continue">REVIEW AND FINISH</a>
-				</div>
+				<div class="col-xs-12">
+					<h4 href="#" data-trigger="manual" data-toggle="tooltip"
+					    title="This is the decision point you have to design">{{name}}<br></h4>
 
-				<!--modal for this button placed below-->
-				<div class="pull-right top-buffer-50" data-placement="bottom" href="#" data-trigger="manual"
-				     data-toggle="tooltip" title="Please click here if you want to quit">
-					<button class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">QUIT</button>
-				</div>
+					<p>{{description}}</p>
 
-				<div class="col-xs-3 col-centered top-buffer-50">
-					<button class="btn tooltips-toggle ban-continue" id="tips-toggle" title="toggle tips on/off">TIPS ON/OFF
+					<p>
+					<span class="text-muted">
+						<strong data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip"
+						        title="These are the requirements for your designs">REQUIREMENTS
+						</strong>
+					</span>
+					</p>
+
+					<p>{{requirements}}</p>
+				</div>
+			</div>
+			<div class="row top-buffer-50">
+				<div class="col-xs-12">
+					<button class="btn btn-default tooltips-toggle btn-continue" id="tips-toggle" title="toggle tips on/off">TIPS
 					</button>
+				</div>
+			</div>
+			<div class="row top-buffer-25">
+				<div class="col-xs-12">
+					<div data-placement="bottom" href="#" data-trigger="manual"
+					     data-toggle="tooltip" title="Click here when finished">
+						<a data-toggle="modal" data-target="#finishModal" id="finishRequest" class="btn btn-success btn-continue">REVIEW
+							AND FINISH</a>
+					</div>
+				</div>
+			</div>
+			<div class="row top-buffer-100">
+				<div class="col-xs-12">
+					<div data-placement="bottom" href="#" data-trigger="manual"
+					     data-toggle="tooltip" title="Please click here if you want to quit">
+						<button class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">QUIT</button>
+					</div>
 				</div>
 			</div>
 		</div>
