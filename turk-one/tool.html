@@ -560,8 +560,26 @@
 												state: JSON.stringify(canvas),
 												complexity: canvas._objects.length,
 												dateUpdated: new Date(),
-												name: name.val(),
-												explain: explain.val()
+												name: sanitizeHtml(name.val(), {
+                                                    textFilter: function(text) {
+                                                        text = text.replace('$', 'dollar');
+                                                        text = text.replace('/', '&#x2F');
+                                                        text = text.replace('\'', '&#x27');
+                                                        return text;
+                                                    },
+                                                    allowedTags: [],
+                                                    allowedAttributes: []
+                                                }),
+												explain: sanitizeHtml(explain.val(), {
+                                                    textFilter: function(text) {
+                                                        text = text.replace('$', 'dollar');
+                                                        text = text.replace('/', '&#x2F');
+                                                        text = text.replace('\'', '&#x27');
+                                                        return text;
+                                                    },
+                                                    allowedTags: [],
+                                                    allowedAttributes: []
+                                                })
 											}
 										}, function (error, number) {
 											if (!error) {
