@@ -11,7 +11,11 @@ if (Meteor.isClient) {
 
 	Template.workerTicketRow.events({
 		"click .delete": function () {
-			WorkerTickets.remove(this._id);
+			var id = this._id;
+			$("#modal" + this._id).on('hidden.bs.modal', function () {
+				console.log("clicking modal");
+				WorkerTickets.remove(id);
+			}).modal('hide')
 		}
 	});
 
