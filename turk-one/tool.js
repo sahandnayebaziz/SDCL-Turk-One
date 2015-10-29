@@ -80,7 +80,11 @@ if (Meteor.isClient) {
 		},
 		"click #finishConfirm": function () {
 			$('#finishModal').on('hidden.bs.modal',
-				function () {
+				WorkerTickets.update(Session.get("ticket"), {
+					$set: {
+						submitted: true
+					}
+				}, function () {
 					var n = noty({
 						text: 'Success! Your work has been submitted.',
 						layout: 'topRight',
@@ -95,7 +99,7 @@ if (Meteor.isClient) {
 						}
 					});
 					Router.go("/exit/" + Session.get("ticket"));
-				}).modal('hide');
+				})).modal('hide');
 		},
 		"click #finishCancel": function () {
 			Session.set("shouldGenerateReviews", false);

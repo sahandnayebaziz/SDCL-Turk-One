@@ -30,6 +30,26 @@ if (Meteor.isClient) {
 				return "text-success";
 			}
 			return "";
+		},
+		viewStatusLabelClass: function () {
+			if (this.reviewed) {
+				return "label-success"
+			}
+			else if (this.submitted) {
+				return "label-primary"
+			} else {
+				return "label-default"
+			}
+		},
+		viewStatusLabelMessage: function () {
+			if (this.reviewed) {
+				return "reviewed"
+			}
+			else if (this.submitted) {
+				return "submitted"
+			} else {
+				return "in-progress"
+			}
 		}
 	});
 
