@@ -24,7 +24,8 @@ if (Meteor.isClient) {
 				workerTicket: Session.get("ticket"),
 				task: taskDifficulty,
 				decision: decisionDifficulty,
-				tool: toolDifficulty
+				tool: toolDifficulty,
+				feedback: feedback
 			}, function() {
 				$('#finalModal').modal("show");
 			});

@@ -31,12 +31,6 @@ if (Meteor.isClient) {
 
 				return hash;
 			}
-		},
-		exitSurveys: function () {
-			return ExitSurveys.find({}, {sort: {_id: 1}});
-		},
-		quitSurveys: function () {
-			return QuitSurveys.find({}, {sort: {_id: 1}});
 		}
 	});
 

@@ -1,0 +1,53 @@
+<template name="adminSurveys">
+	<div class="row top-buffer-25">
+		<div class="col-xs-12">
+			<h5>quit surveys</h5>
+			<table class="table table-sm table-bordered top-buffer-25 bg-white">
+				<thead>
+				<tr>
+					<th>worker</th>
+					<th>reason</th>
+					<th>feedback</th>
+				</tr>
+				</thead>
+				<tbody>
+				{{#each quitSurveys}}
+					<tr>
+						<td>{{workerTicket}}</td>
+						<td>{{reason}}</td>
+						<td>{{feedback}}</td>
+					</tr>
+				{{/each}}
+				</tbody>
+			</table>
+		</div>
+
+		<div class="col-xs-12 top-buffer-100">
+			<h5>exit surveys</h5>
+			<table class="table table-sm table-bordered top-buffer-25 bg-white">
+				<thead>
+				<tr>
+					<th>worker</th>
+					<th>task difficulty</th>
+					<th>DP difficulty</th>
+					<th>tool difficulty</th>
+					<th>feedback</th>
+					<th>actions</th>
+				</tr>
+				</thead>
+				<tbody>
+				{{#each exitSurveys}}
+					<tr>
+						<td>{{workerTicket}}</td>
+						<td>{{task}}</td>
+						<td>{{decision}}</td>
+						<td>{{tool}}</td>
+						<td>{{feedback}}</td>
+						<td><a href="/worker/{{workerTicket}}" class="btn btn-sm btn-continue btn-secondary">review</a></td>
+					</tr>
+				{{/each}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</template>

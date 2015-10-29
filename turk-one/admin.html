@@ -131,29 +131,7 @@
 						</div>
 					</div>
 					<div role="tabpanel" class="tab-pane" id="surveys">
-
-
-						<div class="row top-buffer-25">
-							<div class="col-md-6">
-								<h5>quit surveys</h5>
-								<table class="table table-sm table-bordered top-buffer-25 bg-white">
-									<thead>
-									<tr>
-										<th>reason</th>
-										<th>feedback</th>
-									</tr>
-									</thead>
-									<tbody>
-									{{#each quitSurveys}}
-										<tr>
-											<td>{{reason}}</td>
-											<td>{{feedback}}</td>
-										</tr>
-									{{/each}}
-									</tbody>
-								</table>
-							</div>
-						</div>
+						{{> adminSurveys}}
 					</div>
 				</div>
 			</div>

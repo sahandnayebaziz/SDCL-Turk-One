@@ -66,6 +66,9 @@ if (Meteor.isClient) {
 		numberOfSolutionsAccepted: function () {
 			return Solutions.find({workerId: this._id, status: "accepted"}).count();
 		},
+		numberOfSolutionsRejected: function () {
+			return Solutions.find({workerId: this._id, status: "rejected"}).count();
+		},
 		isComplexEnough: function() {
 			return this.complexity > 0;
 		}

@@ -70,6 +70,7 @@ if (Meteor.isClient) {
 			var feedback = $("#quitText").val();
 
 			QuitSurveys.insert({
+				workerTicket: Session.get("ticket"),
 				reason: reason,
 				feedback: feedback
 			});
