@@ -1,6 +1,10 @@
 /**
  * Created by sahand on 10/6/15.
  */
+Router.configure({
+	trackPageView: true
+});
+
 Router.route('/:_sessionId/:_workerId/:_decisionPointId', function () {
 	this.render('Home', {
 		data: function () {

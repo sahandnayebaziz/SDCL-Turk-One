@@ -80,27 +80,28 @@ if (Meteor.isClient) {
 			}).modal('hide')
 		},
 		"click #finishConfirm": function () {
-			$('#finishModal').on('hidden.bs.modal',
-				WorkerTickets.update(Session.get("ticket"), {
-					$set: {
-						submitted: true
-					}
-				}, function () {
-					var n = noty({
-						text: 'Success! Your work has been submitted.',
-						layout: 'topRight',
-						theme: 'relax', // or 'relax'
-						type: 'success',
-						timeout: 4000,
-						animation: {
-							open: 'animated bounceInRight', // Animate.css class names
-							close: 'animated bounceOutRight', // Animate.css class names
-							easing: 'swing', // unavailable - no need
-							speed: 500 // unavailable - no need
+			$('#finishModal').on('hidden.bs.modal', function () {
+					WorkerTickets.update(Session.get("ticket"), {
+						$set: {
+							submitted: true
 						}
+					}, function () {
+						var n = noty({
+							text: 'Success! Your work has been submitted.',
+							layout: 'topRight',
+							theme: 'relax', // or 'relax'
+							type: 'success',
+							timeout: 4000,
+							animation: {
+								open: 'animated bounceInRight', // Animate.css class names
+								close: 'animated bounceOutRight', // Animate.css class names
+								easing: 'swing', // unavailable - no need
+								speed: 500 // unavailable - no need
+							}
+						});
+						Router.go("/exit/" + Session.get("ticket"));
 					});
-					Router.go("/exit/" + Session.get("ticket"));
-				})).modal('hide');
+			}).modal('hide');
 		},
 		"click #finishCancel": function () {
 			Session.set("shouldGenerateReviews", false);
