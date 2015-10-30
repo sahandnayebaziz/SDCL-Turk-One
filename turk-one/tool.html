@@ -222,27 +222,12 @@
 								this.freeDrawingBrush.color = colorChosen;
 								this.isDrawingMode = true;
 							});
-
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Toolbar',
-                                eventAction: 'Selecting tool',
-                                eventLabel: 'Selecting the a color'
-                            });
-
 						});
 
 						// toolbar eraser clicked
 						$("#buttonEraser").click(function () {
 							setSelectedTool(this);
 							enableEraser();
-
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Toolbar',
-                                eventAction: 'Selecting tool',
-                                eventLabel: 'Selecting the the eraser'
-                            });
 						});
 
 						function disableEraser() {
@@ -281,13 +266,6 @@
 							$.each(canvases, function () {
 								this.isDrawingMode = false;
 							})
-
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Toolbar',
-                                eventAction: 'Selecting tool',
-                                eventLabel: 'Selecting the move controls'
-                            });
 						});
 
 						// text button clicked
@@ -320,13 +298,6 @@
 
 								setSelectedTool("#buttonMove");
 							});
-
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Toolbar',
-                                eventAction: 'Selecting tool',
-                                eventLabel: 'Selecting the text tool'
-                            });
 						});
 
 						// UNDO AND REDO
@@ -344,13 +315,6 @@
 								canvasWithFocus.renderAll();
 								canvasHistory[index].recording = true;
 							}
-
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Toolbar',
-                                eventAction: 'Selecting tool',
-                                eventLabel: 'Undoing'
-                            });
 						});
 
 						$("#buttonRedo").click(function () {
@@ -366,12 +330,6 @@
 								canvasWithFocus.renderAll();
 								canvasHistory[index].recording = true;
 							}
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Toolbar',
-                                eventAction: 'Selecting tool',
-                                eventLabel: 'Redoing'
-                            });
 						});
 
 						// drawing straight lines when pressing shift
@@ -486,9 +444,7 @@
 								if (this.CDIndex == index) {
 									canvasWithFocus = this;
 								}
-
 							});
-
 
 						};
 
@@ -608,7 +564,7 @@
                                                     textFilter: function(text) {
                                                         text = text.replace('$', 'dollar');
                                                         text = text.replace('/', '&#x2F');
-                                                        text = text.replace('\'', '&#x27'); //TODO: this is not working well maybe remove
+                                                        text = text.replace('\'', '&#x27');
                                                         return text;
                                                     },
                                                     allowedTags: [],
@@ -618,7 +574,7 @@
                                                     textFilter: function(text) {
                                                         text = text.replace('$', 'dollar');
                                                         text = text.replace('/', '&#x2F');
-                                                        text = text.replace('\'', '&#x27'); //TODO: this is not working well maybe remove
+                                                        text = text.replace('\'', '&#x27');
                                                         return text;
                                                     },
                                                     allowedTags: [],
@@ -832,9 +788,8 @@
 		<div class="col-md-12 col-lg-10 col-lg-offset-1">
 			<div class="row">
 				<div class="col-xs-12">
-					<h4 data-intro="Hi, this is the tool . Your are supposed to come up with
-					as many alternative solutions for your decision point as possible (up to 5). For each decision point that you complete that meets
-					criteria you will get a payment.">{{name}}<br></h4>
+					<h4 href="#" data-trigger="manual" data-toggle="tooltip"
+					    title="This is the decision point you have to design">{{name}}<br></h4>
 
 					<p>{{description}}</p>
 
@@ -868,7 +823,7 @@
 				<div class="col-xs-12">
 					<div data-placement="bottom" href="#" data-trigger="manual"
 					     data-toggle="tooltip" title="Please click here if you want to quit">
-						<button id="quitRequest" class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">QUIT</button>
+						<button class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">QUIT</button>
 					</div>
 				</div>
 			</div>
@@ -876,27 +831,6 @@
 	</div>
 
 	<script>
-        //start intro
-        introJs().start();
-
-        $("#finishRequest").click(function () {
-            ga('send', {
-                hitType: 'event',
-                eventCategory: 'Button',
-                eventAction: 'Review and Finish',
-                eventLabel: 'Clicking the review and finish button'
-            });
-        });
-
-        $("#quitRequest").click(function () {
-            ga('send', {
-                hitType: 'event',
-                eventCategory: 'Button',
-                eventAction: 'Quit',
-                eventLabel: 'Quiting the task'
-            });
-        });
-
 		$(function () {
 			$('textarea').autosize()
 		});
@@ -911,13 +845,6 @@
 			$("#name-3").tooltip('hide');
 			$("#name-4").tooltip('hide');
 			$("#name-5").tooltip('hide');
-
-            ga('send', {
-                hitType: 'event',
-                eventCategory: 'Button',
-                eventAction: 'Tips toggle',
-                eventLabel: 'toggeling tools on/off'
-            });
 
 		});
 	</script>
