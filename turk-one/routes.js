@@ -49,6 +49,15 @@ Router.route('/exit/:_id', function () {
 	document.title = "Exit Questionnaire";
 });
 
+Router.route('/end/:_id', function () {
+	this.render('end', {
+		data: function () {
+			return WorkerTickets.findOne(this.params._id);
+		}
+	});
+	document.title = "Thank you for your participation";
+});
+
 
 Router.route('/admin', function () {
 	this.render('Admin');
