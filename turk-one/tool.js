@@ -78,6 +78,13 @@ if (Meteor.isClient) {
 				feedback: feedback
 			});
 
+			WorkerTickets.update(Session.get("ticket"), {
+				$set: {
+					quit: true
+				}
+
+			});
+
 			$('#quitModal').on('hidden.bs.modal', function () {
 				window.location.href = 'http://www.google.com';
 			}).modal('hide')
@@ -116,38 +123,5 @@ if (Meteor.isClient) {
 			Session.set("shouldGenerateReviews", true);
 		}
 	});
-
-	Template.tool.rendered = function () {
-		if (!this._rendered) {
-			this._rendered = true;
-
-			console.log("rendering");
-
-			// create persistent objects in database for these sketches
-			function createPersistSelf(canvasNumber) {
-				if (Session.get("insertedSolutionFor" + Session.get("ticket") + canvasNumber)) { //TODO: make this worker-id dependent
-
-				} else {
-					Solutions.insert({
-						workerId: Session.get("ticket"),
-						createdAt: new Date(),
-						dateUpdated: new Date(),
-						canvasNumber: canvasNumber,
-						status: "pending"
-					}, function (error, id) {
-						Session.setPersistent("objectId" + Session.get("ticket") + canvasNumber, id);
-						Session.setPersistent("insertedSolutionFor" + Session.get("ticket") + canvasNumber, "true");
-						console.log("set persistence for user" + Session.get("ticket") + " canvas: " + canvasNumber);
-					});
-				}
-			}
-
-			createPersistSelf(1);
-			createPersistSelf(2);
-			createPersistSelf(3);
-			createPersistSelf(4);
-			createPersistSelf(5);
-		}
-	}
 }
 ;

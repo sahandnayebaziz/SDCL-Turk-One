@@ -36,6 +36,9 @@ if (Meteor.isClient) {
 			return "";
 		},
 		viewStatusLabelClass: function () {
+			if (this.quit) {
+				return "label-danger"
+			}
 			if (this.reviewed) {
 				return "label-success"
 			}
@@ -46,6 +49,9 @@ if (Meteor.isClient) {
 			}
 		},
 		viewStatusLabelMessage: function () {
+			if (this.quit) {
+				return "quit"
+			}
 			if (this.reviewed) {
 				return "reviewed"
 			}
