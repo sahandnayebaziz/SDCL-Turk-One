@@ -3,8 +3,6 @@
  */
 if (Meteor.isClient) {
 
-	document.title = "Solution Designer";
-
 	Template.tool.helpers({
 		workerTicket: function () {
 			return WorkerTickets.findOne(this._id);

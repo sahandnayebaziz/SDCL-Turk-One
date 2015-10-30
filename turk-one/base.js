@@ -2,7 +2,6 @@
  * Created by sahand on 10/7/15.
  */
 if (Meteor.isClient) {
-	document.title = "Introduction Text";
 
 	Template.home.helpers({
 		existingWorkerTicket: function () {
@@ -21,6 +20,7 @@ if (Meteor.isClient) {
 	});
 
 	Template.home.rendered = function() {
+
 		if(!this._rendered) {
 			this._rendered = true;
 

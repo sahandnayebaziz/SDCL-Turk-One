@@ -14,7 +14,11 @@ if (Meteor.isClient) {
 			this._rendered = true;
 
 			console.log(this.data);
-			introJs().start();
+
+			introJs().setOptions({
+				"scrollToElement": true,
+				"showStepNumbers": false,
+			}).start();
 		}
 	}
 }
