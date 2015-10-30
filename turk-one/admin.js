@@ -11,6 +11,9 @@ if (Meteor.isClient) {
 		solutions: function () {
 			return Solutions.find({}, {sort: {_id: 1}});
 		},
+		solutionsWithSketch: function () {
+			return Solutions.find({complexity: {$gt: 0}});
+		},
 		decisionBeingPreviewed: function () {
 			if (Session.get("IDRequestedForPreview")) {
 				return DecisionPoints.findOne(Session.get("IDRequestedForPreview"));
@@ -76,8 +79,6 @@ if (Meteor.isClient) {
 			console.log("requesting id " + Session.get("IDRequestedForPreview"));
 		}
 	});
-
-
 
 
 	Template.solutionVisual.rendered = function() {
