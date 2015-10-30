@@ -2,6 +2,8 @@
  * Created by sahand on 10/7/15.
  */
 if (Meteor.isClient) {
+	document.title = "Introduction Text";
+
 	Template.home.helpers({
 		existingWorkerTicket: function () {
 			return WorkerTickets.findOne({

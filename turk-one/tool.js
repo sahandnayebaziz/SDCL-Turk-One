@@ -2,6 +2,9 @@
  * Created by sahand on 10/7/15.
  */
 if (Meteor.isClient) {
+
+	document.title = "Solution Designer";
+
 	Template.tool.helpers({
 		workerTicket: function () {
 			return WorkerTickets.findOne(this._id);

@@ -2,6 +2,9 @@
  * Created by sahand on 10/11/15.
  */
 if (Meteor.isClient) {
+
+	document.title = "Admin Page";
+
 	Template.admin.helpers({
 		decisionPoints: function () {
 			// find all decisions, sorted by id

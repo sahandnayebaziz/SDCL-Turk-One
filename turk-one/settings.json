@@ -8,7 +8,7 @@
       },
       "set": {
         "forceSSL": true,
-        "anonymizeIp": true
+        "anonymizeIp": false
       },
       "require": {
         "linkid": "linkid.js"
