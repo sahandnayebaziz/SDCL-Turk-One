@@ -78,6 +78,13 @@ if (Meteor.isClient) {
 				feedback: feedback
 			});
 
+			WorkerTickets.update(Session.get("ticket"), {
+				$set: {
+					quit: true
+				}
+
+			});
+
 			$('#quitModal').on('hidden.bs.modal', function () {
 				window.location.href = 'http://www.google.com';
 			}).modal('hide')

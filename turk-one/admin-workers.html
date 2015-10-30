@@ -78,12 +78,17 @@
 					<li class="list-group-item"><span class="text-muted">worker: </span>{{workerId}}</li>
 					<li class="list-group-item"><span class="text-muted">session: </span>{{sessionId}}</li>
 					<li class="list-group-item"><span class="text-muted">decision point: </span>{{decisionPoint.name}}</li>
-					<li class="list-group-item"><span class="text-muted"># of solutions: </span>{{numberOfSolutionsComplexEnough}}
-					</li>
-					<li class="list-group-item"><span class="text-muted">reviewed: </span>{{#if reviewed}} <span
-						class="text-success">yes</span> {{else}} <span class="text-danger">no</span> {{/if}}</li>
-					<li class="list-group-item"><span class="text-muted">accepted: </span>{{numberOfSolutionsAccepted}}</li>
-					<li class="list-group-item"><span class="text-muted">rejected: </span>{{numberOfSolutionsRejected}}</li>
+					<li class="list-group-item"><span class="text-muted"># of solutions: </span>{{numberOfSolutionsComplexEnough}}</li>
+					{{#if quit}}
+						<li class="list-group-item"><span class="text-danger"><strong>User has quit!</strong></span></li>
+						{{else}}
+						{{#if submitted}}
+							<li class="list-group-item"><span class="text-muted">reviewed: </span>{{#if reviewed}} <span
+								class="text-success">yes</span> {{else}} <span class="text-danger">no</span> {{/if}}</li>
+							<li class="list-group-item"><span class="text-muted">accepted: </span>{{numberOfSolutionsAccepted}}</li>
+							<li class="list-group-item"><span class="text-muted">rejected: </span>{{numberOfSolutionsRejected}}</li>
+						{{/if}}
+					{{/if}}
 				</ul>
 			</div>
 			{{#if submitted}}
