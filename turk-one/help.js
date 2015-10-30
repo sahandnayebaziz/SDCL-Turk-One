@@ -3,8 +3,6 @@
  */
 if (Meteor.isClient) {
 
-	document.title = "Tutorial";
-
 	Template.help.events({
 		'click .btn-continue': function (event, template, doc) {
 			Router.go('/tool/' + Session.get("ticket"));
@@ -16,6 +14,7 @@ if (Meteor.isClient) {
 			this._rendered = true;
 
 			console.log(this.data);
+			introJs().start();
 		}
 	}
 }
