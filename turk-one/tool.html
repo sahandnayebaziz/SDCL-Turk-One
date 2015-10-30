@@ -211,14 +211,13 @@
 					</style>
 					<script>
 						// stopwatch class
-						/*
- * Javascript Stopwatch class
- * http://www.seph.dk
- *
- * Copyright 2009 Seph soliman
- * Released under the MIT license (do whatever you want - just leave my name on it)
- * http://opensource.org/licenses/MIT
- */
+						/* Javascript Stopwatch class
+						/* http://www.seph.dk
+            /*
+            /* Copyright 2009 Seph soliman
+            /* Released under the MIT license (do whatever you want - just leave my name on it)
+						/* http://opensource.org/licenses/MIT
+            */
 
 						// * Stopwatch class
 						var Stopwatch = function (listener, resolution) {
@@ -319,35 +318,53 @@
 							}
 						};
 
-						// initialize stopwatches
+						// initialize stopwatch arrays
 						interactionStopwatches = [];
-						stopwatchWithFocus = null;
-						function pauseInteractionTimers() {
+						locationStopwatches = [];
+
+						// functions that operate on stopwatches in those arrays
+						function resetInteractionTimers() {
 							$.each(interactionStopwatches, function () {
 								this.reset();
 							});
 						}
+						function resetLocationTimers() {
+							$.each(locationStopwatches, function () {
+								this.reset();
+							});
+						}
+						function activateLocationTimers() {
+							$.each(locationStopwatches, function () {
+								this.start();
+							});
+						}
+
+						// stopwatch running for canvas with focus
+						stopwatchWithFocus = null;
+
+						// stopwatch running for total time on tools page
+						pageStopwatch = new Stopwatch();
+						locationStopwatches.push(pageStopwatch);
+						pageStopwatch.start();
 
 						// initialize idle timers
-						// idleTime detector
 						idleTime = 0;
-						//Increment the idle time counter every minute.
 						var idleInterval = setInterval(timerIncrement, 1000); // every second
-
-						//Zero the idle timer on mouse movement.
 						$(this).mousemove(function (e) {
 							idleTime = 0;
-						});
+						}); // reset the timer
 						$(this).keypress(function (e) {
 							idleTime = 0;
-						});
-
+						});  // reset the timer
 						function timerIncrement() {
 							idleTime = idleTime + 1;
 							if (idleTime > 10) { // every ten seconds
-								pauseInteractionTimers();
+								resetInteractionTimers(); // reset timers
+								resetLocationTimers();
+							} else {
+								activateLocationTimers();
 							}
-						}
+						} 
 
 						// set up for canvases
 						// setting the default number of canvases to show
@@ -807,6 +824,20 @@
 								var nameForThisCanvas = $("#name-" + {{canvasNumber}});
 								var explainForThisCanvas = $("#explain-" + {{canvasNumber}});
 
+								// set up sanitizer
+								function sanitizeText(text) {
+									return sanitizeHtml(text, {
+										textFilter: function(text) {
+											text = text.replace('$', 'dollar');
+											text = text.replace('/', '&#x2F');
+											text = text.replace('\'', '&#x27'); //TODO: this is not working well maybe remove
+											return text;
+										},
+										allowedTags: [],
+										allowedAttributes: []
+									})
+								}
+
 								saveSelf = (function (canvas, name, explain, stopwatch) {
 									return function () {
 										var index = canvas.CDIndex;
@@ -821,6 +852,7 @@
 											canvasHistory[index].backStates.push(JSON.stringify(canvas));
 										}
 
+										// save solution
 										Solutions.update(Session.get("objectId" + Session.get("ticket") + canvas.CDIndex), {
 											$inc: {
 												time: stopwatch.getElapsed().seconds
@@ -829,33 +861,27 @@
 												state: JSON.stringify(canvas),
 												complexity: canvas._objects.length,
 												dateUpdated: new Date(),
-												name: sanitizeHtml(name.val(), {
-                                                    textFilter: function(text) {
-                                                        text = text.replace('$', 'dollar');
-                                                        text = text.replace('/', '&#x2F');
-                                                        text = text.replace('\'', '&#x27'); //TODO: this is not working well maybe remove
-                                                        return text;
-                                                    },
-                                                    allowedTags: [],
-                                                    allowedAttributes: []
-                                                }),
-												explain: sanitizeHtml(explain.val(), {
-                                                    textFilter: function(text) {
-                                                        text = text.replace('$', 'dollar');
-                                                        text = text.replace('/', '&#x2F');
-                                                        text = text.replace('\'', '&#x27'); //TODO: this is not working well maybe remove
-                                                        return text;
-                                                    },
-                                                    allowedTags: [],
-                                                    allowedAttributes: []
-                                                })
+												name: sanitizeText(name.val()),
+												explain: sanitizeText(explain.val())
 											}
 										}, function (error, number) {
 											if (!error) {
 												stopwatch.reset();
-												stopwatch.start();
+												// each stop watch reading is incrementing the value saved in the database, so we keep clearing
+												// it here to add new chunks of time to what we have saved in the database
 											}
 										});
+
+										// update workerTicketTimeInTool
+										WorkerTickets.update(Session.get("ticket"), {
+											$inc: {
+												timeInTool: pageStopwatch.getElapsed().seconds
+											}
+										}, function (error, number) {
+											if (!error) {
+												pageStopwatch.reset();
+											}
+										})
 									}
 								})(canvas, nameForThisCanvas, explainForThisCanvas, stopwatch);
 

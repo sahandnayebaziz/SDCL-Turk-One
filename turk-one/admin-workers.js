@@ -81,6 +81,9 @@ if (Meteor.isClient) {
 		},
 		isComplexEnough: function() {
 			return this.complexity > 0;
+		},
+		timeInToolInMinutes: function () {
+			return parseInt(this.timeInTool / 60);
 		}
 	});
 
@@ -113,6 +116,9 @@ if (Meteor.isClient) {
 				default:
 					return "";
 			}
+		},
+		timeInMinutes: function () {
+			return parseInt(this.time / 60);
 		}
 	});
 
