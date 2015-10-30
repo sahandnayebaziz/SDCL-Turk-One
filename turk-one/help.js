@@ -18,6 +18,7 @@ if (Meteor.isClient) {
 			introJs().setOptions({
 				"scrollToElement": true,
 				"showStepNumbers": false,
+				"exitOnOverlayClick": false,
 			}).start();
 		}
 	}
