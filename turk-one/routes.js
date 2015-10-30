@@ -14,7 +14,8 @@ Router.route('/:_sessionId/:_workerId/:_decisionPointId', function () {
 				decisionPointId: this.params._decisionPointId
 			}
 		}
-	})
+	});
+	document.title = "Introduction";
 });
 
 Router.route('/help/:_id', function () {
@@ -26,7 +27,8 @@ Router.route('/help/:_id', function () {
 			// render all templates and regions for this route
 			if (this.ready()) this.render()
 		}
-	})
+	});
+	document.title = "Tutorial";
 });
 
 Router.route('/tool/:_id', function () {
@@ -34,7 +36,8 @@ Router.route('/tool/:_id', function () {
 		data: function () {
 			return WorkerTickets.findOne(this.params._id);
 		}
-	})
+	});
+	document.title = "Crowd Design Tool";
 });
 
 Router.route('/exit/:_id', function () {
@@ -42,12 +45,14 @@ Router.route('/exit/:_id', function () {
 		data: function () {
 			return WorkerTickets.findOne(this.params._id);
 		}
-	})
+	});
+	document.title = "Exit Questionnaire";
 });
 
 
 Router.route('/admin', function () {
 	this.render('Admin');
+	document.title = "Crowd Design Admin";
 });
 
 Router.route('/worker/:_id', function () {
@@ -56,4 +61,5 @@ Router.route('/worker/:_id', function () {
 			return WorkerTickets.findOne(this.params._id);
 		}
 	})
+	document.title = "Worker Review";
 });

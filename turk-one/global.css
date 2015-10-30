@@ -18,6 +18,10 @@ body {
     margin-top: 100px;
 }
 
+.top-buffer-150{
+    margin-top: 150px;
+}
+
 .bottom-buffer-100 {
     margin-bottom: 100px;
 }
@@ -36,6 +40,10 @@ body {
 
 .bottom-buffer-25 {
     margin-bottom: 25px;
+}
+
+.right-buffer-10 {
+    margin-left:10px;
 }
 
 .bg-white {
