@@ -1,0 +1,33 @@
+<template name="end">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 top-buffer-100">
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <p class="lead">Task Complete</p>
+                        <p>Thank you for your participation</p>
+                    </div>
+                    <div class="col-xs-12 text-center top-buffer-100">
+                        <p>To confirm your completion of the task<br>please paste this code into mechanical turk <br>
+                        otherwise your payment cannot be guaranteed</p>
+                        <p><span id="code" class="feature-text">Your code is: <strong>{{sessionId}}</strong></span></p>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+
+    <style>
+        #code{
+            margin:0 auto;
+            float:none;
+            display: block;
+            box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.4);
+            border-radius: 5px;
+            width: 300px;
+            height: 25px;
+            text-align: center;
+        }
+    </style>
+
+</template>

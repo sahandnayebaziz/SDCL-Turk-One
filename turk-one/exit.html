@@ -5,122 +5,112 @@
 				<div class="row">
 					<div class="col-xs-12 text-center">
 						<p class="lead">Exit Questionnaire</p>
+                        <p>please answer the following questions</p>
 					</div>
 				</div>
-				<form id="exitForm">
-					<fieldset class="form-group top-buffer-50">
-						<label>How difficult was it to complete this task? </label>
-						<span class="pull-right">
-							<label class="radio-inline">
-								<input type="radio" name="taskDifficulty" value="1"> 1
-							</label>
-							<label class="radio-inline">
-								<input type="radio" name="taskDifficulty" value="2"> 2
-							</label>
-							<label class="radio-inline">
-								<input type="radio" name="taskDifficulty" value="3"> 3
-							</label>
-							<label class="radio-inline">
-								<input type="radio" name="taskDifficulty" value="4"> 4
-							</label>
-							<label class="radio-inline">
-								<input type="radio" name="taskDifficulty" value="5"> 5
-							</label>
-							<label class="radio-inline">
-								<input type="radio" name="taskDifficulty" value="6"> 6
-							</label>
-							<label class="radio-inline">
-								<input type="radio" name="taskDifficulty" value="7"> 7
-							</label>
-							<!--$("#exitForm input[name=taskDifficulty]:checked").val()-->
-						</span>
-					</fieldset>
-					<fieldset class="form-group top-buffer-25">
-						<label>How difficult was it to design for this decision point? </label>
-						<span class="pull-right">
-							<label class="radio-inline">
-								<input type="radio" name="decisionPointDifficulty" value="1"> 1
-							</label>
-						<label class="radio-inline">
-							<input type="radio" name="decisionPointDifficulty" value="2"> 2
-						</label>
-						<label class="radio-inline">
-							<input type="radio" name="decisionPointDifficulty" value="3"> 3
-						</label>
-						<label class="radio-inline">
-							<input type="radio" name="decisionPointDifficulty" value="4"> 4
-						</label>
-						<label class="radio-inline">
-							<input type="radio" name="decisionPointDifficulty" value="5"> 5
-						</label>
-						<label class="radio-inline">
-							<input type="radio" name="decisionPointDifficulty" value="6"> 6
-						</label>
-						<label class="radio-inline">
-							<input type="radio" name="decisionPointDifficulty" value="7"> 7
-						</label>
-						</span>
-					</fieldset>
-					<fieldset class="form-group top-buffer-25">
-						<label>How difficult was it to use this design tool? </label>
-						<span class="pull-right">
-							<label class="radio-inline">
-								<input type="radio" name="toolDifficulty" value="1"> 1
-							</label>
-						<label class="radio-inline">
-							<input type="radio" name="toolDifficulty" value="2"> 2
-						</label>
-						<label class="radio-inline">
-							<input type="radio" name="toolDifficulty" value="3"> 3
-						</label>
-						<label class="radio-inline">
-							<input type="radio" name="toolDifficulty" value="4"> 4
-						</label>
-						<label class="radio-inline">
-							<input type="radio" name="toolDifficulty" value="5"> 5
-						</label>
-						<label class="radio-inline">
-							<input type="radio" name="toolDifficulty" value="6"> 6
-						</label>
-						<label class="radio-inline">
-							<input type="radio" name="toolDifficulty" value="7"> 7
-						</label>
-						</span>
-					</fieldset>
-					<fieldset class="form-group top-buffer-25">
-						<label>Do you have any feedback to improve this HIT?</label>
-						<textarea class="form-control" id="feedbackText" rows="3"></textarea>
-					</fieldset>
-					<div class="row">
-						<div class="col-xs-12 text-center">
-							<button type="submit" id="exitConfirm" disabled="true" class="top-buffer-50 text-center btn btn-primary disabled btn-continue">
-							GET YOUR COMPLETION CODE
-							</button>
-						</div>
-					</div>
+                    <form id="exitForm">
+                        <div class="row">
+
+                            <fieldset class="row top-buffer-50"> 
+                                <label>How difficult was it to complete this task? </label>
+                                <p class="col-md-10 col-md-offset-1"> very easy -
+                                    <label class="radio-inline">
+                                        <input type="radio" name="taskDifficulty" value="1"> 1
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="taskDifficulty" value="2"> 2
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="taskDifficulty" value="3"> 3
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="taskDifficulty" value="4"> 4
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="taskDifficulty" value="5"> 5
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="taskDifficulty" value="6"> 6
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="taskDifficulty" value="7"> 7
+                                    </label>
+                                     - very hard
+                                    <!--$("#exitForm input[name=taskDifficulty]:checked").val()-->
+                                </p>
+                            </fieldset>
+
+                            <fieldset class="row top-buffer-25">
+                                <label>How difficult was it to design for this decision point? </label>
+                                <p class="col-md-10 col-md-offset-1"> very easy -
+                                    <label class="radio-inline">
+                                        <input type="radio" name="decisionPointDifficulty" value="1"> 1
+                                    </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="decisionPointDifficulty" value="2"> 2
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="decisionPointDifficulty" value="3"> 3
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="decisionPointDifficulty" value="4"> 4
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="decisionPointDifficulty" value="5"> 5
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="decisionPointDifficulty" value="6"> 6
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="decisionPointDifficulty" value="7"> 7
+                                </label>
+                                   - very hard
+                                </p>
+                            </fieldset>
+
+                            <fieldset class="row top-buffer-25">
+                                <label>How difficult was it to use this design tool? </label>
+                                <p class="col-md-10 col-md-offset-1"> very easy -
+                                    <label class="radio-inline">
+                                        <input type="radio" name="toolDifficulty" value="1"> 1
+                                    </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="toolDifficulty" value="2"> 2
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="toolDifficulty" value="3"> 3
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="toolDifficulty" value="4"> 4
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="toolDifficulty" value="5"> 5
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="toolDifficulty" value="6"> 6
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="toolDifficulty" value="7"> 7
+                                </label>
+                                    - very hard
+                                </p>
+                            </fieldset>
+
+                            <fieldset class="row top-buffer-25">
+                                <label>Do you have any feedback to improve this HIT?</label>
+                                <textarea class="form-control" id="feedbackText" rows="3"></textarea>
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 text-center">
+                                <button type="submit" id="exitConfirm" disabled="true" class="top-buffer-50 text-center btn btn-primary disabled btn-continue">
+                                GET YOUR COMPLETION CODE
+                                </button>
+                            </div>
+					    </div>
 				</form>
 			</div>
 		</div>
 	</div>
 
-	<div class="modal fade" tabindex="-1" role="dialog" id="finalModal" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-						<span class="sr-only">Close</span>
-					</button>
-					<h4 class="modal-title">Thank you!</h4>
-				</div>
-				<div class="modal-body">
-					<p>Please paste this code back into mechanical turk to confirm your completion of the task.</p>
-					<p>Your code is: <strong>{{sessionId}}</strong></p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
 </template>

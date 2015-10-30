@@ -46,6 +46,9 @@
 											<fieldset class="form-group">
 												<input type="text" class="form-control" name="id" placeholder="ID #">
 											</fieldset>
+                                            <fieldset class="form-group">
+                                                <input type="text" class="form-control" name="type" placeholder="Decision point type ">
+                                            </fieldset>
 											<fieldset class="form-group">
 												<textarea class="form-control" name="description" rows="3" placeholder="Description"></textarea>
 											</fieldset>
@@ -53,6 +56,7 @@
 												<textarea class="form-control" name="requirements" rows="3"
 												          placeholder="Requirements"></textarea>
 											</fieldset>
+
 											<button type="submit" class="btn btn-primary btn-continue">Create</button>
 											<!--<button class="btn btn-info btn-continue update">UPDATE</button>-->
 										</form>
@@ -151,6 +155,9 @@
 		<ul class="list-group list-group-flush">
 			<li class="list-group-item">{{_id}}</li>
 		</ul>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">{{type}}</li>
+        </ul>
 		<div class="card-block">
 			<a href="#" class="card-link preview">Preview</a>
 			<a href="#" class="card-link text-danger delete">Delete</a>

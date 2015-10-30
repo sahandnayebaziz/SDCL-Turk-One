@@ -28,7 +28,7 @@ if (Meteor.isClient) {
 				tool: toolDifficulty,
 				feedback: feedback
 			}, function() {
-				$('#finalModal').modal("show");
+				Router.go("/end/" + Session.get("ticket"));
 			});
 		}
 	});

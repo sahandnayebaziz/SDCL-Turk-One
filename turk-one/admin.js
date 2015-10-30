@@ -3,8 +3,6 @@
  */
 if (Meteor.isClient) {
 
-	document.title = "Admin Page";
-
 	Template.admin.helpers({
 		decisionPoints: function () {
 			// find all decisions, sorted by id
@@ -48,7 +46,8 @@ if (Meteor.isClient) {
 				name: form.name.value,
 				_id: form.id.value,
 				description: form.description.value,
-				requirements: form.requirements.value
+				requirements: form.requirements.value,
+				type: form.type.value
 			});
 		},
 		"click .update": function () {
@@ -59,7 +58,8 @@ if (Meteor.isClient) {
 				name: form.name.value,
 				_id: form.id.value,
 				description: form.description.value,
-				requirements: form.requirements.value
+				requirements: form.requirements.value,
+				type: form.type.value
 			});
 		},
 		"click .deleteSolution": function () {
