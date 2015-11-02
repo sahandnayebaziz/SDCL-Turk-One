@@ -2,17 +2,15 @@
 
 	<div class="container-fluid container-tool">
 		<div class="row">
-			<div class="col-md-12 col-lg-4 bottom-buffer-50 md-fixed">
+			<div id="dpBlock" class="col-md-12 col-lg-4 bottom-buffer-50 md-fixed ">
 				{{#with decisionPoint}}
 					{{>decisionPointInformationPanel}}
 				{{/with}}
 			</div>
-			<div class="col-md-12 col-lg-8 col-lg-offset-4 bottom-buffer-100" data-intro="These are the 5 different canvases and text boxes where you can design your solutions in. You can sketch your solutions in the white boxes and name and describe them below the box.
-			Do not forget to provide a name and explanation for all your solutions."
-                 data-position="left">
+			<div class="col-md-12 col-lg-8 col-lg-offset-4 bottom-buffer-100" id="intro2">
 				<div class="row">
 					<div class="col-lg-1 col-md-12" >
-						<div id="toolbarContainer" class="md-fixed" data-intro="These are your sketching tools. Click on the question mark to toggle on the tips to see what each button does." data-position="left">
+						<div id="toolbarContainer" class="md-fixed">
 							<span class="buttonToolbar buttonColor" id="buttonBlack" data-color="#414141"></span>
 
 							<!--<span class="buttonColor" id="buttonWhite" data-color="#FFFFFF"></span>-->
@@ -455,13 +453,13 @@
                             $('[data-toggle="tooltip"]').tooltip('toggle');
                             console.log("pressed the fucking toggle button bitch!");
 
-                            //google analytics
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Button',
-                                eventAction: 'Tips toggle',
-                                eventLabel: Session.get("ticket")
-                            });
+//                            //google analytics
+//                            ga('send', {
+//                                hitType: 'event',
+//                                eventCategory: 'Button',
+//                                eventAction: 'Tips toggle',
+//                                eventLabel: Session.get("ticket")
+//                            });
                         });
 
 
@@ -641,14 +639,14 @@
 									<div class="row">
 										<div class="col-md-12">
 											<input id="name-{{canvasNumber}}" type="text"
-											       placeholder="Name this solution"
+											       placeholder="Name solution {{canvasNumber}}"
 											       class="form-control form-transparent form-name"
 											       value="{{name}}">
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-md-12">
-											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution"
+											<textarea id="explain-{{canvasNumber}}" placeholder="Explain solution {{canvasNumber}}"
 											          class="explain form-transparent form-control form-description"
 											          value="{{explain}}"></textarea>
 										</div>
@@ -657,10 +655,6 @@
 							</div>
 
 							<script>
-
-								$("#canvas-2").attr({"title": "This is another sketch canvas where you can design an alternative solution, you can make up to 5 alternative solutions"});
-								$("#name-2").attr({"title": "This is where you explain and name the alternative solution"});
-
 								// autosize of textarea's for the explaination fields
 								$(function () {
 									$(".explain").autosize()
@@ -1015,8 +1009,8 @@
 <template name="decisionPointInformationPanel">
 	<div class="row">
 		<div class="col-md-12 col-lg-10 col-lg-offset-1">
-			<div class="row">
-				<div class="col-xs-12" data-intro="This is your decision point. Read it carefully and try to think of different solutions to solve it." data-position="right">
+			<div class="row" id="intro1">
+				<div class="col-xs-12">
 					<h4>{{name}}<br></h4>
 					<p>{{description}}</p>
 					<p>
@@ -1028,32 +1022,38 @@
 					<p>{{requirements}}</p>
 				</div>
 			</div>
-			<div class="row top-buffer-100 right-buffer-10">
-				<div class="pull-left">
-                    <a data-toggle="modal" data-target="#finishModal" id="finishRequest" class="btn btn-success btn-continue" data-position="right" data-step="5" data-intro="When you are done with designing your solutions, click here to review them one more time and to submit them.">
-                   REVIEW AND FINISH</a>
-				</div>
-            </div>
-            <div class="row top-buffer-50 right-buffer-10">
-                <div class="pull-left">
-                    <button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-position="right" data-target="#infoModal">TASK INFORMATION</button>
+            <div id="intro4">
+                <div id="buttonMenu" class="row center" role="group" aria-label="...">
+                    <button id="finishRequest" class="btn btn-success btn-continue" data-toggle="modal" data-target="#finishModal" >REVIEW & FINISH</button>
+                    <button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-target="#infoModal">TASK INFO</button>
+                    <button id="tutorialRequest" class="btn btn-primary btn-continue" data-toggle="modal">TUTORIAL</button>
+                    <button id="quitRequest" class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">QUIT</button>
                 </div>
             </div>
-            <div class="row top-buffer-100 right-buffer-10">
-				<div class="pull-left">
-                    <button id="quitRequest" class="btn btn-danger btn-continue" data-toggle="modal" data-position="right" data-target="#quitModal" data-step="4" data-intro="Please click here if you want to quit the task">QUIT</button>
-				</div>
-			</div>
 		</div>
 	</div>
 
 	<script>
-        //start intro
-        introJs().setOptions({
-            "scrollToElement": true,
-            "showStepNumbers": false,
-        }).start();
+        //choose layout for menu based on screen size
+        if($(window).width() > 985){
+            //console.log($(window).width());
+            $('#buttonMenu').addClass('btn-group-vertical');
+        } else {
+            $('#buttonMenu').addClass('btn-group');
+        }
 
+        // puts the button menu in vertical on smaller screens
+        $(window).resize(function() {
+            if ($(window).width() > 985) {
+                //console.log("width" +$(window).width());
+                //console.log("height" +$(window).height());
+                $('#buttonMenu').removeClass('btn-group');
+                $('#buttonMenu').addClass('btn-group-vertical');
+            } else {
+                $('#buttonMenu').addClass('btn-group');
+                $('#buttonMenu').removeClass('btn-group-vertical');
+            }
+        });
 
         //Google analytics
         $("#finishRequest").click(function () {
@@ -1074,12 +1074,6 @@
             });
         });
 
-        //auto resize of textarea's
-		$(function () {
-			$('textarea').autosize()
-		});
-
 	</script>
-
 
 </template>

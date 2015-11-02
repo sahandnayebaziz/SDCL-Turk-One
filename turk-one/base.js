@@ -26,7 +26,7 @@ if (Meteor.isClient) {
 
 	Template.home.events({
 		"click .btn-continue": function() {
-			Router.go("/help/" + Session.get("ticket"));
+			Router.go("/tool/" + Session.get("ticket"));
 		}
 	});
 
@@ -41,6 +41,7 @@ if (Meteor.isClient) {
 			if (Session.get("ticketedFor" + workerId)) {
 				Session.setPersistent("ticket", Session.get("ticketedFor" + workerId));
 				console.log("ticket exists and was set");
+				console.log("tutorial status is:" +Session.get("tutorialDone"));
 			} else {
 				WorkerTickets.insert({
 					workerId: this.data.workerId,
@@ -52,6 +53,8 @@ if (Meteor.isClient) {
 						console.log("created a worker ticket successfully with id: " + id);
 						Session.setPersistent("ticket", id);
 						Session.setPersistent("ticketedFor" + workerId, id);
+						Session.setPersistent("tutorialDone", false);
+						console.log("tutorial status was set to:" +Session.get("tutorialDone"));
 					}
 				})
 			}

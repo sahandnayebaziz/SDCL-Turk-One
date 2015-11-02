@@ -42,8 +42,9 @@ body {
     margin-bottom: 25px;
 }
 
-.right-buffer-10 {
-    margin-left:10px;
+.center {
+    float:none;
+    margin: 0 auto;
 }
 
 .bg-white {
