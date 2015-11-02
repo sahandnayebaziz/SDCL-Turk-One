@@ -26,6 +26,10 @@ body {
     margin-bottom: 100px;
 }
 
+.bottom-buffer-1500 {
+    margin-bottom: 150px;
+}
+
 .top-buffer-50 {
     margin-top: 50px;
 }

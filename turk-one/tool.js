@@ -71,21 +71,6 @@ if (Meteor.isClient) {
 		solutions: function () {
 			return Solutions.find({workerId: Session.get("ticket")}, {sort: {canvasNumber: 1}});
 		},
-		numberOfCanvasesToShow: function () {
-			var numberOfIndexesToReturn = Session.get("numberOfCanvasesToShow");
-			var arrayOfIndexes = [];
-			for (var x = 1; x <= numberOfIndexesToReturn; x++) {
-				arrayOfIndexes.push(x);
-			}
-			return arrayOfIndexes;
-		},
-		shouldShowAddCanvasButton: function () {
-			if (Session.get("numberOfCanvasesToShow") == 5) {
-				return false;
-			} else {
-				return true;
-			}
-		},
 		shouldGenerateReviews: function () {
 			return Session.get("shouldGenerateReviews");
 		},
@@ -114,10 +99,6 @@ if (Meteor.isClient) {
 	});
 
 	Template.tool.events({
-		"click .addCanvas": function (event) {
-			event.preventDefault();
-			Session.set("numberOfCanvasesToShow", Session.get("numberOfCanvasesToShow") + 1);
-		},
 		"change input[name=quitReason]": function () {
 			$("#quitSubmit").removeClass("disabled");
 			$("#quitSubmit").prop("disabled", false);

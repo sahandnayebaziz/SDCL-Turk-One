@@ -26,7 +26,14 @@ if (Meteor.isClient) {
 
 	Template.home.events({
 		"click .btn-continue": function() {
-			Router.go("/tool/" + Session.get("ticket"));
+			WorkerTickets.update(Session.get("ticket"), {
+				$inc: {
+					homeTime: homeStopwatch.getElapsed().seconds
+				}
+			}, function () {
+				homeStopwatch.reset();
+				Router.go("/tool/" + Session.get("ticket"));
+			});
 		}
 	});
 
