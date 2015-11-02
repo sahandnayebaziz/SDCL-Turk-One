@@ -629,23 +629,26 @@
 							} else {
 								Solutions.insert({
 									workerId: Session.get("ticket"),
+									state: "{\"objects\":[],\"background\":\"white\"}",
 									createdAt: new Date(),
 									dateUpdated: new Date(),
 									canvasNumber: canvasNumber,
 									status: "pending"
 								}, function (error, id) {
-									Session.setPersistent("objectId" + Session.get("ticket") + canvasNumber, id);
-									Session.setPersistent("insertedSolutionFor" + Session.get("ticket") + canvasNumber, "true");
-									console.log("set persistence for user" + Session.get("ticket") + " canvas: " + canvasNumber);
+									if (!error) {
+										Session.setPersistent("objectId" + Session.get("ticket") + canvasNumber, id);
+										Session.setPersistent("insertedSolutionFor" + Session.get("ticket") + canvasNumber, "true");
+										console.log("set persistence for user" + Session.get("ticket") + " canvas: " + canvasNumber);
+									}
 								});
 							}
 						}
 
-						createPersistSelf(5);
-						createPersistSelf(4);
-						createPersistSelf(3);
-						createPersistSelf(2);
 						createPersistSelf(1);
+						createPersistSelf(2);
+						createPersistSelf(3);
+						createPersistSelf(4);
+						createPersistSelf(5);
 
 
 					</script>
@@ -708,6 +711,7 @@
 
 							{{#if state}}
 								<script>
+									console.log("reloading a state for canvas {{canvasNumber}}");
 									canvas.loadFromJSON({{state}});
 									canvas.renderAll();
 									// code from save self
