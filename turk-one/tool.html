@@ -300,8 +300,8 @@
 							$(".selectedTool").removeClass("selectedTool").addClass("deselectedTool");
 							$(tool).addClass("selectedTool");
 
-							if ($(tool).attr("id") != "buttonEraser") {
-								disableEraser();
+							if (($(tool).attr("id") != "buttonEraser") && ($(tool).attr("id") != "buttonText"))  {
+								removeMouseDownEvents();
 							}
 						}
 
@@ -337,11 +337,11 @@
 								eventLabel: Session.get("ticket")
 							});
 						});
-						function disableEraser() {
-
+						function removeMouseDownEvents() {
 							$.each(canvases, function () {
 								this.off("mouse:down");
 							});
+							console.log("removed handlers");
 						}
 						function enableEraser() {
 							$.each(canvases, function () {
@@ -370,7 +370,7 @@
 
 							$.each(canvases, function () {
 								this.isDrawingMode = false;
-							})
+							});
 
 							ga('send', {
 								hitType: 'event',
@@ -378,37 +378,40 @@
 								eventAction: 'Move Controls',
 								eventLabel: Session.get("ticket")
 							});
-						});
+						})
+
+						// this is an explicit mod of the above function that can be synthetically run from another click handler
+						function simulateMoveClick() {
+							setSelectedTool($("#buttonMove"));
+							$.each(canvases, function () {
+								this.isDrawingMode = false;
+							});
+						}
 
 						// text button clicked
 						$("#buttonText").click(function () {
-
 							setSelectedTool(this);
+
 							$.each(canvases, function () {
 								this.isDrawingMode = false;
 							});
 
-							canvasWithFocus.on("mouse:down", function (e) {
-								var pointer = canvasWithFocus.getPointer(event.e);
+							$.each(canvases, function () {
+								this.on("mouse:down", function (e) {
+									var locationOnThisCanvas = this.getPointer(event.e);
+									console.log(locationOnThisCanvas);
+									this.add(new fabric.IText('Enter Text', {
+										fontFamily: 'times black',
+										left: locationOnThisCanvas.x,
+										top: locationOnThisCanvas.y,
+										fontSize: 16
+									}));
 
-								canvasWithFocus.add(new fabric.IText('Enter Text', {
-									fontFamily: 'times black',
-									left: pointer.x,
-									top: pointer.y,
-									fontSize: 16
-								}));
+									var newTextObject = this.item(this.getObjects().length - 1);
+									this.setActiveObject(newTextObject);
 
-								var textObject = canvasWithFocus.item(canvasWithFocus.getObjects().length - 1);
-								canvasWithFocus.setActiveObject(textObject);
-
-								//textObject.enterEditing(); causing the window to scroll is sortof a bug of fabricjs
-
-								textObject.selectAll();
-								$.each(canvases, function () {
-									this.off("mouse:down");
+									simulateMoveClick();
 								});
-
-								setSelectedTool("#buttonMove");
 							});
 
 							ga('send', {
@@ -418,6 +421,7 @@
 								eventLabel: Session.get("ticket")
 							});
 						});
+
 
 						// UNDO AND REDO
 						$("#buttonUndo").click(function () {
