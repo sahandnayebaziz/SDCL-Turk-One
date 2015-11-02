@@ -58,9 +58,17 @@ Router.route('/end/:_id', function () {
 	document.title = "Thank you for your participation";
 });
 
-
 Router.route('/admin', function () {
-	this.render('Admin');
+	if (Meteor.user() && Meteor.user().username === 'admin') {
+		this.render('Admin');
+	} else {
+		this.render("unauth");
+	}
+	document.title = "Crowd Design Admin";
+});
+
+Router.route('/secretlogin', function () {
+	this.render('secretlogin');
 	document.title = "Crowd Design Admin";
 });
 
@@ -69,6 +77,6 @@ Router.route('/worker/:_id', function () {
 		data: function () {
 			return WorkerTickets.findOne(this.params._id);
 		}
-	})
+	});
 	document.title = "Worker Review";
 });
