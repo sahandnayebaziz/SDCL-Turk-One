@@ -924,7 +924,45 @@
 		</div>
 	</div>
 
-	<style>
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">General Task Information</h4>
+                </div>
+                <div class="modal-body">
+                    <h5>
+                        Educational Traffic Flow Simulation Program
+                    </h5>
+                    <p><br>You are part of a team of software developers who are working together to design a traffic flow simulator
+                        program. The overall purpose of the simulator program is educational: university-level civil engineering students
+                        will be using it to understand the effects that different traffic signal timings have on traffic flow.
+                    </p>
+                    <p class="small">The overall design problem has already been broken down into a large number of much smaller
+                        decision points: individual aspects of the design that can be considered in isolation of each other. You
+                        have been tasked with working on one of those decision points, by providing one or more alternative solutions
+                        that would satisfactorily address the requirements of that decision point.<br><br>
+                        <span>{{DecisionPointText}}</span>
+                    </p>
+                    <p class="small"><span class="text-muted medium strong"><strong>DESIGN CRITERIA</strong></span><br>
+                        You may provide as few as one alternative solution, and as many as five. You will be paid $1.50 per alternative solution that meets the following criteria:
+                    <ul class="small">
+                        <li>It is specified in English</li>
+                        <li>It has a proper name and textual explanation</li>
+                        <li>It has a sensible accompanying sketch that shows the alternative solution</li>
+                        <li>It is relevant to the decision point.</li>
+                    </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
 		.container-tool {
 			margin-top: 60px;
 		}
@@ -995,6 +1033,11 @@
                     <a data-toggle="modal" data-target="#finishModal" id="finishRequest" class="btn btn-success btn-continue" data-position="right" data-step="5" data-intro="When you are done with designing your solutions, click here to review them one more time and to submit them.">
                    REVIEW AND FINISH</a>
 				</div>
+            </div>
+            <div class="row top-buffer-50 right-buffer-10">
+                <div class="pull-left">
+                    <button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-position="right" data-target="#infoModal">TASK INFORMATION</button>
+                </div>
             </div>
             <div class="row top-buffer-100 right-buffer-10">
 				<div class="pull-left">
