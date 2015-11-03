@@ -1093,7 +1093,8 @@
 			infoModalStopwatch.stop();
 			WorkerTickets.update(Session.get("ticket"), {
 				$inc: {
-					infoModalTime: infoModalStopwatch.getElapsed().seconds
+					infoModalTime: infoModalStopwatch.getElapsed().seconds,
+					infoModalNumberOfTimes: 1
 				}
 			}, function() {
 				infoModalStopwatch.reset();
