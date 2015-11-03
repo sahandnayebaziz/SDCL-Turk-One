@@ -41,7 +41,7 @@
 							<img src="/redo-icon.png" class="buttonToolbar deselectedTool buttonHistory tooltipBoxUnEven" id="buttonRedo"
 							      href="#" data-trigger="manual" data-toggle="6" title="Redo">
 
-                            <span class=" buttonToolbar deselectedTool" id="toolbarTips">?</span>
+                            <span class=" buttonToolbar deselectedTool" id="toolbarTips" data-toggle="modal" data-target="#tooltipModal">?</span>
 						</div>
 					</div>
 
@@ -477,74 +477,10 @@
 							});
 						});
 
-                        // "global" variables for tooltips
-                        var tooltipNumber = 0;
-                        var bigScreen;
+                        $("#toolbarTips").click(function () {
 
-                        //change tooltip position on horizontal toolbar
-                        if ($(window).width() > 991) {
-                            bigScreen = true;
-                            $('.tooltipBoxEven').attr("data-placement",'right');
-                            $('.tooltipBoxUnEven').attr("data-placement",'left');
-                        } else {
-                            bigScreen = false;
-                            $('.tooltipBoxEven').attr("data-placement",'bottom');
-                            $('.tooltipBoxUnEven').attr("data-placement",'top');
-                        };
 
-                        //change tooltip position on resizing
-                        $(window).resize(function () {
-                            if ($(window).width() > 991) {
-                                if (!bigScreen && Session.get("tipsToggled")){
-                                    $('[data-toggle="'+tooltipNumber+'"]').tooltip('toggle');
-                                    Session.set("tipsToggled", false);
-                                }
-                                if (!bigScreen){
-//                                    $('.tooltipBoxEven').attr("data-placement",'left');
-//                                    $('.tooltipBoxUnEven').attr("data-placement",'right');
-                                    bigScreen=true;
-                                }
-                            } else {
-                                if (bigScreen && Session.get("tipsToggled")){
-                                    $('.buttonToolbar').tooltip('toggle');
-                                    Session.set("tipsToggled", false);
-                                }
-                                if (bigScreen) {
-//                                    $('.tooltipBoxEven').attr("data-placement", 'top');
-//                                    $('.tooltipBoxUnEven').attr("data-placement", 'bottom');
-                                    bigScreen = false;
-                                }
-                            }
                         });
-
-						// tooltips in the toolbar
-						$("#toolbarTips").click(function () {
-                            if ($(window).width() > 991) {
-                                if(Session.get("tipsToggled")){
-                                    Session.set("tipsToggled", false);
-                                } else {
-                                    Session.set("tipsToggled", true);
-                                }
-                                console.log("vertical:" +Session.get("tipsToggled"));
-                                $('.buttonToolbar').tooltip('toggle');
-
-                            } else {
-                                if (tooltipNumber == 6){
-                                    $('[data-toggle="'+tooltipNumber+'"]').tooltip('toggle');
-                                    Session.set("tipsToggled", false);
-                                    tooltipNumber = 0;
-                                } else if (tooltipNumber == 0) {
-                                    tooltipNumber ++;
-                                    Session.set("tipsToggled", true);
-                                    $('[data-toggle="'+tooltipNumber+'"]').tooltip('toggle');
-                                } else {
-                                    $('[data-toggle="'+tooltipNumber+'"]').tooltip('toggle');
-                                    tooltipNumber ++;
-                                    $('[data-toggle="'+tooltipNumber+'"]').tooltip('toggle');
-                                }
-                                console.log("horizontal:" +Session.get("tipsToggled"));
-                            }
-						});
 
 
 						// drawing straight lines when pressing shift
@@ -1143,6 +1079,26 @@
 			</div>
 		</div>
 	</div>
+    <div class="modal fade" id="tooltipModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">Tooltips</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div  class="col-xs-12">
+                            <img src="/vertical.png" class="img-responsive" alt="change colors with the color balls, T adds text, 4 arrows is a move resize rotate selector, pink gummy is an eraser, big arrows are undo redo">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 	<script>
 		// timer hooks for modals
