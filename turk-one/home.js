@@ -60,6 +60,7 @@ if (Meteor.isClient) {
 						Session.setPersistent("ticket", id);
 						Session.setPersistent("ticketedFor" + workerId, id);
 						Session.setPersistent("tutorialDone", false);
+						Session.setPersistent("tipsToggled", false);
 						console.log("tutorial status was set to:" +Session.get("tutorialDone"));
 					}
 				})
