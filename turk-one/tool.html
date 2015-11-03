@@ -10,40 +10,38 @@
 			<div class="col-md-12 col-lg-8 col-lg-offset-4 bottom-buffer-100" id="intro2">
 				<div class="row">
 					<div class="col-lg-1 col-md-12">
-						<div id="toolbarContainer" class="md-fixed">
+						<div id="toolbarContainer" class="md-fixed noselect">
 							<span class="buttonToolbar buttonColor" id="buttonBlack" data-color="#414141"></span>
 
 							<!--<span class="buttonColor" id="buttonWhite" data-color="#FFFFFF"></span>-->
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonBlue" data-color="#80D4FC"></span>
 
-							<span class="buttonToolbar deselectedTool buttonColor" id="buttonGreen" data-color="#A1F5AA"
-							      data-placement="left" href="#" data-trigger="manual" data-toggle="tooltip"
-							      title="Use these buttons to select the colour of your brush"></span>
+							<span class="buttonToolbar deselectedTool buttonColor tooltipBoxEven" id="buttonGreen" data-color="#A1F5AA"
+                                  href="#" data-trigger="manual" data-toggle="1"
+							      title="select the colour of your brush"></span>
 
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonRed" data-color="#F78479"></span>
 
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
 
-							<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText" data-placement="right" href="#"
-							     data-trigger="manual" data-toggle="tooltip"
+							<img src="/type.png" class="buttonToolbar deselectedTool tooltipBoxUnEven" id="buttonText" href="#"
+							     data-trigger="manual" data-toggle="2"
 							     title="Add text to your sketch: click anywhere on the canvas to add, then click on the text to edit.">
 
-							<span class="buttonToolbar deselectedTool" id="buttonMove" data-placement="left" href="#"
-							      data-trigger="manual" data-toggle="tooltip"
+							<span class="buttonToolbar deselectedTool tooltipBoxEven" id="buttonMove" href="#"
+							      data-trigger="manual" data-toggle="3"
 							      title="With this tool you can move, resize or rotate every object on your canvas"></span>
 
-							<span class="buttonToolbar deselectedTool" id="buttonEraser" data-placement="right" href="#"
-							      data-trigger="manual" data-toggle="tooltip" title="Eraser"></span>
+							<span class="buttonToolbar deselectedTool tooltipBoxUnEven" id="buttonEraser" href="#"
+							      data-trigger="manual" data-toggle="4" title="Erase: Click on object to delete or drag to select objects you want to delete, then click on the selected objects"></span>
 
-							<img src="/undo-icon.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonUndo"
-							     data-placement="left" href="#" data-trigger="manual" data-toggle="tooltip" title="Undo">
+							<img src="/undo-icon.png" class="buttonToolbar deselectedTool buttonHistory tooltipBoxEven" id="buttonUndo"
+							      href="#" data-trigger="manual" data-toggle="5" title="Undo">
 
-							<img src="/redo-icon.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonRedo"
-							     data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Redo">
+							<img src="/redo-icon.png" class="buttonToolbar deselectedTool buttonHistory tooltipBoxUnEven" id="buttonRedo"
+							      href="#" data-trigger="manual" data-toggle="6" title="Redo">
 
-                            <span class="buttonToolbar deselectedTool" id="toolbarTips" data-placement="left" href="#"
-                                  data-trigger="manual" data-toggle="tooltip" title="tooltips on/off">?
-                            </span>
+                            <span class=" buttonToolbar deselectedTool" id="toolbarTips">?</span>
 						</div>
 					</div>
 
@@ -81,8 +79,12 @@
 								margin-right: 24px !IMPORTANT;
 							}
 
-							#buttonRedo, #buttonUndo {
-								margin-top: 5px;
+                            #toolbarTips{
+                                line-height: 28px;
+                            }
+
+							#buttonRedo, #buttonUndo  {
+								margin-bottom: 5px;
 							}
 						}
 
@@ -122,6 +124,7 @@
 								height: 25px;
 								margin-bottom: 24px;
 							}
+
 						}
 
 						.buttonHistory {
@@ -191,26 +194,33 @@
 							opacity: 1 !IMPORTANT;
 						}
 
+                        #buttonRedo, #buttonUndo  {
+                            transform: rotate(45deg);
+                            -moz-transform: rotate(45deg);
+                            -webkit-transform: rotate(45deg);
+                            -ms-transform: rotate(45deg);
+                        }
+
 						#toolbarTips {
 							text-align: center;
 							font-size: 20pt;
 							height: 28px;
 							width: 28px;
+                            cursor:default;
 						}
 
 						.tooltip-inner {
 							border: solid 1px #000000;
 							background-color: #ededed;
 							color: #000000;
-							max-width: 200px;
+							max-width: 320px;
 							/* If max-width does not work, try using width instead */
 							/*width: 350px;*/
 						}
 
 					</style>
+
 					<script>
-
-
 						// initialize stopwatch arrays
 						interactionStopwatches = [];
 						locationStopwatches = [];
@@ -467,19 +477,73 @@
 							});
 						});
 
+                        // "global" variables for tooltips
+                        var tooltipNumber = 0;
+                        var bigScreen;
+
+                        //change tooltip position on horizontal toolbar
+                        if ($(window).width() > 991) {
+                            bigScreen = true;
+                            $('.tooltipBoxEven').attr("data-placement",'right');
+                            $('.tooltipBoxUnEven').attr("data-placement",'left');
+                        } else {
+                            bigScreen = false;
+                            $('.tooltipBoxEven').attr("data-placement",'bottom');
+                            $('.tooltipBoxUnEven').attr("data-placement",'top');
+                        };
+
+                        //change tooltip position on resizing
+                        $(window).resize(function () {
+                            if ($(window).width() > 991) {
+                                if (!bigScreen && Session.get("tipsToggled")){
+                                    $('[data-toggle="'+tooltipNumber+'"]').tooltip('toggle');
+                                    Session.set("tipsToggled", false);
+                                }
+                                if (!bigScreen){
+//                                    $('.tooltipBoxEven').attr("data-placement",'left');
+//                                    $('.tooltipBoxUnEven').attr("data-placement",'right');
+                                    bigScreen=true;
+                                }
+                            } else {
+                                if (bigScreen && Session.get("tipsToggled")){
+                                    $('.buttonToolbar').tooltip('toggle');
+                                    Session.set("tipsToggled", false);
+                                }
+                                if (bigScreen) {
+//                                    $('.tooltipBoxEven').attr("data-placement", 'top');
+//                                    $('.tooltipBoxUnEven').attr("data-placement", 'bottom');
+                                    bigScreen = false;
+                                }
+                            }
+                        });
+
 						// tooltips in the toolbar
 						$("#toolbarTips").click(function () {
+                            if ($(window).width() > 991) {
+                                if(Session.get("tipsToggled")){
+                                    Session.set("tipsToggled", false);
+                                } else {
+                                    Session.set("tipsToggled", true);
+                                }
+                                console.log("vertical:" +Session.get("tipsToggled"));
+                                $('.buttonToolbar').tooltip('toggle');
 
-							$('[data-toggle="tooltip"]').tooltip('toggle');
-							console.log("pressed the fucking toggle button bitch!");
-
-//                            //google analytics
-//                            ga('send', {
-//                                hitType: 'event',
-//                                eventCategory: 'Button',
-//                                eventAction: 'Tips toggle',
-//                                eventLabel: Session.get("ticket")
-//                            });
+                            } else {
+                                if (tooltipNumber == 6){
+                                    $('[data-toggle="'+tooltipNumber+'"]').tooltip('toggle');
+                                    Session.set("tipsToggled", false);
+                                    tooltipNumber = 0;
+                                } else if (tooltipNumber == 0) {
+                                    tooltipNumber ++;
+                                    Session.set("tipsToggled", true);
+                                    $('[data-toggle="'+tooltipNumber+'"]').tooltip('toggle');
+                                } else {
+                                    $('[data-toggle="'+tooltipNumber+'"]').tooltip('toggle');
+                                    tooltipNumber ++;
+                                    $('[data-toggle="'+tooltipNumber+'"]').tooltip('toggle');
+                                }
+                                console.log("horizontal:" +Session.get("tipsToggled"));
+                            }
 						});
 
 
@@ -1139,7 +1203,7 @@
 
 	<script>
 		//choose layout for menu based on screen size
-		if ($(window).width() > 985) {
+		if ($(window).width() > 991) {
 			//console.log($(window).width());
 			$('#buttonMenu').addClass('btn-group-vertical');
 		} else {
@@ -1148,7 +1212,7 @@
 
 		// puts the button menu in vertical on smaller screens
 		$(window).resize(function () {
-			if ($(window).width() > 985) {
+			if ($(window).width() > 991) {
 				//console.log("width" +$(window).width());
 				//console.log("height" +$(window).height());
 				$('#buttonMenu').removeClass('btn-group');
