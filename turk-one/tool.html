@@ -625,34 +625,6 @@
 							forceFocus(index);
 						});
 
-						// create persistent objects in database for these sketches
-						function createPersistSelf(canvasNumber) {
-							if (Session.get("insertedSolutionFor" + Session.get("ticket") + canvasNumber)) {
-
-							} else {
-								Solutions.insert({
-									workerId: Session.get("ticket"),
-									state: "{\"objects\":[],\"background\":\"white\"}",
-									createdAt: new Date(),
-									dateUpdated: new Date(),
-									canvasNumber: canvasNumber,
-									status: "pending"
-								}, function (error, id) {
-									if (!error) {
-										Session.setPersistent("objectId" + Session.get("ticket") + canvasNumber, id);
-										Session.setPersistent("insertedSolutionFor" + Session.get("ticket") + canvasNumber, "true");
-										console.log("set persistence for user" + Session.get("ticket") + " canvas: " + canvasNumber);
-									}
-								});
-							}
-						}
-
-						createPersistSelf(1);
-						createPersistSelf(2);
-						createPersistSelf(3);
-						createPersistSelf(4);
-						createPersistSelf(5);
-
 
 					</script>
 
@@ -1116,6 +1088,34 @@
 				infoModalStopwatch.reset();
 			})
 		});
+
+		// create persistent objects in database for these sketches
+		function createPersistSelf(canvasNumber) {
+			if (Session.get("insertedSolutionFor" + Session.get("ticket") + canvasNumber)) {
+
+			} else {
+				Solutions.insert({
+					workerId: Session.get("ticket"),
+					state: "{\"objects\":[],\"background\":\"white\"}",
+					createdAt: new Date(),
+					dateUpdated: new Date(),
+					canvasNumber: canvasNumber,
+					status: "pending"
+				}, function (error, id) {
+					if (!error) {
+						Session.setPersistent("objectId" + Session.get("ticket") + canvasNumber, id);
+						Session.setPersistent("insertedSolutionFor" + Session.get("ticket") + canvasNumber, "true");
+						console.log("set persistence for user" + Session.get("ticket") + " canvas: " + canvasNumber);
+					}
+				});
+			}
+		}
+
+		createPersistSelf(1);
+		createPersistSelf(2);
+		createPersistSelf(3);
+		createPersistSelf(4);
+		createPersistSelf(5);
 
 	</script>
 
