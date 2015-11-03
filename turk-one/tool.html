@@ -291,6 +291,9 @@
 						// state object for undo/redo stacks
 						canvasHistory = {};
 
+						// focusedText?
+						focusedText = false;
+
 						// Set Black as default color in toolbar (set for each canvas at initialization in tool.html
 						Session.set("currentColor", "#414141");
 						$("#buttonBlack").addClass("selectedTool");
@@ -622,34 +625,6 @@
 							forceFocus(index);
 						});
 
-						// create persistent objects in database for these sketches
-						function createPersistSelf(canvasNumber) {
-							if (Session.get("insertedSolutionFor" + Session.get("ticket") + canvasNumber)) {
-
-							} else {
-								Solutions.insert({
-									workerId: Session.get("ticket"),
-									state: "{\"objects\":[],\"background\":\"white\"}",
-									createdAt: new Date(),
-									dateUpdated: new Date(),
-									canvasNumber: canvasNumber,
-									status: "pending"
-								}, function (error, id) {
-									if (!error) {
-										Session.setPersistent("objectId" + Session.get("ticket") + canvasNumber, id);
-										Session.setPersistent("insertedSolutionFor" + Session.get("ticket") + canvasNumber, "true");
-										console.log("set persistence for user" + Session.get("ticket") + " canvas: " + canvasNumber);
-									}
-								});
-							}
-						}
-
-						createPersistSelf(1);
-						createPersistSelf(2);
-						createPersistSelf(3);
-						createPersistSelf(4);
-						createPersistSelf(5);
-
 
 					</script>
 
@@ -847,8 +822,20 @@
 
 								nameForThisCanvas.on("focus", setNameTimer);
 								nameForThisCanvas.on("blur", stopNameTimer);
+								nameForThisCanvas.on("keydown", function(canvasNumber) {
+									return function () {
+										forceFocus(canvasNumber);
+										console.log("forced focus baby");
+									}
+								}({{canvasNumber}}));
 								explainForThisCanvas.on("focus", setExplainTimer);
 								explainForThisCanvas.on("blur", stopExplainTimer);
+								explainForThisCanvas.on("keydown", function(canvasNumber) {
+									return function () {
+										forceFocus(canvasNumber);
+										console.log("forced focus baby");
+									}
+								}({{canvasNumber}}));
 
 								// initial save state
 								saveSelf();
@@ -955,6 +942,7 @@
 
 											<div class="text-center">
 												<p>{{name}}</p>
+												<p>{{explain}}</p>
 											</div>
 										</div>
 									{{/if}}
@@ -1101,6 +1089,34 @@
 			})
 		});
 
+		// create persistent objects in database for these sketches
+		function createPersistSelf(canvasNumber) {
+			if (Session.get("insertedSolutionFor" + Session.get("ticket") + canvasNumber)) {
+
+			} else {
+				Solutions.insert({
+					workerId: Session.get("ticket"),
+					state: "{\"objects\":[],\"background\":\"white\"}",
+					createdAt: new Date(),
+					dateUpdated: new Date(),
+					canvasNumber: canvasNumber,
+					status: "pending"
+				}, function (error, id) {
+					if (!error) {
+						Session.setPersistent("objectId" + Session.get("ticket") + canvasNumber, id);
+						Session.setPersistent("insertedSolutionFor" + Session.get("ticket") + canvasNumber, "true");
+						console.log("set persistence for user" + Session.get("ticket") + " canvas: " + canvasNumber);
+					}
+				});
+			}
+		}
+
+		createPersistSelf(1);
+		createPersistSelf(2);
+		createPersistSelf(3);
+		createPersistSelf(4);
+		createPersistSelf(5);
+
 	</script>
 
 </template>
@@ -1122,8 +1138,7 @@
 			</div>
 			<div id="intro4">
 				<div id="buttonMenu" class="row center" role="group" aria-label="...">
-					<button id="finishRequest" class="btn btn-success btn-continue" data-toggle="modal"
-					        data-target="#finishModal">REVIEW & FINISH
+					<button id="finishRequest" class="btn btn-success btn-continue">REVIEW & FINISH
 					</button>
 					<button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-target="#infoModal">TASK
 						INFO
