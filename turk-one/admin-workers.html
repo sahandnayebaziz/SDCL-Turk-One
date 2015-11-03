@@ -65,7 +65,7 @@
 </template>
 
 <template name="worker">
-	<div class="container top-buffer-100 bottom-buffer-100">
+	<div class="container-fluid top-buffer-100 bottom-buffer-100">
 		<div class="row bottom-buffer-50">
 			<div class="col-xs-12">
 				<a href="/admin"><strong>Back to admin</strong></a>
@@ -79,7 +79,9 @@
 					<li class="list-group-item"><span class="text-muted">session: </span>{{sessionId}}</li>
 					<li class="list-group-item"><span class="text-muted">decision point: </span>{{decisionPoint.name}}</li>
 					<li class="list-group-item"><span class="text-muted"># of solutions: </span>{{numberOfSolutionsComplexEnough}}</li>
+					<li class="list-group-item"><span class="text-muted">time on home: </span>{{timeOnHomeInMinutes}}m</li>
 					<li class="list-group-item"><span class="text-muted">time in tool: </span>{{timeInToolInMinutes}}m</li>
+					<li class="list-group-item"><span class="text-muted">time on info: </span>{{timeOnInfoInMinutes}}m</li>
 					{{#if quit}}
 						<li class="list-group-item"><span class="text-danger"><strong>User has quit!</strong></span></li>
 						{{else}}
@@ -114,7 +116,6 @@
 		</div>
 	</div>
 </template>
-
 <template name="solutionReviewModule">
 	<li class="list-group-item {{viewStatus}}">
 		<div class="row">
@@ -122,6 +123,8 @@
 				<p><span class="text-muted">name: </span> {{name}}</p>
 				<p><span class="text-muted">explanation: </span> {{explain}}</p>
 				<p><span class="text-muted">time spent:</span> {{timeInMinutes}}m</p>
+				<p><span class="text-muted">time spent name:</span> {{timeInName}}s</p>
+				<p><span class="text-muted">time spent explain:</span> {{timeInExplain}}s</p>
 				<canvas id="canvas-{{canvasNumber}}" class="canvas-sketch"></canvas>
 			</div>
 		</div>

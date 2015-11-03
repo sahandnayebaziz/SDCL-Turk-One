@@ -50,7 +50,7 @@ if (Meteor.isClient) {
 				_id: form.id.value,
 				description: form.description.value,
 				requirements: form.requirements.value,
-				type: form.type.value
+				decisionPointType: form.type.value
 			});
 		},
 		"click .update": function () {
@@ -62,7 +62,7 @@ if (Meteor.isClient) {
 				_id: form.id.value,
 				description: form.description.value,
 				requirements: form.requirements.value,
-				type: form.type.value
+				decisionPointType: form.type.value
 			});
 		},
 		"click .deleteSolution": function () {

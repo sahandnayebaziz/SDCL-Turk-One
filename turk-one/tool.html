@@ -2,17 +2,15 @@
 
 	<div class="container-fluid container-tool">
 		<div class="row">
-			<div class="col-md-12 col-lg-4 bottom-buffer-50 md-fixed">
+			<div id="dpBlock" class="col-md-12 col-lg-4 bottom-buffer-50 md-fixed ">
 				{{#with decisionPoint}}
 					{{>decisionPointInformationPanel}}
 				{{/with}}
 			</div>
-			<div class="col-md-12 col-lg-8 col-lg-offset-4 bottom-buffer-100" data-intro="These are the 5 different canvases and text boxes where you can design your solutions in. You can sketch your solutions in the white boxes and name and describe them below the box.
-			Do not forget to provide a name and explanation for all your solutions."
-                 data-position="left">
+			<div class="col-md-12 col-lg-8 col-lg-offset-4 bottom-buffer-100" id="intro2">
 				<div class="row">
-					<div class="col-lg-1 col-md-12" >
-						<div id="toolbarContainer" class="md-fixed" data-intro="These are your sketching tools. Click on the question mark to toggle on the tips to see what each button does." data-position="left">
+					<div class="col-lg-1 col-md-12">
+						<div id="toolbarContainer" class="md-fixed">
 							<span class="buttonToolbar buttonColor" id="buttonBlack" data-color="#414141"></span>
 
 							<!--<span class="buttonColor" id="buttonWhite" data-color="#FFFFFF"></span>-->
@@ -27,7 +25,8 @@
 							<span class="buttonToolbar deselectedTool buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
 
 							<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText" data-placement="right" href="#"
-							     data-trigger="manual" data-toggle="tooltip" title="Add text to your sketch: click anywhere on the canvas to add, then click on the text to edit.">
+							     data-trigger="manual" data-toggle="tooltip"
+							     title="Add text to your sketch: click anywhere on the canvas to add, then click on the text to edit.">
 
 							<span class="buttonToolbar deselectedTool" id="buttonMove" data-placement="left" href="#"
 							      data-trigger="manual" data-toggle="tooltip"
@@ -36,10 +35,10 @@
 							<span class="buttonToolbar deselectedTool" id="buttonEraser" data-placement="right" href="#"
 							      data-trigger="manual" data-toggle="tooltip" title="Eraser"></span>
 
-							<img src="/un-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonUndo"
+							<img src="/undo-icon.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonUndo"
 							     data-placement="left" href="#" data-trigger="manual" data-toggle="tooltip" title="Undo">
 
-							<img src="/re-do.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonRedo"
+							<img src="/redo-icon.png" class="buttonToolbar deselectedTool buttonHistory" id="buttonRedo"
 							     data-placement="right" href="#" data-trigger="manual" data-toggle="tooltip" title="Redo">
 
                             <span class="buttonToolbar deselectedTool" id="toolbarTips" data-placement="left" href="#"
@@ -192,21 +191,21 @@
 							opacity: 1 !IMPORTANT;
 						}
 
-                        #toolbarTips {
-                            text-align: center;
-                            font-size: 20pt;
-                            height: 28px;
-                            width: 28px;
-                        }
+						#toolbarTips {
+							text-align: center;
+							font-size: 20pt;
+							height: 28px;
+							width: 28px;
+						}
 
-                         .tooltip-inner {
-                             border: solid 1px #000000;
-                             background-color: #ededed;
-                             color: #000000;
-                             max-width: 200px;
-                             /* If max-width does not work, try using width instead */
-                             /*width: 350px;*/
-                         }
+						.tooltip-inner {
+							border: solid 1px #000000;
+							background-color: #ededed;
+							color: #000000;
+							max-width: 200px;
+							/* If max-width does not work, try using width instead */
+							/*width: 350px;*/
+						}
 
 					</style>
 					<script>
@@ -215,6 +214,7 @@
 						// initialize stopwatch arrays
 						interactionStopwatches = [];
 						locationStopwatches = [];
+						readingStopwatches = []; // these have a higher tolerance for inactivity (160 seconds instead of 10)
 
 						// functions that operate on stopwatches in those arrays
 						function resetInteractionTimers() {
@@ -224,6 +224,11 @@
 						}
 						function resetLocationTimers() {
 							$.each(locationStopwatches, function () {
+								this.reset();
+							});
+						}
+						function resetReadingTimers() {
+							$.each(readingStopwatches, function () {
 								this.reset();
 							});
 						}
@@ -241,6 +246,14 @@
 						locationStopwatches.push(pageStopwatch);
 						pageStopwatch.start();
 
+						// stopwatch that will run when writing a name
+						typingTimerName = new Stopwatch();
+						interactionStopwatches.push(typingTimerName);
+
+						// stopwatch that will run when writing an explanation
+						typingTimerExplanation = new Stopwatch();
+						interactionStopwatches.push(typingTimerExplanation);
+
 						// initialize idle timers
 						idleTime = 0;
 						var idleInterval = setInterval(timerIncrement, 1000); // every second
@@ -252,18 +265,19 @@
 						});  // reset the timer
 						function timerIncrement() {
 							idleTime = idleTime + 1;
-							if (idleTime > 10) { // every ten seconds
-								resetInteractionTimers(); // reset timers
-								resetLocationTimers();
-							} else {
+							if (idleTime <= 10) {
 								activateLocationTimers();
 							}
-						} 
+							if (idleTime > 10) { // after ten seconds
+								resetInteractionTimers();
+								resetLocationTimers();
+							}
+							if (idleTime > 160) { // after 2 minutes
+								resetReadingTimers();
+							}
+						}
 
 						// set up for canvases
-						// setting the default number of canvases to show
-						Session.set("numberOfCanvasesToShow", 5);
-
 						// this array will hold references to each Fabric canvas instance, and is looped through in the below toolbar
 						// actions to 'broadcast' the toolbar selects across the canvases
 						canvases = [];
@@ -286,8 +300,8 @@
 							$(".selectedTool").removeClass("selectedTool").addClass("deselectedTool");
 							$(tool).addClass("selectedTool");
 
-							if ($(tool).attr("id") != "buttonEraser") {
-								disableEraser();
+							if (($(tool).attr("id") != "buttonEraser") && ($(tool).attr("id") != "buttonText"))  {
+								removeMouseDownEvents();
 							}
 						}
 
@@ -302,12 +316,12 @@
 								this.isDrawingMode = true;
 							});
 
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Toolbar',
-                                eventAction: 'Selecting a color',
-                                eventLabel: Session.get("ticket")
-                            });
+							ga('send', {
+								hitType: 'event',
+								eventCategory: 'Toolbar',
+								eventAction: 'Selecting a color',
+								eventLabel: Session.get("ticket")
+							});
 
 						});
 
@@ -316,18 +330,18 @@
 							setSelectedTool(this);
 							enableEraser();
 
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Toolbar',
-                                eventAction: 'Eraser',
-                                eventLabel: Session.get("ticket")
-                            });
+							ga('send', {
+								hitType: 'event',
+								eventCategory: 'Toolbar',
+								eventAction: 'Eraser',
+								eventLabel: Session.get("ticket")
+							});
 						});
-						function disableEraser() {
-
+						function removeMouseDownEvents() {
 							$.each(canvases, function () {
 								this.off("mouse:down");
 							});
+							console.log("removed handlers");
 						}
 						function enableEraser() {
 							$.each(canvases, function () {
@@ -356,54 +370,58 @@
 
 							$.each(canvases, function () {
 								this.isDrawingMode = false;
-							})
+							});
 
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Toolbar',
-                                eventAction: 'Move Controls',
-                                eventLabel: Session.get("ticket")
-                            });
-						});
+							ga('send', {
+								hitType: 'event',
+								eventCategory: 'Toolbar',
+								eventAction: 'Move Controls',
+								eventLabel: Session.get("ticket")
+							});
+						})
+
+						// this is an explicit mod of the above function that can be synthetically run from another click handler
+						function simulateMoveClick() {
+							setSelectedTool($("#buttonMove"));
+							$.each(canvases, function () {
+								this.isDrawingMode = false;
+							});
+						}
 
 						// text button clicked
 						$("#buttonText").click(function () {
-
 							setSelectedTool(this);
+
 							$.each(canvases, function () {
 								this.isDrawingMode = false;
 							});
 
-							canvasWithFocus.on("mouse:down", function (e) {
-								var pointer = canvasWithFocus.getPointer(event.e);
+							$.each(canvases, function () {
+								this.on("mouse:down", function (e) {
+									var locationOnThisCanvas = this.getPointer(event.e);
+									console.log(locationOnThisCanvas);
+									this.add(new fabric.IText('Enter Text', {
+										fontFamily: 'times black',
+										left: locationOnThisCanvas.x,
+										top: locationOnThisCanvas.y,
+										fontSize: 16
+									}));
 
-								canvasWithFocus.add(new fabric.IText('Enter Text', {
-									fontFamily: 'times black',
-									left: pointer.x,
-									top: pointer.y,
-									fontSize: 16
-								}));
+									var newTextObject = this.item(this.getObjects().length - 1);
+									this.setActiveObject(newTextObject);
 
-								var textObject = canvasWithFocus.item(canvasWithFocus.getObjects().length - 1);
-								canvasWithFocus.setActiveObject(textObject);
-
-								//textObject.enterEditing(); causing the window to scroll is sortof a bug of fabricjs
-
-								textObject.selectAll();
-								$.each(canvases, function () {
-									this.off("mouse:down");
+									simulateMoveClick();
 								});
-
-								setSelectedTool("#buttonMove");
 							});
 
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Toolbar',
-                                eventAction: 'Text',
-                                eventLabel: Session.get("ticket")
-                            });
+							ga('send', {
+								hitType: 'event',
+								eventCategory: 'Toolbar',
+								eventAction: 'Text',
+								eventLabel: Session.get("ticket")
+							});
 						});
+
 
 						// UNDO AND REDO
 						$("#buttonUndo").click(function () {
@@ -421,12 +439,12 @@
 								canvasHistory[index].recording = true;
 							}
 
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Toolbar',
-                                eventAction: 'Undo',
-                                eventLabel: Session.get("ticket")
-                            });
+							ga('send', {
+								hitType: 'event',
+								eventCategory: 'Toolbar',
+								eventAction: 'Undo',
+								eventLabel: Session.get("ticket")
+							});
 						});
 						$("#buttonRedo").click(function () {
 							var index = canvasWithFocus.CDIndex;
@@ -441,28 +459,28 @@
 								canvasWithFocus.renderAll();
 								canvasHistory[index].recording = true;
 							}
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Toolbar',
-                                eventAction: 'Redo',
-                                eventLabel: Session.get("ticket")
-                            });
+							ga('send', {
+								hitType: 'event',
+								eventCategory: 'Toolbar',
+								eventAction: 'Redo',
+								eventLabel: Session.get("ticket")
+							});
 						});
 
-                        // tooltips in the toolbar
-                        $("#toolbarTips").click(function () {
+						// tooltips in the toolbar
+						$("#toolbarTips").click(function () {
 
-                            $('[data-toggle="tooltip"]').tooltip('toggle');
-                            console.log("pressed the fucking toggle button bitch!");
+							$('[data-toggle="tooltip"]').tooltip('toggle');
+							console.log("pressed the fucking toggle button bitch!");
 
-                            //google analytics
-                            ga('send', {
-                                hitType: 'event',
-                                eventCategory: 'Button',
-                                eventAction: 'Tips toggle',
-                                eventLabel: Session.get("ticket")
-                            });
-                        });
+//                            //google analytics
+//                            ga('send', {
+//                                hitType: 'event',
+//                                eventCategory: 'Button',
+//                                eventAction: 'Tips toggle',
+//                                eventLabel: Session.get("ticket")
+//                            });
+						});
 
 
 						// drawing straight lines when pressing shift
@@ -519,7 +537,6 @@
 								});
 							}
 						}, 'keyup');
-
 
 						// guessing focus
 						function findFocus() {
@@ -612,23 +629,26 @@
 							} else {
 								Solutions.insert({
 									workerId: Session.get("ticket"),
+									state: "{\"objects\":[],\"background\":\"white\"}",
 									createdAt: new Date(),
 									dateUpdated: new Date(),
 									canvasNumber: canvasNumber,
 									status: "pending"
 								}, function (error, id) {
-									Session.setPersistent("objectId" + Session.get("ticket") + canvasNumber, id);
-									Session.setPersistent("insertedSolutionFor" + Session.get("ticket") + canvasNumber, "true");
-									console.log("set persistence for user" + Session.get("ticket") + " canvas: " + canvasNumber);
+									if (!error) {
+										Session.setPersistent("objectId" + Session.get("ticket") + canvasNumber, id);
+										Session.setPersistent("insertedSolutionFor" + Session.get("ticket") + canvasNumber, "true");
+										console.log("set persistence for user" + Session.get("ticket") + " canvas: " + canvasNumber);
+									}
 								});
 							}
 						}
 
-						createPersistSelf(5);
-						createPersistSelf(4);
-						createPersistSelf(3);
-						createPersistSelf(2);
 						createPersistSelf(1);
+						createPersistSelf(2);
+						createPersistSelf(3);
+						createPersistSelf(4);
+						createPersistSelf(5);
 
 
 					</script>
@@ -641,14 +661,14 @@
 									<div class="row">
 										<div class="col-md-12">
 											<input id="name-{{canvasNumber}}" type="text"
-											       placeholder="Name this solution"
+											       placeholder="Name solution {{canvasNumber}}"
 											       class="form-control form-transparent form-name"
 											       value="{{name}}">
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-md-12">
-											<textarea id="explain-{{canvasNumber}}" placeholder="Explain this solution"
+											<textarea id="explain-{{canvasNumber}}" placeholder="Explain solution {{canvasNumber}}"
 											          class="explain form-transparent form-control form-description"
 											          value="{{explain}}"></textarea>
 										</div>
@@ -657,10 +677,6 @@
 							</div>
 
 							<script>
-
-								$("#canvas-2").attr({"title": "This is another sketch canvas where you can design an alternative solution, you can make up to 5 alternative solutions"});
-								$("#name-2").attr({"title": "This is where you explain and name the alternative solution"});
-
 								// autosize of textarea's for the explaination fields
 								$(function () {
 									$(".explain").autosize()
@@ -695,6 +711,7 @@
 
 							{{#if state}}
 								<script>
+									console.log("reloading a state for canvas {{canvasNumber}}");
 									canvas.loadFromJSON({{state}});
 									canvas.renderAll();
 									// code from save self
@@ -721,7 +738,7 @@
 								// set up sanitizer
 								function sanitizeText(text) {
 									return sanitizeHtml(text, {
-										textFilter: function(text) {
+										textFilter: function (text) {
 											text = text.replace('$', 'dollar');
 											text = text.replace('/', '&#x2F');
 											text = text.replace('\'', '&#x27'); //TODO: this is not working well maybe remove
@@ -779,6 +796,47 @@
 									}
 								})(canvas, nameForThisCanvas, explainForThisCanvas, stopwatch);
 
+								// TODO: give stopwatches a type, and don't repeat myself in these four functions so much
+								setNameTimer = (function (canvasNumber) {
+									return function() {
+										typingTimerName.start();
+									}
+								})({{canvasNumber}});
+								stopNameTimer = (function (canvasNumber) {
+									return function() {
+										Solutions.update(Session.get("objectId" + Session.get("ticket") + canvasNumber), {
+											$inc: {
+												timeInName: typingTimerName.getElapsed().seconds
+											}
+										}, function(error, number) {
+											if (!error) {
+												typingTimerName.stop();
+												typingTimerName.reset();
+											}
+										});
+									}
+								})({{canvasNumber}});
+
+								setExplainTimer = (function (canvasNumber) {
+									return function() {
+										typingTimerExplanation.start();
+									}
+								})({{canvasNumber}});
+								stopExplainTimer = (function (canvasNumber) {
+									return function() {
+										Solutions.update(Session.get("objectId" + Session.get("ticket") + canvasNumber), {
+											$inc: {
+												timeInExplain: typingTimerExplanation.getElapsed().seconds
+											}
+										}, function(error, number) {
+											if (!error) {
+												typingTimerExplanation.stop();
+												typingTimerExplanation.reset();
+											}
+										});
+									}
+								})({{canvasNumber}});
+
 								// event hooks
 								canvas.on('object:added', saveSelf);
 								canvas.on('object:modified', saveSelf);
@@ -786,6 +844,11 @@
 
 								nameForThisCanvas.on("change", saveSelf);
 								explainForThisCanvas.on("change", saveSelf);
+
+								nameForThisCanvas.on("focus", setNameTimer);
+								nameForThisCanvas.on("blur", stopNameTimer);
+								explainForThisCanvas.on("focus", setExplainTimer);
+								explainForThisCanvas.on("blur", stopExplainTimer);
 
 								// initial save state
 								saveSelf();
@@ -802,6 +865,57 @@
 		</div>
 	</div>
 
+	<!--styles-->
+	<style>
+		.container-tool {
+			margin-top: 60px;
+		}
+
+		.canvasContainer {
+			opacity: 0.4;
+			transition: opacity .13s ease-out;
+		}
+
+		.canvasContainer.focusedCanvas {
+			opacity: 1;
+		}
+
+		canvas.canvas-sketch {
+			display: block;
+			box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.04);
+			border-radius: 5px;
+		}
+
+		.form-transparent {
+			background-color: transparent;
+			border: none;
+			outline: none;
+		}
+
+		.canvas-forms {
+			margin-top: 25px;
+		}
+
+		.form-name {
+			font-size: 20px;
+		}
+
+		.form-description {
+			font-size: 15px;
+			line-height: 20px;
+			height: 80px;
+			resize: none;
+		}
+
+		.img-review {
+			display: block;
+			box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.09);
+			border-radius: 5px;
+			margin-bottom: 20px;
+		}
+	</style>
+
+	<!--modals-->
 	<div class="modal fade" id="finishModal" tabindex="-1" role="dialog" aria-labelledby="Finish confirmation"
 	     aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -859,8 +973,6 @@
 			</div>
 		</div>
 	</div>
-
-
 	<div class="modal fade" id="quitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -923,62 +1035,81 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">General Task Information</h4>
+				</div>
+				<div class="modal-body">
+					<h5>
+						Educational Traffic Flow Simulation Program
+					</h5>
 
-	<style>
-		.container-tool {
-			margin-top: 60px;
-		}
+					<p><br>You are part of a team of software developers who are working together to design a traffic flow
+						simulator
+						program. The overall purpose of the simulator program is educational: university-level civil engineering
+						students
+						will be using it to understand the effects that different traffic signal timings have on traffic flow.
+					</p>
 
-		.canvasContainer {
-			opacity: 0.4;
-			transition: opacity .13s ease-out;
-		}
+					<p class="small">The overall design problem has already been broken down into a large number of much smaller
+						decision points: individual aspects of the design that can be considered in isolation of each other. You
+						have been tasked with working on one of those decision points, by providing one or more alternative
+						solutions
+						that would satisfactorily address the requirements of that decision point.<br><br>
+						<span>{{decisionPointText}}</span>
+					</p>
 
-		.canvasContainer.focusedCanvas {
-			opacity: 1;
-		}
+					<p class="small"><span class="text-muted medium strong"><strong>DESIGN CRITERIA</strong></span><br>
+						You may provide as few as one alternative solution, and as many as five. You will be paid $1.50 per
+						alternative solution that meets the following criteria:
+					<ul class="small">
+						<li>It is specified in English</li>
+						<li>It has a proper name and textual explanation</li>
+						<li>It has a sensible accompanying sketch that shows the alternative solution</li>
+						<li>It is relevant to the decision point.</li>
+					</ul>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
 
-		canvas.canvas-sketch {
-			display: block;
-			box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.04);
-			border-radius: 5px;
-		}
+	<script>
+		// timer hooks for modals
+		infoModalStopwatch = new Stopwatch();
+		readingStopwatches.push(infoModalStopwatch);
 
-		.form-transparent {
-			background-color: transparent;
-			border: none;
-			outline: none;
-		}
+		$("#infoModal").on('shown.bs.modal', function () {
+			infoModalStopwatch.start();
+		});
 
-		.canvas-forms {
-			margin-top: 25px;
-		}
+		$("#infoModal").on('hide.bs.modal', function () {
+			infoModalStopwatch.stop();
+			WorkerTickets.update(Session.get("ticket"), {
+				$inc: {
+					infoModalTime: infoModalStopwatch.getElapsed().seconds,
+					infoModalNumberOfTimes: 1
+				}
+			}, function() {
+				infoModalStopwatch.reset();
+			})
+		});
 
-		.form-name {
-			font-size: 20px;
-		}
+	</script>
 
-		.form-description {
-			font-size: 15px;
-			line-height: 20px;
-			height: 80px;
-			resize: none;
-		}
-
-		.img-review {
-			display: block;
-			box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.09);
-			border-radius: 5px;
-			margin-bottom: 20px;
-		}
-	</style>
 </template>
 
 <template name="decisionPointInformationPanel">
 	<div class="row">
 		<div class="col-md-12 col-lg-10 col-lg-offset-1">
-			<div class="row">
-				<div class="col-xs-12" data-intro="This is your decision point. Read it carefully and try to think of different solutions to solve it." data-position="right">
+			<div class="row" id="intro1">
+				<div class="col-xs-12">
 					<h4>{{name}}<br></h4>
 					<p>{{description}}</p>
 					<p>
@@ -986,57 +1117,67 @@
 						<strong>REQUIREMENTS</strong>
 					</span>
 					</p>
-
 					<p>{{requirements}}</p>
 				</div>
 			</div>
-			<div class="row top-buffer-100 right-buffer-10">
-				<div class="pull-left">
-                    <a data-toggle="modal" data-target="#finishModal" id="finishRequest" class="btn btn-success btn-continue" data-position="right" data-step="5" data-intro="When you are done with designing your solutions, click here to review them one more time and to submit them.">
-                   REVIEW AND FINISH</a>
-				</div>
-            </div>
-            <div class="row top-buffer-100 right-buffer-10">
-				<div class="pull-left">
-                    <button id="quitRequest" class="btn btn-danger btn-continue" data-toggle="modal" data-position="right" data-target="#quitModal" data-step="4" data-intro="Please click here if you want to quit the task">QUIT</button>
+			<div id="intro4">
+				<div id="buttonMenu" class="row center" role="group" aria-label="...">
+					<button id="finishRequest" class="btn btn-success btn-continue" data-toggle="modal"
+					        data-target="#finishModal">REVIEW & FINISH
+					</button>
+					<button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-target="#infoModal">TASK
+						INFO
+					</button>
+					<button id="tutorialRequest" class="btn btn-primary btn-continue" data-toggle="modal">TUTORIAL</button>
+					<button id="quitRequest" class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">
+						QUIT
+					</button>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<script>
-        //start intro
-        introJs().setOptions({
-            "scrollToElement": true,
-            "showStepNumbers": false,
-        }).start();
+		//choose layout for menu based on screen size
+		if ($(window).width() > 985) {
+			//console.log($(window).width());
+			$('#buttonMenu').addClass('btn-group-vertical');
+		} else {
+			$('#buttonMenu').addClass('btn-group');
+		}
 
+		// puts the button menu in vertical on smaller screens
+		$(window).resize(function () {
+			if ($(window).width() > 985) {
+				//console.log("width" +$(window).width());
+				//console.log("height" +$(window).height());
+				$('#buttonMenu').removeClass('btn-group');
+				$('#buttonMenu').addClass('btn-group-vertical');
+			} else {
+				$('#buttonMenu').addClass('btn-group');
+				$('#buttonMenu').removeClass('btn-group-vertical');
+			}
+		});
 
-        //Google analytics
-        $("#finishRequest").click(function () {
-            ga('send', {
-                hitType: 'event',
-                eventCategory: 'Button',
-                eventAction: 'Review and Finish',
-                eventLabel: Session.get("ticket")
-            });
-        });
+		//Google analytics
+		$("#finishRequest").click(function () {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Review and Finish',
+				eventLabel: Session.get("ticket")
+			});
+		});
 
-        $("#quitRequest").click(function () {
-            ga('send', {
-                hitType: 'event',
-                eventCategory: 'Button',
-                eventAction: 'Quit',
-                eventLabel: Session.get("ticket")
-            });
-        });
-
-        //auto resize of textarea's
-		$(function () {
-			$('textarea').autosize()
+		$("#quitRequest").click(function () {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Quit',
+				eventLabel: Session.get("ticket")
+			});
 		});
 
 	</script>
-
 
 </template>

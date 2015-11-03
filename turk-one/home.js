@@ -11,14 +11,13 @@ if (Meteor.isClient) {
 				decisionPointId: this.decisionPointId
 			});
 		},
-
-		DecisionPointText : function() {
-			console.log("the dp type is:" +DecisionPoints.findOne(this.decisionPointId).type);
-
-			if (DecisionPoints.findOne(this.decisionPointId).type == 'UI') {
-				return "The decision point on which you are asked to work concerns the user interface of the simulator. That is, you will need to design the visual elements and interaction that the user has with the program for that decision point."
-			} else {
-				return "The decision point on which you are asked to work concerns the implementation of the simulator. That is, you will need to design the classes and interfaces that the programmer will need to implement for that decision point."
+		decisionPointText : function() {
+			if (DecisionPoints.findOne(this.decisionPointId)) {
+				if (DecisionPoints.findOne().decisionPointType == 'UI') {
+					return "The decision point on which you are asked to work concerns the user interface of the simulator. That is, you will need to design the visual elements and interaction that the user has with the program for that decision point."
+				} else {
+					return "The decision point on which you are asked to work concerns the implementation of the simulator. That is, you will need to design the classes and interfaces that the programmer will need to implement for that decision point."
+				}
 			}
 		}
 
@@ -26,7 +25,14 @@ if (Meteor.isClient) {
 
 	Template.home.events({
 		"click .btn-continue": function() {
-			Router.go("/help/" + Session.get("ticket"));
+			WorkerTickets.update(Session.get("ticket"), {
+				$inc: {
+					homeTime: homeStopwatch.getElapsed().seconds
+				}
+			}, function () {
+				homeStopwatch.reset();
+				Router.go("/tool/" + Session.get("ticket"));
+			});
 		}
 	});
 
@@ -41,6 +47,7 @@ if (Meteor.isClient) {
 			if (Session.get("ticketedFor" + workerId)) {
 				Session.setPersistent("ticket", Session.get("ticketedFor" + workerId));
 				console.log("ticket exists and was set");
+				console.log("tutorial status is:" +Session.get("tutorialDone"));
 			} else {
 				WorkerTickets.insert({
 					workerId: this.data.workerId,
@@ -52,6 +59,8 @@ if (Meteor.isClient) {
 						console.log("created a worker ticket successfully with id: " + id);
 						Session.setPersistent("ticket", id);
 						Session.setPersistent("ticketedFor" + workerId, id);
+						Session.setPersistent("tutorialDone", false);
+						console.log("tutorial status was set to:" +Session.get("tutorialDone"));
 					}
 				})
 			}

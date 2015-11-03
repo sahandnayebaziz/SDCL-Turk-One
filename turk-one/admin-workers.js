@@ -84,6 +84,12 @@ if (Meteor.isClient) {
 		},
 		timeInToolInMinutes: function () {
 			return parseInt(this.timeInTool / 60);
+		},
+		timeOnHomeInMinutes: function () {
+			return parseInt(this.homeTime / 60);
+		},
+		timeOnInfoInMinutes: function () {
+			return parseInt(this.infoModalTime / 60);
 		}
 	});
 
