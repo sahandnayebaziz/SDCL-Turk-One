@@ -90,7 +90,6 @@ if (Meteor.isClient) {
 		},
 		numberComplexEnough: function () {
 			function isCanvasComplex(canvas) {
-				console.log(canvas._objects.length);
 				return canvas._objects.length > 0;
 			}
 
@@ -178,6 +177,39 @@ if (Meteor.isClient) {
 	Template.decisionPointInformationPanel.events({
 		"click #finishRequest": function () {
 			Session.set("shouldGenerateReviews", true);
+
+			function completedTextFieldsForUsedSketches() {
+				var allFieldsAreFilled = true;
+				$.each(canvases, function() {
+					var canvasNumber = this.CDIndex;
+					if (this._objects.length > 0) {
+						var nameForThisCanvas = $("#name-" + canvasNumber);
+						var explainForThisCanvas = $("#explain-" + canvasNumber);
+						if (nameForThisCanvas.val() == "" || explainForThisCanvas.val() == "") {
+							allFieldsAreFilled = false;
+						}
+					}
+				});
+				return allFieldsAreFilled;
+			}
+
+			if (completedTextFieldsForUsedSketches()) {
+				$('#finishModal').modal('show');
+			} else {
+				var n = noty({
+					text: 'One of the sketches you made is missing a name or an explanation! Give it one and try again :)',
+					layout: 'topLeft',
+					theme: 'relax', // or 'relax'
+					type: 'warning',
+					timeout: 6500,
+					animation: {
+						open: 'animated bounceInLeft', // Animate.css class names
+						close: 'animated bounceOutLeft', // Animate.css class names
+						easing: 'swing', // unavailable - no need
+						speed: 500 // unavailable - no need
+					}
+				});
+			}
 		}
 	});
 }

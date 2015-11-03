@@ -855,7 +855,7 @@
 										forceFocus(canvasNumber);
 										console.log("forced focus baby");
 									}
-								}({{canvasNumber}}));git
+								}({{canvasNumber}}));
 								explainForThisCanvas.on("focus", setExplainTimer);
 								explainForThisCanvas.on("blur", stopExplainTimer);
 								explainForThisCanvas.on("keydown", function(canvasNumber) {
@@ -970,6 +970,7 @@
 
 											<div class="text-center">
 												<p>{{name}}</p>
+												<p>{{explain}}</p>
 											</div>
 										</div>
 									{{/if}}
@@ -1137,8 +1138,7 @@
 			</div>
 			<div id="intro4">
 				<div id="buttonMenu" class="row center" role="group" aria-label="...">
-					<button id="finishRequest" class="btn btn-success btn-continue" data-toggle="modal"
-					        data-target="#finishModal">REVIEW & FINISH
+					<button id="finishRequest" class="btn btn-success btn-continue">REVIEW & FINISH
 					</button>
 					<button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-target="#infoModal">TASK
 						INFO
