@@ -291,6 +291,9 @@
 						// state object for undo/redo stacks
 						canvasHistory = {};
 
+						// focusedText?
+						focusedText = false;
+
 						// Set Black as default color in toolbar (set for each canvas at initialization in tool.html
 						Session.set("currentColor", "#414141");
 						$("#buttonBlack").addClass("selectedTool");
@@ -847,8 +850,20 @@
 
 								nameForThisCanvas.on("focus", setNameTimer);
 								nameForThisCanvas.on("blur", stopNameTimer);
+								nameForThisCanvas.on("keydown", function(canvasNumber) {
+									return function () {
+										forceFocus(canvasNumber);
+										console.log("forced focus baby");
+									}
+								}({{canvasNumber}}));git
 								explainForThisCanvas.on("focus", setExplainTimer);
 								explainForThisCanvas.on("blur", stopExplainTimer);
+								explainForThisCanvas.on("keydown", function(canvasNumber) {
+									return function () {
+										forceFocus(canvasNumber);
+										console.log("forced focus baby");
+									}
+								}({{canvasNumber}}));
 
 								// initial save state
 								saveSelf();
