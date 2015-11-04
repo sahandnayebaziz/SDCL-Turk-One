@@ -190,6 +190,9 @@ if (Meteor.isClient) {
 	};
 
 	Template.tool.helpers({
+		shouldShow: function () {
+			return !this.submitted && !this.quit;
+		},
 		workerTicket: function () {
 			return WorkerTickets.findOne(this._id);
 		},
