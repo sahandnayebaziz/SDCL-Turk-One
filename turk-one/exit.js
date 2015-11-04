@@ -1,6 +1,24 @@
 /**
  * Created by sahand on 10/27/15.
  */
+if (Meteor.isServer) {
+	Meteor.methods({
+		submitExitSurvey: function (ticket, task, decision, tool, feedback) {
+			ExitSurveys.insert({
+				workerTicket: ticket,
+				task: task,
+				decision: decision,
+				tool: tool,
+				feedback: feedback
+			}, function (error) {
+				if (!error) {
+					console.log("subbed exit survey");
+				}
+			})
+		}
+	})
+}
+
 if (Meteor.isClient) {
 
 	Template.exit.events({
@@ -21,14 +39,10 @@ if (Meteor.isClient) {
 			var toolDifficulty = $("#exitForm input[name=toolDifficulty]:checked").val();
 			var feedback = $("#feedbackText").val();
 
-			ExitSurveys.insert({
-				workerTicket: Session.get("ticket"),
-				task: taskDifficulty,
-				decision: decisionDifficulty,
-				tool: toolDifficulty,
-				feedback: feedback
-			}, function() {
-				Router.go("/end/" + Session.get("ticket"));
+			Meteor.call("submitExitSurvey", Session.get("ticket"), taskDifficulty, decisionDifficulty, toolDifficulty, feedback, function(e, r) {
+				if (!e) {
+					Router.go("/end/" + Session.get("ticket"));
+				}
 			});
 		}
 	});
