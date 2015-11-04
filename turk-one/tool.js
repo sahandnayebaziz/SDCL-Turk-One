@@ -70,11 +70,19 @@ if (Meteor.isServer) {
 					console.log(error);
 				}
 			})
+		},
+		getDecisionPoint: function (dpId) {
+			console.log(dpId);
+			return DecisionPoints.findOne(dpId);
 		}
 	});
 
 	Meteor.publish("solutions", function () {
 		return Solutions.find();
+	});
+
+	Meteor.publish("decisionPoints", function () {
+		return DecisionPoints.find();
 	});
 }
 
@@ -82,6 +90,7 @@ if (Meteor.isServer) {
 if (Meteor.isClient) {
 
 	Meteor.subscribe("solutions");
+	Meteor.subscribe("decisionPoints");
 
 	var tutorialSteps = [
 		{
@@ -146,7 +155,7 @@ if (Meteor.isClient) {
 			return WorkerTickets.findOne(this._id);
 		},
 		decisionPoint: function () {
-			return DecisionPoints.findOne(this.decisionPointId);
+			return DecisionPoints.find({_id: this.decisionPointId.toString()}).fetch()[0];
 		},
 		solutions: function () {
 			return Solutions.find({workerId: Session.get("ticket")}, {sort: {canvasNumber: 1}});
