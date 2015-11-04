@@ -1,7 +1,87 @@
 /**
  * Created by sahand on 10/7/15.
  */
+if (Meteor.isServer) {
+	Meteor.methods({
+		createSolution: function (ticket, canvasNumber) {
+			var newDoc = Solutions.insert({
+				workerId: ticket,
+				state: "{\"objects\":[],\"background\":\"white\"}",
+				createdAt: new Date(),
+				dateUpdated: new Date(),
+				canvasNumber: canvasNumber,
+				status: "pending"
+			});
+			console.log("created new solution for canvasNumber " + canvasNumber);
+			return newDoc;
+		},
+		updateSolution: function (id, time, state, complexity, updated, name, explain) {
+			Solutions.update(id, {
+				$inc: {
+					time: time
+				},
+				$set: {
+					state: state,
+					complexity: complexity,
+					dateUpdated: updated,
+					name: name,
+					explain: explain
+				}
+			}, function (error, number) {
+				if (!error) {
+					console.log("upped sketch");
+					return true
+				}
+			});
+		},
+		updateToolTime: function (id, time) {
+			WorkerTickets.update(id, {
+				$inc: {
+					timeInTool: time
+				}
+			}, function (error, number) {
+				if (!error) {
+					console.log("upped tool time");
+				}
+			});
+		},
+		updateNameTime: function (id, time) {
+			Solutions.update(id, {
+				$inc: {
+					timeInName: time
+				}
+			}, function (error, number) {
+				if (!error) {
+					console.log("upped name time")
+				} else {
+					console.log(error);
+				}
+			})
+		},
+		updateExplainTime: function (id, time) {
+			Solutions.update(id, {
+				$inc: {
+					timeInExplain: time
+				}
+			}, function (error, number) {
+				if (!error) {
+					console.log("upped name time")
+				} else {
+					console.log(error);
+				}
+			})
+		}
+	});
+
+	Meteor.publish("solutions", function () {
+		return Solutions.find();
+	});
+}
+
+
 if (Meteor.isClient) {
+
+	Meteor.subscribe("solutions");
 
 	var tutorialSteps = [
 		{
@@ -41,8 +121,8 @@ if (Meteor.isClient) {
 		}
 	];
 
-	Template.tool.rendered = function() {
-		if(!this._rendered) {
+	Template.tool.rendered = function () {
+		if (!this._rendered) {
 			this._rendered = true;
 
 			if (!Session.get("tutorialDone")) {
@@ -95,7 +175,7 @@ if (Meteor.isClient) {
 
 			return canvases.filter(isCanvasComplex).length;
 		},
-		decisionPointText : function() {
+		decisionPointText: function () {
 			if (DecisionPoints.findOne(this.decisionPointId)) {
 				if (DecisionPoints.findOne().decisionPointType == 'UI') {
 					return "The decision point on which you are asked to work concerns the user interface of the simulator. That is, you will need to design the visual elements and interaction that the user has with the program for that decision point."
@@ -147,26 +227,26 @@ if (Meteor.isClient) {
 
 		"click #finishConfirm": function () {
 			$('#finishModal').on('hidden.bs.modal', function () {
-					WorkerTickets.update(Session.get("ticket"), {
-						$set: {
-							submitted: true
+				WorkerTickets.update(Session.get("ticket"), {
+					$set: {
+						submitted: true
+					}
+				}, function () {
+					var n = noty({
+						text: 'Success! Your work has been submitted.',
+						layout: 'topRight',
+						theme: 'relax', // or 'relax'
+						type: 'success',
+						timeout: 4000,
+						animation: {
+							open: 'animated bounceInRight', // Animate.css class names
+							close: 'animated bounceOutRight', // Animate.css class names
+							easing: 'swing', // unavailable - no need
+							speed: 500 // unavailable - no need
 						}
-					}, function () {
-						var n = noty({
-							text: 'Success! Your work has been submitted.',
-							layout: 'topRight',
-							theme: 'relax', // or 'relax'
-							type: 'success',
-							timeout: 4000,
-							animation: {
-								open: 'animated bounceInRight', // Animate.css class names
-								close: 'animated bounceOutRight', // Animate.css class names
-								easing: 'swing', // unavailable - no need
-								speed: 500 // unavailable - no need
-							}
-						});
-						Router.go("/exit/" + Session.get("ticket"));
 					});
+					Router.go("/exit/" + Session.get("ticket"));
+				});
 			}).modal('hide');
 		},
 		"click #finishCancel": function () {
@@ -180,7 +260,7 @@ if (Meteor.isClient) {
 
 			function completedTextFieldsForUsedSketches() {
 				var allFieldsAreFilled = true;
-				$.each(canvases, function() {
+				$.each(canvases, function () {
 					var canvasNumber = this.CDIndex;
 					if (this._objects.length > 0) {
 						var nameForThisCanvas = $("#name-" + canvasNumber);
@@ -214,3 +294,5 @@ if (Meteor.isClient) {
 	});
 }
 ;
+
+

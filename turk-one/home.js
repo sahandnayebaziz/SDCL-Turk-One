@@ -15,6 +15,7 @@ if (Meteor.isServer) {
 				decisionPointId: d,
 				visited: v
 			});
+			console.log("created new workerTicket");
 			return newDoc;
 		},
 		updateWorkerHomeTime: function (time, ticket) {
@@ -22,9 +23,6 @@ if (Meteor.isServer) {
 				$inc: {
 					homeTime: time
 				}
-			}, function () {
-				homeStopwatch.reset();
-				return true
 			})
 		}
 	});
@@ -51,6 +49,7 @@ if (Meteor.isClient) {
 		"click .btn-continue": function () {
 			Meteor.call("updateWorkerHomeTime", homeStopwatch.getElapsed().seconds, Session.get("ticket"), function(e, r) {
 				if (!e) {
+					homeStopwatch.reset();
 					Router.go("/tool/" + Session.get("ticket"));
 				}
 			});
