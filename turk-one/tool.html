@@ -1082,14 +1082,8 @@
 
 		$("#infoModal").on('hide.bs.modal', function () {
 			infoModalStopwatch.stop();
-			WorkerTickets.update(Session.get("ticket"), {
-				$inc: {
-					infoModalTime: infoModalStopwatch.getElapsed().seconds,
-					infoModalNumberOfTimes: 1
-				}
-			}, function () {
-				infoModalStopwatch.reset();
-			})
+			Meteor.call("updateInfoModalTime", Session.get("ticket"), infoModalStopwatch.getElapsed().seconds);
+			infoModalStopwatch.reset();
 		});
 
 		// create persistent objects in database for these sketches

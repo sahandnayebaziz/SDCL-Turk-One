@@ -65,15 +65,54 @@ if (Meteor.isServer) {
 				}
 			}, function (error, number) {
 				if (!error) {
-					console.log("upped name time")
+					console.log("upped explain time")
 				} else {
 					console.log(error);
 				}
 			})
 		},
-		getDecisionPoint: function (dpId) {
-			console.log(dpId);
-			return DecisionPoints.findOne(dpId);
+		updateInfoModalTime: function (ticket, time) {
+			WorkerTickets.update(ticket, {
+				$inc: {
+					infoModalTime: time,
+					infoModalNumber: 1
+				}
+			}, function(e, n) {
+				console.log("upped info modal");
+			})
+		},
+		submitQuitSurvey: function (ticket, reason, feedback) {
+			QuitSurveys.insert({
+				workerTicket: ticket,
+				reason: reason,
+				feedback: feedback
+			}, function(error) {
+				if (!error) {
+					console.log("created quit survey");
+				}
+			})
+		},
+		setTicketFlagQuit: function (ticket) {
+			WorkerTickets.update(ticket, {
+				$set: {
+					quit: true
+				}
+			}, function(error) {
+				if (!error) {
+					console.log("set flag quit");
+				}
+			})
+		},
+		setTicketFlagSubmitted: function (ticket) {
+			WorkerTickets.update(ticket, {
+				$set: {
+					submitted: true
+				}
+			}, function(error) {
+				if (!error) {
+					console.log("set flag submitted");
+				}
+			})
 		}
 	});
 
@@ -206,22 +245,20 @@ if (Meteor.isClient) {
 			var reason = $("#quitForm input[name=quitReason]:checked").val()
 			var feedback = $("#quitText").val();
 
-			QuitSurveys.insert({
-				workerTicket: Session.get("ticket"),
-				reason: reason,
-				feedback: feedback
-			});
-
-			WorkerTickets.update(Session.get("ticket"), {
-				$set: {
-					quit: true
+			Meteor.call("submitQuitSurvey", Session.get("ticket"), reason, feedback, function(e, r) {
+				if (!e) {
+					// set workerticket
+					// nav away
+					Meteor.call("setTicketFlagQuit", Session.get("ticket"), function(e, r) {
+						if (!e) {
+							$('#quitModal').on('hidden.bs.modal', function () {
+								window.location.href = 'http://www.google.com'; // TODO: take to thank you page
+							}).modal('hide')
+						}
+					});
 				}
-
 			});
 
-			$('#quitModal').on('hidden.bs.modal', function () {
-				window.location.href = 'http://www.google.com';
-			}).modal('hide')
 		},
 		"click #tutorialRequest": function () {
 			introJs().setOptions({
@@ -236,25 +273,23 @@ if (Meteor.isClient) {
 
 		"click #finishConfirm": function () {
 			$('#finishModal').on('hidden.bs.modal', function () {
-				WorkerTickets.update(Session.get("ticket"), {
-					$set: {
-						submitted: true
+				Meteor.call("setTicketFlagSubmitted", Session.get("ticket"), function (e, r) {
+					if (!e) {
+						var n = noty({
+							text: 'Success! Your work has been submitted.',
+							layout: 'topRight',
+							theme: 'relax', // or 'relax'
+							type: 'success',
+							timeout: 4000,
+							animation: {
+								open: 'animated bounceInRight', // Animate.css class names
+								close: 'animated bounceOutRight', // Animate.css class names
+								easing: 'swing', // unavailable - no need
+								speed: 500 // unavailable - no need
+							}
+						});
+						Router.go("/exit/" + Session.get("ticket"));
 					}
-				}, function () {
-					var n = noty({
-						text: 'Success! Your work has been submitted.',
-						layout: 'topRight',
-						theme: 'relax', // or 'relax'
-						type: 'success',
-						timeout: 4000,
-						animation: {
-							open: 'animated bounceInRight', // Animate.css class names
-							close: 'animated bounceOutRight', // Animate.css class names
-							easing: 'swing', // unavailable - no need
-							speed: 500 // unavailable - no need
-						}
-					});
-					Router.go("/exit/" + Session.get("ticket"));
 				});
 			}).modal('hide');
 		},
