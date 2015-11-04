@@ -17,14 +17,14 @@ if (Meteor.isServer) {
 			});
 			return newDoc;
 		},
-		updateWorkerHomeTime: function (time) {
-			WorkerTickets.update(Session.get("ticket"), {
+		updateWorkerHomeTime: function (time, ticket) {
+			WorkerTickets.update(ticket, {
 				$inc: {
 					homeTime: time
 				}
 			}, function () {
 				homeStopwatch.reset();
-				Router.go("/tool/" + Session.get("ticket"));
+				return true
 			})
 		}
 	});
@@ -49,7 +49,11 @@ if (Meteor.isClient) {
 
 	Template.home.events({
 		"click .btn-continue": function () {
-			Meteor.call("updateWorkerHomeTime", homeStopwatch.getElapsed().seconds);
+			Meteor.call("updateWorkerHomeTime", homeStopwatch.getElapsed().seconds, Session.get("ticket"), function(e, r) {
+				if (!e) {
+					Router.go("/tool/" + Session.get("ticket"));
+				}
+			});
 		}
 	});
 }
