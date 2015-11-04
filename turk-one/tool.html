@@ -1126,7 +1126,7 @@
 				</div>
 			</div>
 		{{else}}
-			{{> end}}
+			<script>Router.go("/exit/" + Session.get("ticket"));</script>
 		{{/if}}
 	{{/if}}
 </template>
