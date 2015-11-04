@@ -6,22 +6,22 @@ if (Meteor.isClient) {
 	var tutorialSteps = [
 		{
 			element: '#intro1',
-			intro: "This is your decision point. Read it carefully and try to think of different solutions to solve it. We want you to try to come up with multiple solutions for this decision point. We are not looking for the one best design but for a variety of designs that each can have their own pro's and con's",
+			intro: "This is your decision point. Read it carefully and try to think of alternative solutions to solve it. We want you to try to come up with multiple solutions for this decision point. We are not looking for the one best design but for a variety of designs that each have their own pros and cons",
 			position: 'bottom'
 		},
 		{
 			element: '#intro2',
-			intro: "To help others understand your solutions you have to sketch them. In this area you have 5 sketch panels and their respective name and description fields. We are looking for high level sketches like you would make on a whiteboard. You can keep your sketches simple but understandable. Also remember that a good sketch complements the textual description and visa versa.",
+			intro: "To help others understand your solutions you have to sketch them. In this area you have 5 sketch panels and their respective name and description fields. We are looking for high level sketches like you would make on a whiteboard. You can keep your sketches simple, but please keep them understandable. Also remember that a good sketch complements the textual description and visa versa.",
 			position: 'bottom'
 		},
 		{
 			element: '#toolbarContainer',
-			intro: "These are your sketching tools. Click on the question mark to toggle on the tips to see each of the tools work.",
+			intro: "These are your sketching tools. Click on the question mark to toggle on the tips to see how each of the tools work.",
 			position: 'bottom'
 		},
 		{
 			element: '#finishRequest',
-			intro: "Press REVIEW AND FINISH when you are ready to submit your work. This will give you the opportunity to review your designs one more time before submitting them. After reviewing you can either submit your work or go cancel and go back.",
+			intro: "Press REVIEW AND FINISH when you are ready to submit your work. This will give you the opportunity to review your designs one more time before submitting them. After reviewing, you can either submit your work or hit cancel and go back.",
 			position: 'bottom'
 		},
 		{
@@ -36,7 +36,7 @@ if (Meteor.isClient) {
 		},
 		{
 			element: '#quitRequest',
-			intro: "Press QUIT whenever you want to quit your task, we would appreciate greatly if you would give some feedback on the tool and task so we can improve it in the future.",
+			intro: "Press QUIT whenever you want to quit your task. We would appreciate it greatly if you would give some feedback on the tool, task and a reason for quiting so we can improve it in the future.",
 			position: 'bottom'
 		}
 	];
