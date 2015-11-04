@@ -24,15 +24,8 @@ if (Meteor.isClient) {
 	});
 
 	Template.home.events({
-		"click .btn-continue": function() {
-			WorkerTickets.update(Session.get("ticket"), {
-				$inc: {
-					homeTime: homeStopwatch.getElapsed().seconds
-				}
-			}, function () {
-				homeStopwatch.reset();
-				Router.go("/tool/" + Session.get("ticket"));
-			});
+		"click .btn-continue": function () {
+			Meteor.call("updateWorkerHomeTime", homeStopwatch.getElapsed().seconds);
 		}
 	});
 
@@ -41,30 +34,47 @@ if (Meteor.isClient) {
 		if(!this._rendered) {
 			this._rendered = true;
 
-			workerId = this.data.workerId;
-			//console.log(this.data);
-			this.data["visited"] = new Date();
-			if (Session.get("ticketedFor" + workerId)) {
-				Session.setPersistent("ticket", Session.get("ticketedFor" + workerId));
-				console.log("ticket exists and was set");
-				console.log("tutorial status is:" +Session.get("tutorialDone"));
-			} else {
-				WorkerTickets.insert({
-					workerId: this.data.workerId,
-					sessionId: this.data.sessionId,
-					decisionPointId: this.data.decisionPointId,
-					visited: this.data.visited
-				}, function(error, id) {
-					if (!error) {
-						console.log("created a worker ticket successfully with id: " + id);
-						Session.setPersistent("ticket", id);
-						Session.setPersistent("ticketedFor" + workerId, id);
-						Session.setPersistent("tutorialDone", false);
-						Session.setPersistent("tipsToggled", false);
-						console.log("tutorial status was set to:" +Session.get("tutorialDone"));
-					}
-				})
-			}
+			var w = this.data.workerId;
+			var s = this.data.sessionId;
+			var d = this.data.decisionPointId;
+			var v = new Date();
+			Meteor.call("determineWorkerTicketId", w, s, d, v); //worker, session, decsion, visited
+
 		}
 	}
 }
+
+Meteor.methods({
+	determineWorkerTicketId: function (w, s, d, v) {
+		if (Session.get("ticketedFor" + w)) {
+			Session.setPersistent("ticket", Session.get("ticketedFor" + w));
+			console.log("ticket exists and was set");
+			console.log("tutorial status is:" + Session.get("tutorialDone"));
+		} else {
+			WorkerTickets.insert({
+				workerId: w,
+				sessionId: s,
+				decisionPointId: d,
+				visited: v
+			}, function(error, id) {
+				if (!error) {
+					console.log("created a worker ticket successfully with id: " + id);
+					Session.setPersistent("ticket", id);
+					Session.setPersistent("ticketedFor" + w, id);
+					Session.setPersistent("tutorialDone", false);
+					Session.setPersistent("tipsToggled", false);
+					console.log("tutorial status was set to:" + Session.get("tutorialDone"));
+				}
+			})
+		}
+	},
+	updateWorkerHomeTime: function(time) {
+		WorkerTickets.update(Session.get("ticket"), {
+			$inc: {
+				homeTime: time
+			}
+		}, function () {
+			homeStopwatch.reset();
+		})
+	}
+});
