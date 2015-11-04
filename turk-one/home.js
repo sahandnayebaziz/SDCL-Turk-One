@@ -1,17 +1,39 @@
 /**
  * Created by sahand on 10/7/15.
  */
+if (Meteor.isServer) {
+	// This code only runs on the server
+	Meteor.publish("workerTickets", function () {
+		return WorkerTickets.find();
+	});
+
+	Meteor.methods({
+		createWorkerTicketId: function (w, s, d, v) {
+			var newDoc = WorkerTickets.insert({
+				workerId: w,
+				sessionId: s,
+				decisionPointId: d,
+				visited: v
+			});
+			console.log("created new workerTicket");
+			return newDoc;
+		},
+		updateWorkerHomeTime: function (time, ticket) {
+			WorkerTickets.update(ticket, {
+				$inc: {
+					homeTime: time
+				}
+			})
+		}
+	});
+}
+
 if (Meteor.isClient) {
 
+	Meteor.subscribe("WorkerTickets");
+
 	Template.home.helpers({
-		existingWorkerTicket: function () {
-			return WorkerTickets.findOne({
-				sessionId: this.sessionId,
-				workerId: this.workerId,
-				decisionPointId: this.decisionPointId
-			});
-		},
-		decisionPointText : function() {
+		decisionPointText: function () {
 			if (DecisionPoints.findOne(this.decisionPointId)) {
 				if (DecisionPoints.findOne().decisionPointType == 'UI') {
 					return "The decision point on which you are asked to work concerns the user interface of the simulator. That is, you will need to design the visual elements and interaction that the user has with the program for that decision point."
@@ -24,47 +46,14 @@ if (Meteor.isClient) {
 	});
 
 	Template.home.events({
-		"click .btn-continue": function() {
-			WorkerTickets.update(Session.get("ticket"), {
-				$inc: {
-					homeTime: homeStopwatch.getElapsed().seconds
+		"click .btn-continue": function () {
+			Meteor.call("updateWorkerHomeTime", homeStopwatch.getElapsed().seconds, Session.get("ticket"), function(e, r) {
+				if (!e) {
+					homeStopwatch.reset();
+					Router.go("/tool/" + Session.get("ticket"));
 				}
-			}, function () {
-				homeStopwatch.reset();
-				Router.go("/tool/" + Session.get("ticket"));
 			});
 		}
 	});
-
-	Template.home.rendered = function() {
-
-		if(!this._rendered) {
-			this._rendered = true;
-
-			workerId = this.data.workerId;
-			//console.log(this.data);
-			this.data["visited"] = new Date();
-			if (Session.get("ticketedFor" + workerId)) {
-				Session.setPersistent("ticket", Session.get("ticketedFor" + workerId));
-				console.log("ticket exists and was set");
-				console.log("tutorial status is:" +Session.get("tutorialDone"));
-			} else {
-				WorkerTickets.insert({
-					workerId: this.data.workerId,
-					sessionId: this.data.sessionId,
-					decisionPointId: this.data.decisionPointId,
-					visited: this.data.visited
-				}, function(error, id) {
-					if (!error) {
-						console.log("created a worker ticket successfully with id: " + id);
-						Session.setPersistent("ticket", id);
-						Session.setPersistent("ticketedFor" + workerId, id);
-						Session.setPersistent("tutorialDone", false);
-						Session.setPersistent("tipsToggled", false);
-						console.log("tutorial status was set to:" +Session.get("tutorialDone"));
-					}
-				})
-			}
-		}
-	}
 }
+

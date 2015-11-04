@@ -1,7 +1,42 @@
 /**
  * Created by sahand on 10/11/15.
  */
+if (Meteor.isServer) {
+	Meteor.publish("exitSurveys", function() {
+		return ExitSurveys.find();
+	});
+
+	Meteor.publish("quitSurveys", function() {
+		return QuitSurveys.find();
+	});
+
+	Meteor.methods({
+		createDecisionPoint: function(name, id, descr, req, type) {
+			DecisionPoints.insert({
+				name: name,
+				_id: id,
+				description: descr,
+				requirements: req,
+				decisionPointType: type
+			}, function(error) {
+				if (!error) {
+					console.log("created decision point");
+				}
+			});
+		},
+		deleteSolution: function (id) {
+			Solutions.remove(id);
+		},
+		deleteDecisionPoint: function (id) {
+			DecisionPoints.remove(id);
+		}
+	})
+}
+
 if (Meteor.isClient) {
+
+	Meteor.subscribe("exitSurveys");
+	Meteor.subscribe("quitSurveys");
 
 	Template.admin.helpers({
 		decisionPoints: function () {
@@ -37,7 +72,6 @@ if (Meteor.isClient) {
 			}
 		}
 	});
-
 	Template.admin.events({
 		"submit #createDecision": function (event) {
 
@@ -45,41 +79,18 @@ if (Meteor.isClient) {
 
 			var form = event.target;
 
-			DecisionPoints.insert({
-				name: form.name.value,
-				_id: form.id.value,
-				description: form.description.value,
-				requirements: form.requirements.value,
-				decisionPointType: form.type.value
-			});
-		},
-		"click .update": function () {
-
-			var form = $("#createDecision");
-
-			DecisionPoints.update(form.id.value, {
-				name: form.name.value,
-				_id: form.id.value,
-				description: form.description.value,
-				requirements: form.requirements.value,
-				decisionPointType: form.type.value
-			});
+			Meteor.call("createDecisionPoint", form.name.value, form.id.value, form.description.value, form.requirements.value, form.type.value);
 		},
 		"click .deleteSolution": function () {
-			Solutions.remove(this._id);
+			Meteor.call("deleteSolution", this._id);
 		}
 	});
 
 	Template.decisionPreview.events({
 		"click .delete": function () {
-			DecisionPoints.remove(this._id);
-		},
-		"click .preview": function () {
-			Session.set("IDRequestedForPreview", this._id);
-			console.log("requesting id " + Session.get("IDRequestedForPreview"));
+			Meteor.call("deleteDecisionPoint", this._id);
 		}
 	});
-
 
 	Template.solutionVisual.rendered = function() {
 		if(!this._rendered) {

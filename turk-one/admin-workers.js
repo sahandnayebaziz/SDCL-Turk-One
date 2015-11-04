@@ -1,7 +1,40 @@
 /**
  * Created by sahand on 10/28/15.
  */
+if (Meteor.isServer) {
+	Meteor.methods({
+		deleteTicket: function(id) {
+			WorkerTickets.remove(id);
+		},
+		updateTicketReviewed: function(id, reviewedFlag) {
+			WorkerTickets.update(id, {
+				$set: {
+					reviewed: reviewedFlag
+				}
+			}, function(error) {
+				if (!error) {
+					console.log("set reviewed " + reviewedFlag);
+				}
+			})
+		},
+		updateSolutionStatus: function(id, newStatus) {
+			Solutions.update(id, {
+				$set: {
+					status: newStatus
+				}
+			}, function(error) {
+				if (!error) {
+					console.log("solution status now " + newStatus);
+				}
+			})
+		}
+	})
+}
+
 if (Meteor.isClient) {
+
+	Meteor.subscribe("workerTickets");
+
 	// worker review page
 	Template.adminWorkers.helpers({
 		workerTickets: function () {
@@ -13,8 +46,7 @@ if (Meteor.isClient) {
 		"click .delete": function () {
 			var id = this._id;
 			$("#modal" + this._id).on('hidden.bs.modal', function () {
-				console.log("clicking modal");
-				WorkerTickets.remove(id);
+				Meteor.call("deleteTicket", id);
 			}).modal('hide')
 		}
 	});
@@ -93,22 +125,15 @@ if (Meteor.isClient) {
 		}
 	});
 
+	// TODO: make this a toggle instead of a set and cancel
 	Template.worker.events({
 		"click .reviewed": function() {
-			WorkerTickets.update(this._id, {
-				$set: {
-					reviewed: true
-				}
-			})
+			Meteor.call("updateTicketReviewed", this._id, true);
 		},
 		"click .cancelReviewed": function() {
-			WorkerTickets.update(this._id, {
-				$set: {
-					reviewed: false
-				}
-			})
+			Meteor.call("updateTicketReviewed", this._id, false);
 		}
-	})
+	});
 
 	Template.solutionReviewModule.helpers({
 		viewStatus: function() {
@@ -130,25 +155,13 @@ if (Meteor.isClient) {
 
 	Template.solutionReviewModule.events({
 		"click .cancel": function() {
-			Solutions.update(this._id, {
-				$set: {
-					status: "pending"
-				}
-			})
+			Meteor.call("updateSolutionStatus", this._id, "pending");
 		},
 		"click .accept": function() {
-			Solutions.update(this._id, {
-				$set: {
-					status: "accepted"
-				}
-			})
+			Meteor.call("updateSolutionStatus", this._id, "accepted");
 		},
 		"click .reject": function() {
-			Solutions.update(this._id, {
-				$set: {
-					status: "rejected"
-				}
-			})
+			Meteor.call("updateSolutionStatus", this._id, "rejected");
 		}
 
 	});

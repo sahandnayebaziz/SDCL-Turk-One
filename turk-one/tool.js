@@ -1,27 +1,155 @@
 /**
  * Created by sahand on 10/7/15.
  */
+if (Meteor.isServer) {
+	Meteor.methods({
+		createSolution: function (ticket, canvasNumber) {
+			var newDoc = Solutions.insert({
+				workerId: ticket,
+				state: "{\"objects\":[],\"background\":\"white\"}",
+				createdAt: new Date(),
+				dateUpdated: new Date(),
+				canvasNumber: canvasNumber,
+				status: "pending"
+			});
+			console.log("created new solution for canvasNumber " + canvasNumber);
+			return newDoc;
+		},
+		updateSolution: function (id, time, state, complexity, updated, name, explain) {
+			Solutions.update(id, {
+				$inc: {
+					time: time
+				},
+				$set: {
+					state: state,
+					complexity: complexity,
+					dateUpdated: updated,
+					name: name,
+					explain: explain
+				}
+			}, function (error, number) {
+				if (!error) {
+					console.log("upped sketch");
+					return true
+				}
+			});
+		},
+		updateToolTime: function (id, time) {
+			WorkerTickets.update(id, {
+				$inc: {
+					timeInTool: time
+				}
+			}, function (error, number) {
+				if (!error) {
+					console.log("upped tool time");
+				}
+			});
+		},
+		updateNameTime: function (id, time) {
+			Solutions.update(id, {
+				$inc: {
+					timeInName: time
+				}
+			}, function (error, number) {
+				if (!error) {
+					console.log("upped name time")
+				} else {
+					console.log(error);
+				}
+			})
+		},
+		updateExplainTime: function (id, time) {
+			Solutions.update(id, {
+				$inc: {
+					timeInExplain: time
+				}
+			}, function (error, number) {
+				if (!error) {
+					console.log("upped explain time")
+				} else {
+					console.log(error);
+				}
+			})
+		},
+		updateInfoModalTime: function (ticket, time) {
+			WorkerTickets.update(ticket, {
+				$inc: {
+					infoModalTime: time,
+					infoModalNumber: 1
+				}
+			}, function(e, n) {
+				console.log("upped info modal");
+			})
+		},
+		submitQuitSurvey: function (ticket, reason, feedback) {
+			QuitSurveys.insert({
+				workerTicket: ticket,
+				reason: reason,
+				feedback: feedback
+			}, function(error) {
+				if (!error) {
+					console.log("created quit survey");
+				}
+			})
+		},
+		setTicketFlagQuit: function (ticket) {
+			WorkerTickets.update(ticket, {
+				$set: {
+					quit: true
+				}
+			}, function(error) {
+				if (!error) {
+					console.log("set flag quit");
+				}
+			})
+		},
+		setTicketFlagSubmitted: function (ticket) {
+			WorkerTickets.update(ticket, {
+				$set: {
+					submitted: true
+				}
+			}, function(error) {
+				if (!error) {
+					console.log("set flag submitted");
+				}
+			})
+		}
+	});
+
+	Meteor.publish("solutions", function () {
+		return Solutions.find();
+	});
+
+	Meteor.publish("decisionPoints", function () {
+		return DecisionPoints.find();
+	});
+}
+
+
 if (Meteor.isClient) {
+
+	Meteor.subscribe("solutions");
+	Meteor.subscribe("decisionPoints");
 
 	var tutorialSteps = [
 		{
 			element: '#intro1',
-			intro: "This is your decision point. Read it carefully and try to think of different solutions to solve it. We want you to try to come up with multiple solutions for this decision point. We are not looking for the one best design but for a variety of designs that each can have their own pro's and con's",
+			intro: "This is your decision point. Read it carefully and try to think of alternative solutions to solve it. We want you to try to come up with multiple solutions for this decision point. We are not looking for the one best design but for a variety of designs that each have their own pros and cons",
 			position: 'bottom'
 		},
 		{
 			element: '#intro2',
-			intro: "To help others understand your solutions you have to sketch them. In this area you have 5 sketch panels and their respective name and description fields. We are looking for high level sketches like you would make on a whiteboard. You can keep your sketches simple but understandable. Also remember that a good sketch complements the textual description and visa versa.",
+			intro: "To help others understand your solutions you have to sketch them. In this area you have 5 sketch panels and their respective name and description fields. We are looking for high level sketches like you would make on a whiteboard. You can keep your sketches simple, but please keep them understandable. Also remember that a good sketch complements the textual description and visa versa.",
 			position: 'bottom'
 		},
 		{
 			element: '#toolbarContainer',
-			intro: "These are your sketching tools. Click on the question mark to toggle on the tips to see each of the tools work.",
+			intro: "These are your sketching tools. Click on the question mark to toggle on the tips to see how each of the tools work.",
 			position: 'bottom'
 		},
 		{
 			element: '#finishRequest',
-			intro: "Press REVIEW AND FINISH when you are ready to submit your work. This will give you the opportunity to review your designs one more time before submitting them. After reviewing you can either submit your work or go cancel and go back.",
+			intro: "Press REVIEW AND FINISH when you are ready to submit your work. This will give you the opportunity to review your designs one more time before submitting them. After reviewing, you can either submit your work or hit cancel and go back.",
 			position: 'bottom'
 		},
 		{
@@ -36,13 +164,13 @@ if (Meteor.isClient) {
 		},
 		{
 			element: '#quitRequest',
-			intro: "Press QUIT whenever you want to quit your task, we would appreciate greatly if you would give some feedback on the tool and task so we can improve it in the future.",
+			intro: "Press QUIT whenever you want to quit your task. We would appreciate it greatly if you would give some feedback on the tool, task and a reason for quiting so we can improve it in the future.",
 			position: 'bottom'
 		}
 	];
 
-	Template.tool.rendered = function() {
-		if(!this._rendered) {
+	Template.tool.rendered = function () {
+		if (!this._rendered) {
 			this._rendered = true;
 
 			if (!Session.get("tutorialDone")) {
@@ -66,7 +194,7 @@ if (Meteor.isClient) {
 			return WorkerTickets.findOne(this._id);
 		},
 		decisionPoint: function () {
-			return DecisionPoints.findOne(this.decisionPointId);
+			return DecisionPoints.find({_id: this.decisionPointId.toString()}).fetch()[0];
 		},
 		solutions: function () {
 			return Solutions.find({workerId: Session.get("ticket")}, {sort: {canvasNumber: 1}});
@@ -95,7 +223,7 @@ if (Meteor.isClient) {
 
 			return canvases.filter(isCanvasComplex).length;
 		},
-		decisionPointText : function() {
+		decisionPointText: function () {
 			if (DecisionPoints.findOne(this.decisionPointId)) {
 				if (DecisionPoints.findOne().decisionPointType == 'UI') {
 					return "The decision point on which you are asked to work concerns the user interface of the simulator. That is, you will need to design the visual elements and interaction that the user has with the program for that decision point."
@@ -117,22 +245,20 @@ if (Meteor.isClient) {
 			var reason = $("#quitForm input[name=quitReason]:checked").val()
 			var feedback = $("#quitText").val();
 
-			QuitSurveys.insert({
-				workerTicket: Session.get("ticket"),
-				reason: reason,
-				feedback: feedback
-			});
-
-			WorkerTickets.update(Session.get("ticket"), {
-				$set: {
-					quit: true
+			Meteor.call("submitQuitSurvey", Session.get("ticket"), reason, feedback, function(e, r) {
+				if (!e) {
+					// set workerticket
+					// nav away
+					Meteor.call("setTicketFlagQuit", Session.get("ticket"), function(e, r) {
+						if (!e) {
+							$('#quitModal').on('hidden.bs.modal', function () {
+								window.location.href = 'http://www.google.com'; // TODO: take to thank you page
+							}).modal('hide')
+						}
+					});
 				}
-
 			});
 
-			$('#quitModal').on('hidden.bs.modal', function () {
-				window.location.href = 'http://www.google.com';
-			}).modal('hide')
 		},
 		"click #tutorialRequest": function () {
 			introJs().setOptions({
@@ -147,11 +273,8 @@ if (Meteor.isClient) {
 
 		"click #finishConfirm": function () {
 			$('#finishModal').on('hidden.bs.modal', function () {
-					WorkerTickets.update(Session.get("ticket"), {
-						$set: {
-							submitted: true
-						}
-					}, function () {
+				Meteor.call("setTicketFlagSubmitted", Session.get("ticket"), function (e, r) {
+					if (!e) {
 						var n = noty({
 							text: 'Success! Your work has been submitted.',
 							layout: 'topRight',
@@ -166,7 +289,8 @@ if (Meteor.isClient) {
 							}
 						});
 						Router.go("/exit/" + Session.get("ticket"));
-					});
+					}
+				});
 			}).modal('hide');
 		},
 		"click #finishCancel": function () {
@@ -180,7 +304,7 @@ if (Meteor.isClient) {
 
 			function completedTextFieldsForUsedSketches() {
 				var allFieldsAreFilled = true;
-				$.each(canvases, function() {
+				$.each(canvases, function () {
 					var canvasNumber = this.CDIndex;
 					if (this._objects.length > 0) {
 						var nameForThisCanvas = $("#name-" + canvasNumber);
@@ -214,3 +338,5 @@ if (Meteor.isClient) {
 	});
 }
 ;
+
+

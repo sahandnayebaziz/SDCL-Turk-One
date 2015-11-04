@@ -17,6 +17,28 @@
 				homeStopwatch.reset();
 			}
 		}
+
+		w = {{workerId}};
+		var s = {{sessionId}};
+		var d = {{decisionPointId}};
+		var v = new Date();
+		if (Session.get("ticketedFor" + w)) {
+			Session.setPersistent("ticket", Session.get("ticketedFor" + w));
+			console.log("ticket exists and was set");
+		} else {
+			Meteor.call("createWorkerTicketId", w, s, d, v, function(e, r){
+				if (e) {
+					console.log(e);
+				} else {
+					// examine result
+					Session.setPersistent("ticket", r);
+					Session.setPersistent("ticketedFor" + w, r);
+					Session.setPersistent("tutorialDone", false);
+					Session.setPersistent("tipsToggled", false);
+					console.log("made new ticket");
+				}
+			});
+		}
 	</script>
 
 	<div class="container-fluid">
