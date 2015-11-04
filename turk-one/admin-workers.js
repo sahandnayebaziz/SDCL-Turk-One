@@ -2,6 +2,9 @@
  * Created by sahand on 10/28/15.
  */
 if (Meteor.isClient) {
+
+	Meteor.subscribe("workerTickets");
+
 	// worker review page
 	Template.adminWorkers.helpers({
 		workerTickets: function () {
