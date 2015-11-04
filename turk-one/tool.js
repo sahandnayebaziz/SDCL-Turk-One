@@ -144,7 +144,7 @@ if (Meteor.isClient) {
 		},
 		{
 			element: '#toolbarContainer',
-			intro: "These are your sketching tools. Click on the question mark to toggle on the tips to see how each of the tools work.",
+			intro: "These are your sketching tools. The tools automatically affect whichever canvas is highlighted. Click on the question mark to see how they work.",
 			position: 'bottom'
 		},
 		{
@@ -321,7 +321,7 @@ if (Meteor.isClient) {
 				$('#finishModal').modal('show');
 			} else {
 				var n = noty({
-					text: 'One of the sketches you made is missing a name or an explanation! Give it one and try again :)',
+					text: 'One or more of the sketches you made is missing a name or an explanation! Fill it in and try again :)',
 					layout: 'topLeft',
 					theme: 'relax', // or 'relax'
 					type: 'warning',
