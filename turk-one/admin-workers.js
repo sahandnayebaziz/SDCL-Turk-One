@@ -94,7 +94,8 @@ if (Meteor.isClient) {
 			}
 		},
 		timeFormatted: function() {
-			return moment(this.visited.toString()).subtract(8, 'hours').calendar();
+			moment.tz.setDefault("America/Los_Angeles");
+			return moment(this.visited.toString()).calendar();
 		}
 	});
 
