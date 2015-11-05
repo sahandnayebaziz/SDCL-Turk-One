@@ -4,8 +4,9 @@
 			<table class="table table-sm table-bordered table-striped">
 				<thead>
 				<tr>
+					<th>time</th>
 					<th>worker</th>
-					<th>session</th>
+					<!--<th>session</th>-->
 					<th># of solutions</th>
 					<th>decision point</th>
 					<th>status</th>
@@ -24,8 +25,9 @@
 </template>
 <template name="workerTicketRow">
 	<tr class="{{viewStatus}}">
+		<td>{{timeFormatted}}</td>
 		<td>{{workerId}}</td>
-		<td>{{sessionId}}</td>
+		<!--<td>{{sessionId}}</td>-->
 		<td>{{numberOfSolutionsComplexEnough}}</td>
 		<td>{{decisionPoint.name}}</td>
 		<td><span class="label {{viewStatusLabelClass}}">{{viewStatusLabelMessage}}</span></td>

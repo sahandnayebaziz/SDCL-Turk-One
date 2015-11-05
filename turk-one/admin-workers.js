@@ -38,7 +38,7 @@ if (Meteor.isClient) {
 	// worker review page
 	Template.adminWorkers.helpers({
 		workerTickets: function () {
-			return WorkerTickets.find({}, {sort: {workerId: -1}});
+			return WorkerTickets.find({}, {sort: {visited: -1}});
 		}
 	});
 
@@ -92,6 +92,9 @@ if (Meteor.isClient) {
 			} else {
 				return "in-progress"
 			}
+		},
+		timeFormatted: function() {
+			return moment(this.visited.toString()).calendar();
 		}
 	});
 
