@@ -94,7 +94,7 @@ if (Meteor.isClient) {
 			}
 		},
 		timeFormatted: function() {
-			return moment(this.visited.toString()).calendar();
+			return moment(this.visited.toString()).subtract(8, 'hours').calendar();
 		}
 	});
 
