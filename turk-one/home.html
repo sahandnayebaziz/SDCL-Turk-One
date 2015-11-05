@@ -18,9 +18,9 @@
 			}
 		}
 
-		w = {{workerId}};
-		var s = {{sessionId}};
-		var d = {{decisionPointId}};
+		w = "{{workerId}}";
+		var s = "{{sessionId}}";
+		var d = "{{decisionPointId}}";
 		var v = new Date();
 		if (Session.get("ticketedFor" + w)) {
 			Session.setPersistent("ticket", Session.get("ticketedFor" + w));
