@@ -8,15 +8,12 @@
 					<th>worker</th>
 					<th>reason</th>
 					<th>feedback</th>
+					<th>actions</th>
 				</tr>
 				</thead>
 				<tbody>
 				{{#each quitSurveys}}
-					<tr>
-						<td>{{workerTicket}}</td>
-						<td>{{reason}}</td>
-						<td>{{feedback}}</td>
-					</tr>
+					{{> quitSurveyRow}}
 				{{/each}}
 				</tbody>
 			</table>
@@ -37,17 +34,33 @@
 				</thead>
 				<tbody>
 				{{#each exitSurveys}}
-					<tr>
-						<td>{{workerTicket}}</td>
-						<td>{{task}}</td>
-						<td>{{decision}}</td>
-						<td>{{tool}}</td>
-						<td>{{feedback}}</td>
-						<td><a href="/worker/{{workerTicket}}" class="btn btn-sm btn-continue btn-secondary">review</a></td>
-					</tr>
+					{{> exitSurveyRow}}
 				{{/each}}
 				</tbody>
 			</table>
 		</div>
 	</div>
+</template>
+
+<template name="quitSurveyRow">
+	<tr>
+		<td>{{workerTicket}}</td>
+		<td>{{reason}}</td>
+		<td>{{feedback}}</td>
+		<td><button class="btn btn-sm btn-continue btn-danger delete">Delete</button></td>
+	</tr>
+</template>
+
+<template name="exitSurveyRow">
+	<tr>
+		<td>{{workerTicket}}</td>
+		<td>{{task}}</td>
+		<td>{{decision}}</td>
+		<td>{{tool}}</td>
+		<td>{{feedback}}</td>
+		<td>
+			<a href="/worker/{{workerTicket}}" class="btn btn-sm btn-continue btn-secondary">review</a>
+			<button class="btn btn-danger btn-continue btn-sm delete">Delete</button>
+		</td>
+	</tr>
 </template>
