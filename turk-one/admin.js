@@ -24,9 +24,6 @@ if (Meteor.isServer) {
 				}
 			});
 		},
-		deleteSolution: function (id) {
-			Solutions.remove(id);
-		},
 		deleteDecisionPoint: function (id) {
 			DecisionPoints.remove(id);
 		}
@@ -91,22 +88,4 @@ if (Meteor.isClient) {
 			Meteor.call("deleteDecisionPoint", this._id);
 		}
 	});
-
-	Template.solutionVisual.rendered = function() {
-		if(!this._rendered) {
-			this._rendered = true;
-
-			canvasArray = [];
-
-			var idForNewCanvas = "canvas" + this.data._id;
-			var element = $("#" + idForNewCanvas);
-			var canvas = new fabric.Canvas(idForNewCanvas);
-			canvas.isDrawingMode = true;
-			canvas.freeDrawingBrush.width = 5;
-			canvas.setBackgroundColor("white").renderAll();
-			canvasArray.push(canvas);
-
-			canvas.loadFromJSON(this.data.state, canvas.renderAll.bind(canvas));
-		}
-	};
 }

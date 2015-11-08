@@ -67,6 +67,15 @@ Router.route('/admin', function () {
 	document.title = "Crowd Design Admin";
 });
 
+Router.route('/adminSolutions', function () {
+	if (Meteor.user() && Meteor.user().username === 'admin') {
+		this.render('adminSolutions');
+	} else {
+		this.render("unauth");
+	}
+	document.title = "Crowd Design Admin";
+});
+
 Router.route('/secretlogin', function () {
 	this.render('secretlogin');
 	document.title = "Crowd Design Admin";
