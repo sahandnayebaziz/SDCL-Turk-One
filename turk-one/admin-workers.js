@@ -132,10 +132,18 @@ if (Meteor.isClient) {
 	// TODO: make this a toggle instead of a set and cancel
 	Template.worker.events({
 		"click .reviewed": function() {
-			Meteor.call("updateTicketReviewed", this._id, true);
+			Meteor.call("updateTicketReviewed", this._id, true, function(e, r) {
+				if (!e) {
+					Router.go("/admin");
+				}
+			});
 		},
 		"click .cancelReviewed": function() {
-			Meteor.call("updateTicketReviewed", this._id, false);
+			Meteor.call("updateTicketReviewed", this._id, false, function(e, r) {
+				if (!e) {
+					Router.go("/admin");
+				}
+			});
 		}
 	});
 

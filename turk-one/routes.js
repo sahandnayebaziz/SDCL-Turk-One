@@ -67,13 +67,13 @@ Router.route('/admin', function () {
 	document.title = "Crowd Design Admin";
 });
 
-Router.route('/adminSolutions', function () {
+Router.route('/admin/:innerName', function () {
 	if (Meteor.user() && Meteor.user().username === 'admin') {
-		this.render('adminSolutions');
+		this.render('admin' + this.params.innerName);
 	} else {
 		this.render("unauth");
 	}
-	document.title = "Crowd Design Admin";
+	document.title = "Crowd Design Admin " + this.params.innerName;
 });
 
 Router.route('/secretlogin', function () {
