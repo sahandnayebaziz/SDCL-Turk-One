@@ -38,7 +38,7 @@ if (Meteor.isClient) {
 	// worker review page
 	Template.adminWorkers.helpers({
 		workerTickets: function () {
-			return WorkerTickets.find({}, {sort: {workerId: -1}});
+			return WorkerTickets.find({}, {sort: {visited: -1}});
 		}
 	});
 
@@ -92,6 +92,10 @@ if (Meteor.isClient) {
 			} else {
 				return "in-progress"
 			}
+		},
+		timeFormatted: function() {
+			moment.tz.setDefault("America/Los_Angeles");
+			return moment(this.visited.toString()).calendar();
 		}
 	});
 
@@ -128,10 +132,18 @@ if (Meteor.isClient) {
 	// TODO: make this a toggle instead of a set and cancel
 	Template.worker.events({
 		"click .reviewed": function() {
-			Meteor.call("updateTicketReviewed", this._id, true);
+			Meteor.call("updateTicketReviewed", this._id, true, function(e, r) {
+				if (!e) {
+					Router.go("/admin");
+				}
+			});
 		},
 		"click .cancelReviewed": function() {
-			Meteor.call("updateTicketReviewed", this._id, false);
+			Meteor.call("updateTicketReviewed", this._id, false, function(e, r) {
+				if (!e) {
+					Router.go("/admin");
+				}
+			});
 		}
 	});
 
