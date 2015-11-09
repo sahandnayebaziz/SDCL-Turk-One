@@ -486,8 +486,12 @@
 							});
 
 							$("#toolbarTips").click(function () {
-
-
+                                ga('send', {
+                                    hitType: 'event',
+                                    eventCategory: 'Toolbar',
+                                    eventAction: 'Toolbar Tips',
+                                    eventLabel: Session.get("ticket")
+                                });
 							});
 
 
