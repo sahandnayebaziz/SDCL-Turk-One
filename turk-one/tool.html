@@ -17,7 +17,7 @@
 								<!--<span class="buttonColor" id="buttonWhite" data-color="#FFFFFF"></span>-->
 								<span class="buttonToolbar deselectedTool buttonColor" id="buttonBlue" data-color="#80D4FC"></span>
 
-							<span class="buttonToolbar deselectedTool buttonColor tooltipBoxEven" id="buttonGreen"
+							<span class="buttonToolbar deselectedTool buttonColor" id="buttonGreen"
 							      data-color="#A1F5AA"
 							      href="#" data-trigger="manual" data-toggle="1"
 							      title="select the colour of your brush"></span>
@@ -26,23 +26,23 @@
 
 								<span class="buttonToolbar deselectedTool buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
 
-								<img src="/type.png" class="buttonToolbar deselectedTool tooltipBoxUnEven" id="buttonText" href="#"
+								<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText" href="#"
 								     data-trigger="manual" data-toggle="2"
 								     title="Add text to your sketch: click anywhere on the canvas to add, then click on the text to edit.">
 
-							<span class="buttonToolbar deselectedTool tooltipBoxEven" id="buttonMove" href="#"
+							<span class="buttonToolbar deselectedTool" id="buttonMove" href="#"
 							      data-trigger="manual" data-toggle="3"
 							      title="With this tool you can move, resize or rotate every object on your canvas"></span>
 
-							<span class="buttonToolbar deselectedTool tooltipBoxUnEven" id="buttonEraser" href="#"
+							<span class="buttonToolbar deselectedTool" id="buttonEraser" href="#"
 							      data-trigger="manual" data-toggle="4"
 							      title="Erase: Click on object to delete or drag to select objects you want to delete, then click on the selected objects"></span>
 
-								<img src="/undo-icon.png" class="buttonToolbar deselectedTool buttonHistory tooltipBoxEven"
+								<img src="/undo-icon.png" class="buttonToolbar deselectedTool buttonHistory"
 								     id="buttonUndo"
 								     href="#" data-trigger="manual" data-toggle="5" title="Undo">
 
-								<img src="/redo-icon.png" class="buttonToolbar deselectedTool buttonHistory tooltipBoxUnEven"
+								<img src="/redo-icon.png" class="buttonToolbar deselectedTool buttonHistory"
 								     id="buttonRedo"
 								     href="#" data-trigger="manual" data-toggle="6" title="Redo">
 
@@ -1205,6 +1205,24 @@
 				eventLabel: Session.get("ticket")
 			});
 		});
+
+        $("#infoRequest").click(function () {
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Button',
+                eventAction: 'Info',
+                eventLabel: Session.get("ticket")
+            });
+        });
+
+        $("#tutorialRequest").click(function () {
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Button',
+                eventAction: 'Tutorial',
+                eventLabel: Session.get("ticket")
+            });
+        });
 
 	</script>
 
