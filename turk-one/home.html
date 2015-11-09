@@ -72,16 +72,7 @@
 								<span>{{decisionPointText}}</span>
 							</p>
 
-							<p class="small"><span class="text-muted small strong"><strong>CRITERIA</strong></span><br>
-								You may provide as few as one alternative solution, and as many as five. You will be paid $1.50 per
-								alternative solution that meets the following criteria:
-							<ul class="small">
-								<li>It is specified in English</li>
-								<li>It has a proper name and textual explanation</li>
-								<li>It has a sensible accompanying sketch that shows the alternative solution</li>
-								<li>It is relevant to the decision point.</li>
-							</ul>
-							</p>
+							{{> criteria}}
 
 							<a type="button" class="btn btn-primary btn-continue top-buffer-50"><span
 								class="small">CONTINUE</span></a>
@@ -92,4 +83,29 @@
 		</div>
 	</div>
 
+</template>
+
+<template name="criteria">
+	<p class="small"><span class="text-muted small strong"><strong>ACCEPTION CRITERIA</strong></span><br>
+		In order for your task to be accepted you need to provide at least one alternative solution that meets
+		the following criteria:
+	<ul class="small">
+		<li>It is specified in English</li>
+		<li>It has a sketch, name, and textual explanation.</li>
+		<li>It shows honest effort to propose a solution that solves the decision point</li>
+	</ul>
+	</p>
+	<p class="small">For each solution you provide, that meets this criteria, you will be awarded a bonus of $0.50 on top of the $1.00 completion fee.
+		You can only take this HIT once; unfortunately we have to reject workers that submit this HIT multiple times. </p>
+
+	<p class="small"><span class="text-muted small strong"><strong>BONUS CRITERIA</strong></span><br>
+		If you provide relevant solution alternatives, you will be awarded a bonus of $1.50 per solution (instead of $0.50)
+		that meets the following criteria:
+	<ul class="small">
+		<li>It is specified in English</li>
+		<li>It has a proper name and textual explanation</li>
+		<li>It has a sensible accompanying sketch that shows the alternative solution</li>
+		<li>It is relevant to the decision point</li>
+	</ul>
+	</p>
 </template>
