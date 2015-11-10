@@ -370,7 +370,6 @@
 								$.each(canvases, function () {
 									this.off("mouse:down");
 								});
-								console.log("removed handlers");
 							}
 							function enableEraser() {
 								$.each(canvases, function () {
@@ -428,7 +427,6 @@
 								$.each(canvases, function () {
 									this.on("mouse:down", function (e) {
 										var locationOnThisCanvas = this.getPointer(event.e);
-										console.log(locationOnThisCanvas);
 										this.add(new fabric.IText('Enter Text', {
 											fontFamily: 'times black',
 											left: locationOnThisCanvas.x,
@@ -462,7 +460,6 @@
 								$.each(canvases, function () {
 									this.on("mouse:down", function (e) {
 										var locationOnThisCanvas = this.getPointer(event.e);
-										console.log(locationOnThisCanvas);
 										this.add(new fabric.Rect({
 											width: 200,
 											height: 200,
@@ -498,7 +495,6 @@
 								$.each(canvases, function () {
 									this.on("mouse:down", function (e) {
 										var locationOnThisCanvas = this.getPointer(event.e);
-										console.log(locationOnThisCanvas);
 										this.add(new fabric.Circle({
 											radius: 100,
 											width: 200,
@@ -814,7 +810,6 @@
 								{{#if state}}
 									<!--RUNS WHEN THE STATE HAS BEEN READ FROM THE DB. LOADS STATE, SAVES INITIAL TO UNDO/REDO STACK.-->
 									<script>
-										console.log("reloading a state for canvas {{canvasNumber}}");
 										canvas.loadFromJSON({{state}});
 										canvas.renderAll();
 										// code from save self
@@ -886,7 +881,6 @@
 									stopNameTimer = (function (canvasNumber, timer) {
 										return function () {
 											var timeFound = timer.getElapsed().seconds;
-											console.log(timeFound);
 											Meteor.call("updateNameTime", Session.get("objectId" + Session.get("ticket") + canvasNumber), timeFound, function (e, r) {
 												if (!e) {
 													typingTimerName.stop();
@@ -905,7 +899,6 @@
 									stopExplainTimer = (function (canvasNumber, timer) {
 										return function () {
 											var timeFound = timer.getElapsed().seconds;
-											console.log(timeFound);
 											Meteor.call("updateExplainTime", Session.get("objectId" + Session.get("ticket") + canvasNumber), timeFound, function (e, r) {
 												if (!e) {
 													typingTimerExplanation.stop();
@@ -928,7 +921,6 @@
 									nameForThisCanvas.on("keydown", function (canvasNumber) {
 										return function () {
 											forceFocus(canvasNumber);
-											console.log("forced focus baby");
 										}
 									}({{canvasNumber}}));
 									explainForThisCanvas.on("focus", setExplainTimer);
@@ -936,7 +928,6 @@
 									explainForThisCanvas.on("keydown", function (canvasNumber) {
 										return function () {
 											forceFocus(canvasNumber);
-											console.log("forced focus baby");
 										}
 									}({{canvasNumber}}));
 
@@ -1205,13 +1196,11 @@
 			// create persistent objects in database for these sketches
 			function createSolutionIfNotExits(canvasNumber, ticket) {
 				if (Session.get("insertedSolutionFor" + ticket + canvasNumber)) {
-					console.log("solutions created for " + canvasNumber);
 				} else {
 					Meteor.call("createSolution", ticket, canvasNumber, function (e, r) {
 						if (!e) {
 							Session.setPersistent("objectId" + ticket + canvasNumber, r);
 							Session.setPersistent("insertedSolutionFor" + ticket + canvasNumber, "true");
-							console.log("set persistence for user" + ticket + " canvas: " + canvasNumber);
 						}
 					})
 				}

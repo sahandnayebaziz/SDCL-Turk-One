@@ -13,7 +13,8 @@ if (Meteor.isServer) {
 				workerId: w,
 				sessionId: s,
 				decisionPointId: d,
-				visited: v
+				visited: v,
+				run: "ART1MT"
 			});
 			console.log("created new workerTicket");
 			return newDoc;
