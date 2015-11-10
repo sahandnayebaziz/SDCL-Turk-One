@@ -30,9 +30,25 @@
 								     data-trigger="manual" data-toggle="2"
 								     title="Add text to your sketch: click anywhere on the canvas to add, then click on the text to edit.">
 
+								<img src="/rectangle.png" class="buttonToolbar deselectedTool" id="buttonRectangle" href="#"
+								     data-trigger="manual" data-toggle="2"
+								     title="Add a rectangle to your sketch: click anywhere on the canvas to add a rectangle, then click on the object to move it around">
+
+								<img src="/circle.png" class="buttonToolbar deselectedTool" id="buttonCircle" href="#"
+								     data-trigger="manual" data-toggle="2"
+								     title="Add a rectangle to your sketch: click anywhere on the canvas to add a circle, then click on the text to edit."/>
+
 							<span class="buttonToolbar deselectedTool" id="buttonMove" href="#"
 							      data-trigger="manual" data-toggle="3"
 							      title="With this tool you can move, resize or rotate every object on your canvas"></span>
+
+								<img src="/send-front.png" class="buttonToolbar deselectedTool" id="buttonSendFront" href="#"
+								     data-trigger="manual" data-toggle="2"
+								     title="Click to make an object sit above all other objects">
+
+								<img src="/send-back.png" class="buttonToolbar deselectedTool" id="buttonSendBack" href="#"
+								     data-trigger="manual" data-toggle="2"
+								     title="Click to make an object sit below all other objects."/>
 
 							<span class="buttonToolbar deselectedTool" id="buttonEraser" href="#"
 							      data-trigger="manual" data-toggle="4"
@@ -56,7 +72,7 @@
 									position: fixed;
 									bottom: 50px;
 									left: 50%;
-									margin-left: -200px;
+									margin-left: -289px;
 									display: block;
 									min-width: 340px;
 									height: 46px;
@@ -76,12 +92,8 @@
 									width: 25px;
 								}
 
-								#buttonText {
+								#buttonText, #buttonEraser {
 									margin-left: 24px !IMPORTANT;
-								}
-
-								#buttonEraser {
-									margin-right: 24px !IMPORTANT;
 								}
 
 								#toolbarTips {
@@ -96,7 +108,7 @@
 							@media screen and (min-width: 62em) {
 								#toolbarContainer {
 									margin-right: 15px;
-									margin-top: 100px;
+									margin-top: 30px;
 									background: #CECECE;
 									box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.14);
 									border-radius: 6px;
@@ -114,7 +126,7 @@
 									margin-bottom: 8px;
 								}
 
-								#buttonText {
+								#buttonText, #buttonEraser {
 									margin-top: 24px;
 								}
 
@@ -127,7 +139,6 @@
 								#buttonEraser {
 									background-image: url("/eraser.png");
 									height: 25px;
-									margin-bottom: 24px;
 								}
 
 							}
@@ -440,6 +451,113 @@
 								});
 							});
 
+							// shape tools
+							$("#buttonRectangle").click(function () {
+								setSelectedTool(this);
+
+								$.each(canvases, function () {
+									this.isDrawingMode = false;
+								});
+
+								$.each(canvases, function () {
+									this.on("mouse:down", function (e) {
+										var locationOnThisCanvas = this.getPointer(event.e);
+										console.log(locationOnThisCanvas);
+										this.add(new fabric.Rect({
+											width: 200,
+											height: 200,
+											stroke: Session.get("currentColor"),
+											fill: "transparent",
+											opacity: 1,
+											strokeWidth: 2,
+											left: locationOnThisCanvas.x,
+											top: locationOnThisCanvas.y,
+										}));
+										var newRectObject = this.item(this.getObjects().length - 1);
+										this.setActiveObject(newRectObject);
+
+										simulateMoveClick();
+									});
+								});
+
+								ga('send', {
+									hitType: 'event',
+									eventCategory: 'Toolbar',
+									eventAction: 'Text',
+									eventLabel: Session.get("ticket")
+								});
+							});
+
+							$("#buttonCircle").click(function () {
+								setSelectedTool(this);
+
+								$.each(canvases, function () {
+									this.isDrawingMode = false;
+								});
+
+								$.each(canvases, function () {
+									this.on("mouse:down", function (e) {
+										var locationOnThisCanvas = this.getPointer(event.e);
+										console.log(locationOnThisCanvas);
+										this.add(new fabric.Circle({
+											radius: 100,
+											width: 200,
+											height: 200,
+											stroke: Session.get("currentColor"),
+											fill: "transparent",
+											opacity: 1,
+											strokeWidth: 2,
+											left: locationOnThisCanvas.x,
+											top: locationOnThisCanvas.y,
+										}));
+										var newRectObject = this.item(this.getObjects().length - 1);
+										this.setActiveObject(newRectObject);
+
+										simulateMoveClick();
+									});
+								});
+
+								ga('send', {
+									hitType: 'event',
+									eventCategory: 'Toolbar',
+									eventAction: 'Text',
+									eventLabel: Session.get("ticket")
+								});
+							});
+
+							$("#buttonSendFront").click(function () {
+
+								if (canvasWithFocus.getActiveObject()) {
+									var target = canvasWithFocus.getActiveObject();
+									canvasWithFocus.bringToFront(target);
+									canvasWithFocus.deactivateAll();
+									canvasWithFocus.renderAll();
+								}
+
+								ga('send', {
+									hitType: 'event',
+									eventCategory: 'Toolbar',
+									eventAction: 'Send front',
+									eventLabel: Session.get("ticket")
+								});
+							});
+
+							$("#buttonSendBack").click(function () {
+								if (canvasWithFocus.getActiveObject()) {
+									var target = canvasWithFocus.getActiveObject();
+									canvasWithFocus.sendToBack(target);
+									canvasWithFocus.deactivateAll();
+									canvasWithFocus.renderAll();
+								}
+
+								ga('send', {
+									hitType: 'event',
+									eventCategory: 'Toolbar',
+									eventAction: 'Send back',
+									eventLabel: Session.get("ticket")
+								});
+							});
+
 
 							// UNDO AND REDO
 							$("#buttonUndo").click(function () {
@@ -486,12 +604,12 @@
 							});
 
 							$("#toolbarTips").click(function () {
-                                ga('send', {
-                                    hitType: 'event',
-                                    eventCategory: 'Toolbar',
-                                    eventAction: 'Toolbar Tips',
-                                    eventLabel: Session.get("ticket")
-                                });
+								ga('send', {
+									hitType: 'event',
+									eventCategory: 'Toolbar',
+									eventAction: 'Toolbar Tips',
+									eventLabel: Session.get("ticket")
+								});
 							});
 
 
@@ -1114,6 +1232,7 @@
 						<div class="row">
 							<div class="col-xs-12 text-center">
 								<p class="lead">Task Complete</p>
+
 								<p>Thank you for your participation</p>
 							</div>
 						</div>
@@ -1201,23 +1320,23 @@
 			});
 		});
 
-        $("#infoRequest").click(function () {
-            ga('send', {
-                hitType: 'event',
-                eventCategory: 'Button',
-                eventAction: 'Info',
-                eventLabel: Session.get("ticket")
-            });
-        });
+		$("#infoRequest").click(function () {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Info',
+				eventLabel: Session.get("ticket")
+			});
+		});
 
-        $("#tutorialRequest").click(function () {
-            ga('send', {
-                hitType: 'event',
-                eventCategory: 'Button',
-                eventAction: 'Tutorial',
-                eventLabel: Session.get("ticket")
-            });
-        });
+		$("#tutorialRequest").click(function () {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Tutorial',
+				eventLabel: Session.get("ticket")
+			});
+		});
 
 	</script>
 

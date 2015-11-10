@@ -38,7 +38,36 @@ if (Meteor.isClient) {
 	// worker review page
 	Template.adminWorkers.helpers({
 		workerTickets: function () {
-			return WorkerTickets.find({}, {sort: {visited: -1}});
+			if (!Session.get("shouldShowStatuses")) {
+				return WorkerTickets.find({}, {sort: {visited: -1}});
+			} else {
+				var filters = {};
+				console.log(Session.get("shouldShowStatuses"));
+				$.each(Session.get("shouldShowStatuses"), function(index, value) {
+					switch (value) {
+						case "reviewed":
+							filters["reviewed"] = true;
+							break;
+						case "submitted":
+							filters = {
+								$and: [
+									{$or: [{"reviewed": false}, {"reviewed": {$exists: false}}]},
+									{"submitted": true}
+								]
+							};
+							break;
+						case "in-progress":
+							filters["reviewed"] = {$exists: false};
+							filters["submitted"] = {$exists: false};
+							filters["quit"] = {$exists: false};
+							break;
+						default:
+							filters = {};
+					}
+				});
+				console.log(filters);
+				return WorkerTickets.find(filters, {sort: {visited: -1}});
+			}
 		}
 	});
 
@@ -96,6 +125,41 @@ if (Meteor.isClient) {
 		timeFormatted: function() {
 			moment.tz.setDefault("America/Los_Angeles");
 			return moment(this.visited.toString()).calendar();
+		}
+	});
+
+	Template.workerTableControls.helpers({
+		filterShownClass: function(filter) {
+			var existingFilters = Session.get("shouldShowStatuses");
+			if (existingFilters) {
+				if ($.inArray(filter, existingFilters) == -1) {
+					return "hidden-filter";
+				} else {
+					return "shown-filter";
+				}
+			} else {
+				return "hidden-filter";
+			}
+		}
+	});
+
+	Template.workerTableControls.events({
+		"click .filter-control": function(e) {
+			var statusFilterToggled = $(e.target).attr('data-filter');
+			var newFilters = [];
+			if (Session.get("shouldShowStatuses")) {
+				var existingFilters = Session.get("shouldShowStatuses");
+				newFilters = existingFilters;
+			}
+
+			var index = $.inArray(statusFilterToggled, newFilters)
+			if (index != -1) {
+				newFilters.splice(index, 1);
+			} else {
+				newFilters.push(statusFilterToggled);
+			}
+
+			Session.set("shouldShowStatuses", newFilters);
 		}
 	});
 
