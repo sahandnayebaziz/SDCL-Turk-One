@@ -1,4 +1,5 @@
 <template name="adminWorkers">
+	{{> workerTableControls}}
 	<div class="row">
 		<div class="col-sm-12 top-buffer-25">
 			<table class="table table-sm table-bordered table-striped">
@@ -23,7 +24,31 @@
 		</div>
 	</div>
 </template>
+<template name="workerTableControls">
+	<div class="row">
+		<div class="col-xs-12">
+			<span class="pull-right">
+				<p>
+					<span class="small">showing </span>
+					<span class="label label-default {{filterShownClass "in-progress"}} filter-control" data-filter="in-progress">in-progress</span>
+					<span class="label label-primary {{filterShownClass "submitted"}} filter-control" data-filter="submitted">submitted</span>
+					<span class="label label-danger {{filterShownClass "quit"}} filter-control" data-filter="quit">quit</span>
+					<span class="label label-success {{filterShownClass "reviewed"}} filter-control" data-filter="reviewed">reviewed</span>
+				</p>
+			</span>
+		</div>
+	</div>
 
+	<style>
+		.shown-filter {
+			opacity: 1;
+		}
+
+		.hidden-filter {
+			opacity: 0.4;
+		}
+	</style>
+</template>
 <template name="workerTicketRow">
 	<tr class="{{viewStatus}}">
 		<td>{{timeFormatted}}</td>

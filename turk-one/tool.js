@@ -89,6 +89,8 @@ if (Meteor.isServer) {
 			}, function(error) {
 				if (!error) {
 					console.log("created quit survey");
+				} else {
+					console.log(error);
 				}
 			})
 		},
@@ -174,7 +176,6 @@ if (Meteor.isClient) {
 			this._rendered = true;
 
 			if (!Session.get("tutorialDone")) {
-				console.log("start tutorial");
 
 				introJs().setOptions({
 					"scrollToElement": true,
