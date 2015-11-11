@@ -115,6 +115,7 @@
 									padding-top: 17px;
 									padding-bottom: 9px;
 									min-width: 50px;
+									max-height: 575px;
 								}
 
 								.buttonToolbar {
@@ -480,7 +481,7 @@
 								ga('send', {
 									hitType: 'event',
 									eventCategory: 'Toolbar',
-									eventAction: 'Text',
+									eventAction: 'Rectangle',
 									eventLabel: Session.get("ticket")
 								});
 							});
@@ -516,7 +517,7 @@
 								ga('send', {
 									hitType: 'event',
 									eventCategory: 'Toolbar',
-									eventAction: 'Text',
+									eventAction: 'Circle',
 									eventLabel: Session.get("ticket")
 								});
 							});
