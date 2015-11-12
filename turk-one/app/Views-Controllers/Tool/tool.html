@@ -1,0 +1,360 @@
+<template name="tool">
+
+	{{#if shouldShow}}
+		<div class="container-fluid container-tool">
+			<div class="row">
+				<div id="dpBlock" class="col-md-12 col-lg-4 bottom-buffer-50 md-fixed ">
+					{{#with decisionPoint}}
+						{{>decisionPointInformationPanel}}
+					{{/with}}
+				</div>
+				<div class="col-md-12 col-lg-8 col-lg-offset-4 bottom-buffer-100" id="intro2">
+					<div class="row">
+						<div class="col-lg-1 col-md-12">
+							{{> toolbar}}
+						</div>
+						<div class="col-lg-10 animated fadeIn" id="col-sketch">
+
+							{{#each solutions}}
+								{{> solutionCanvas}}
+							{{/each}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--modals-->
+		<div class="modal fade" id="finishModal" tabindex="-1" role="dialog" aria-labelledby="Finish confirmation"
+		     aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title">Are you sure you're ready to finish?</h4>
+					</div>
+					<div class="modal-body">
+						{{#if shouldGenerateReviews}}
+							<p class="modal-text">You are about to submit {{numberComplexEnough}} out of a possible 5 sketches.</p>
+
+							<p><strong class="text-danger">Once you click "confirm", you will not have a chance to return and
+								continue sketching your solutions.</strong></p>
+
+							<p>As a reminder, your sketches will be reviewed using the following criteria:</p>
+
+							<p>
+							<ul class="small">
+								<li>It is specified in English</li>
+								<li>It has a proper name and textual explanation</li>
+								<li>It has a sensible accompanying sketch that shows the alternative solution</li>
+								<li>It is relevant to the decision point.</li>
+							</ul>
+							</p>
+
+							<div class="row">
+								<div class="col-xs-12">
+									<h5 class="bottom-buffer-25">Sketches</h5>
+									{{#each solutions}}
+										{{#if canvasIsComplexEnough}}
+											<div class="bottom-buffer-50">
+												<img class="img-responsive img-rounded img-review" src="{{imageForCanvas canvasNumber}}">
+
+												<div class="text-center">
+													<p>{{name}}</p>
+
+													<p>{{explain}}</p>
+												</div>
+											</div>
+										{{/if}}
+									{{/each}}
+								</div>
+							</div>
+						{{/if}}
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" onclick="$('#finishModal').modal('hide');" class="btn btn-secondary"
+						        data-dismiss="modal" id="finishCancel">Cancel
+						</button>
+						<button type="button" class="btn btn-success" id="finishConfirm">Confirm</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="quitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		     aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title">Are you sure you want to quit this HIT?</h4>
+					</div>
+					<div class="modal-body">
+						<form id="quitForm" class="top-buffer-25">
+							<label>Why are you quitting this task?</label>
+							<!--- The task is to easy-->
+							<!--- The task is to hard-->
+							<!--- It is not clear to me what I need to do-->
+							<!--- The tool does not work like I would expect-->
+							<!--- Other, (provide textfield)-->
+							<div class="radio">
+								<label>
+									<input type="radio" name="quitReason" value="too easy">
+									The task is too easy
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="quitReason" value="too hard">
+									The task is too hard
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="quitReason" value="not clear">
+									It is not clear to me what I need to do
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="quitReason" value="tool doesn't work">
+									The tool does not work like I would expect
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="quitReason" value="Other">
+									Other (explained below)
+								</label>
+							</div>
+							<fieldset class="form-group top-buffer-50">
+								<label for="quitText">Do you have any feedback to improve this HIT?</label>
+								<textarea class="form-control" id="quitText" rows="3"></textarea>
+							</fieldset>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+								<button type="submit" class="btn btn-danger disabled" disabled="true" id="quitSubmit">Quit this HIT
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		     aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title">General Task Information</h4>
+					</div>
+					<div class="modal-body">
+						<h5>
+							Educational Traffic Flow Simulation Program
+						</h5>
+
+						<p><br>You are part of a team of software developers who are working together to design a traffic flow
+							simulator
+							program. The overall purpose of the simulator program is educational: university-level civil engineering
+							students
+							will be using it to understand the effects that different traffic signal timings have on traffic flow.
+						</p>
+
+						<p>The overall design problem has already been broken down into a large number of much smaller
+							decision points: individual aspects of the design that can be considered in isolation of each other. You
+							have been tasked with working on one of those decision points, by providing one or more alternative
+							solutions
+							that would satisfactorily address the requirements of that decision point.<br><br>
+							<span>{{decisionPointText}}</span>
+						</p>
+
+						{{> criteria}}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="tooltipModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		     aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+							<span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title">Tooltips</h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-xs-12">
+								<img src="/vertical.png" class="img-responsive"
+								     alt="change colors with the color balls, T adds text, 4 arrows is a move resize rotate selector, pink gummy is an eraser, big arrows are undo redo">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			// timer hooks for modals
+			infoModalStopwatch = new Stopwatch();
+			readingStopwatches.push(infoModalStopwatch);
+
+			$("#infoModal").on('shown.bs.modal', function () {
+				infoModalStopwatch.start();
+			});
+
+			$("#infoModal").on('hide.bs.modal', function () {
+				infoModalStopwatch.stop();
+				Meteor.call("updateInfoModalTime", Session.get("ticket"), infoModalStopwatch.getElapsed().seconds);
+				infoModalStopwatch.reset();
+			});
+
+			// create persistent objects in database for these sketches
+			function createSolutionIfNotExits(canvasNumber, ticket) {
+				if (Session.get("insertedSolutionFor" + ticket + canvasNumber)) {
+				} else {
+					Meteor.call("createSolution", ticket, canvasNumber, function (e, r) {
+						if (!e) {
+							Session.setPersistent("objectId" + ticket + canvasNumber, r);
+							Session.setPersistent("insertedSolutionFor" + ticket + canvasNumber, "true");
+						}
+					})
+				}
+			}
+
+			createSolutionIfNotExits(1, Session.get("ticket"));
+			createSolutionIfNotExits(2, Session.get("ticket"));
+			createSolutionIfNotExits(3, Session.get("ticket"));
+			createSolutionIfNotExits(4, Session.get("ticket"));
+			createSolutionIfNotExits(5, Session.get("ticket"));
+
+		</script>
+	{{else}}
+		{{#if quit}}
+			<div class="container">
+				<div class="row">
+					<div class="col-md-10 col-md-offset-1 top-buffer-100">
+						<div class="row">
+							<div class="col-xs-12 text-center">
+								<p class="lead">Task Complete</p>
+
+								<p>Thank you for your participation</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{{else}}
+			<script>Router.go("/exit/" + Session.get("ticket"));</script>
+		{{/if}}
+	{{/if}}
+</template>
+
+<template name="decisionPointInformationPanel">
+	<div class="row">
+		<div class="col-md-12 col-lg-10 col-lg-offset-1">
+			<div class="row" id="intro1">
+				<div class="col-xs-12">
+					<h4>{{name}}<br></h4>
+
+					<p>{{description}}</p>
+
+					<p>
+					<span class="text-muted">
+						<strong>REQUIREMENTS</strong>
+					</span>
+					</p>
+
+					<p>{{requirements}}</p>
+				</div>
+			</div>
+			<div id="intro4">
+				<div id="buttonMenu" class="row center" role="group" aria-label="...">
+					<button id="finishRequest" class="btn btn-success btn-continue">REVIEW & FINISH
+					</button>
+					<button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-target="#infoModal">TASK
+						INFO
+					</button>
+					<button id="tutorialRequest" class="btn btn-primary btn-continue" data-toggle="modal">TUTORIAL</button>
+					<button id="quitRequest" class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">
+						QUIT
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		//choose layout for menu based on screen size
+		if ($(window).width() > 991) {
+			//console.log($(window).width());
+			$('#buttonMenu').addClass('btn-group-vertical');
+		} else {
+			$('#buttonMenu').addClass('btn-group');
+		}
+
+		// puts the button menu in vertical on smaller screens
+		$(window).resize(function () {
+			if ($(window).width() > 991) {
+				//console.log("width" +$(window).width());
+				//console.log("height" +$(window).height());
+				$('#buttonMenu').removeClass('btn-group');
+				$('#buttonMenu').addClass('btn-group-vertical');
+			} else {
+				$('#buttonMenu').addClass('btn-group');
+				$('#buttonMenu').removeClass('btn-group-vertical');
+			}
+		});
+
+		//Google analytics
+		$("#finishRequest").click(function () {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Review and Finish',
+				eventLabel: Session.get("ticket")
+			});
+		});
+
+		$("#quitRequest").click(function () {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Quit',
+				eventLabel: Session.get("ticket")
+			});
+		});
+
+		$("#infoRequest").click(function () {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Info',
+				eventLabel: Session.get("ticket")
+			});
+		});
+
+		$("#tutorialRequest").click(function () {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Tutorial',
+				eventLabel: Session.get("ticket")
+			});
+		});
+
+	</script>
+
+</template>

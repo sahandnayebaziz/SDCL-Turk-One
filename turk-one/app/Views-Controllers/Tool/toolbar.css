@@ -1,0 +1,203 @@
+/* Screen is not very wide */
+@media screen and (max-width: 62em) {
+    #toolbarContainer {
+        position: fixed;
+        bottom: 50px;
+        left: 50%;
+        margin-left: -289px;
+        display: block;
+        min-width: 340px;
+        max-height: 50px !IMPORTANT;
+        overflow-y: hidden !IMPORTANT;
+        padding: 10px 0px 0px 17px;
+        background: #CECECE;
+        box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.33);
+        border-radius: 6px;
+        z-index: 2;
+    }
+
+    .buttonToolbar {
+        display: block;
+        float: left;
+        clear: none;
+        margin: 0px 8px 0px 0px;
+        height: auto;
+        width: 25px;
+    }
+
+    #buttonText, #buttonEraser {
+        margin-left: 24px !IMPORTANT;
+    }
+
+    #toolbarTips {
+        line-height: 28px;
+    }
+
+    #buttonRedo, #buttonUndo {
+        margin-bottom: 5px;
+    }
+}
+
+/* Screen is not very tall */
+@media screen and (max-height: 666px) {
+    #toolbarContainer {
+        position: fixed;
+        bottom: 50px;
+        left: 50%;
+        margin-left: -289px;
+        display: block;
+        min-width: 340px;
+        max-height: 50px !IMPORTANT;
+        overflow-y: hidden !IMPORTANT;
+        padding: 10px 0px 0px 17px;
+        background: #CECECE;
+        box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.33);
+        border-radius: 6px;
+        z-index: 2;
+    }
+
+    .buttonToolbar {
+        display: block;
+        float: left;
+        clear: none;
+        margin: 0px 8px 0px 0px;
+        height: auto;
+        width: 25px;
+    }
+
+    #buttonText, #buttonEraser {
+        margin-left: 24px !IMPORTANT;
+    }
+
+    #toolbarTips {
+        line-height: 28px;
+    }
+
+    #buttonRedo, #buttonUndo {
+        margin-bottom: 5px;
+    }
+}
+
+/* Screen is wide and tall */
+@media screen and (min-width: 62em) and (min-height: 667px) {
+    #toolbarContainer {
+        margin-right: 15px;
+        margin-top: 30px;
+        background: #CECECE;
+        box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.14);
+        border-radius: 6px;
+        padding-top: 17px;
+        padding-bottom: 9px;
+        min-width: 50px;
+        max-height: 583px;
+    }
+
+    .buttonToolbar {
+        height: auto;
+        width: 25px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 8px;
+    }
+
+    #buttonText, #buttonEraser {
+        margin-top: 24px;
+    }
+
+    #buttonMove {
+        background-image: url("/controls.png");
+        height: 28px;
+        width: 28px;
+    }
+
+    #buttonEraser {
+        background-image: url("/eraser.png");
+        height: 25px;
+    }
+
+}
+
+.buttonHistory {
+    padding-bottom: 3px;
+    padding-top: 3px;
+}
+
+.deselectedTool {
+    opacity: 0.4;
+}
+
+.deselectedTool:hover {
+    opacity: 0.8;
+}
+
+.buttonColor {
+    border-radius: 50px;
+    height: 25px;
+}
+
+#buttonBlack {
+    background: #414141;
+    border: 3px solid #000000;
+}
+
+#buttonWhite {
+    background: #FFFFFF;
+    border: 3px solid #BDBDBD;
+}
+
+#buttonBlue {
+    background: #80D4FC;
+    border: 3px solid #4B95B4;
+}
+
+#buttonGreen {
+    background: #A1F5AA;
+    border: 3px solid #6AB373;
+}
+
+#buttonRed {
+    background: #F78479;
+    border: 3px solid #C76A61;
+}
+
+#buttonYellow {
+    background: #FBDE9E;
+    border: 3px solid #E9BB35;
+}
+
+#buttonMove {
+    background-image: url("/controls.png");
+    height: 28px;
+    width: 28px;
+}
+
+#buttonEraser {
+    background-image: url("/eraser.png");
+    height: 25px;
+}
+
+#buttonText {
+    height: 25px;
+}
+
+.selectedTool {
+    opacity: 1 !IMPORTANT;
+}
+
+#toolbarTips {
+    text-align: center;
+    font-size: 20pt;
+    height: 28px;
+    width: 28px;
+    cursor: default;
+}
+
+.tooltip-inner {
+    border: solid 1px #000000;
+    background-color: #ededed;
+    color: #000000;
+    max-width: 320px;
+    /* If max-width does not work, try using width instead */
+    /*width: 350px;*/
+}
