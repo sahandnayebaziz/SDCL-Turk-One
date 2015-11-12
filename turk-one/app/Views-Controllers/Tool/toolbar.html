@@ -424,62 +424,6 @@
 			});
 		});
 
-
-		// drawing straight lines when pressing shift
-		Mousetrap.bind('shift', function () {
-
-			var line, isDown;
-
-			canvasWithFocus.isDrawingMode = false;
-			canvasWithFocus.selection = false;
-			canvasWithFocus.forEachObject(function (o) {
-				o.selectable = false;
-			});
-
-			canvasWithFocus.on('mouse:down', function (o) {
-				isDown = true;
-				isDrawing = true;
-				var pointer = canvasWithFocus.getPointer(o.e);
-				var points = [pointer.x, pointer.y, pointer.x, pointer.y];
-				line = new fabric.Line(points, {
-					strokeWidth: 5,
-					fill: 'black',
-					stroke: 'black',
-					originX: 'center',
-					originY: 'center',
-				});
-				canvasWithFocus.add(line);
-			});
-
-			canvasWithFocus.on('mouse:move', function (o) {
-				if (!isDown) return;
-				var pointer = canvasWithFocus.getPointer(o.e);
-				line.set({x2: pointer.x, y2: pointer.y});
-				canvasWithFocus.renderAll();
-				line.selectable = true;
-			});
-
-			canvasWithFocus.on('mouse:up', function (o) {
-				isDown = false;
-				isDrawing = false;
-				//canvasWithFocus.remove(canvasWithFocus.item(canvasWithFocus.getObjects().length - 1));
-			});
-		}, 'keydown');
-		Mousetrap.bind('shift', function () {
-			if (!isDrawing) {
-				c = canvasWithFocus;
-				c.off('mouse:down');
-				c.off('mouse:move');
-				c.off('mouse:up');
-
-				c.isDrawingMode = false;
-				c.selection = true;
-				c.forEachObject(function (o) {
-					o.selectable = true;
-				});
-			}
-		}, 'keyup');
-
 		// guessing focus
 		function findFocus() {
 
