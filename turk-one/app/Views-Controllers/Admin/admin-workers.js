@@ -211,6 +211,12 @@ if (Meteor.isClient) {
 		},
 		timeOnInfoInMinutes: function () {
 			return parseInt(this.infoModalTime / 60);
+		},
+		quitSurvey: function () {
+			return QuitSurveys.findOne({workerTicket: this._id});
+		},
+		exitSurvey: function () {
+			return ExitSurveys.findOne({workerTicket: this._id});
 		}
 	});
 
