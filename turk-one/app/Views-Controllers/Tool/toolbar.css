@@ -90,6 +90,7 @@
         padding-bottom: 9px;
         min-width: 50px;
         max-height: 583px;
+        overflow-y: hidden!IMPORTANT;
     }
 
     .buttonToolbar {
