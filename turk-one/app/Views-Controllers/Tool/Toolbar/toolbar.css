@@ -1,52 +1,11 @@
-/* Screen is not very wide */
-@media screen and (max-width: 62em) {
+/* Screen is not very tall or very wide */
+@media screen and (max-width: 62em), screen and (max-height: 666px) {
     #toolbarContainer {
         position: fixed;
         bottom: 50px;
         left: 50%;
-        margin-left: -289px;
+        margin-left: -220px;
         display: block;
-        min-width: 340px;
-        max-height: 50px !IMPORTANT;
-        overflow-y: hidden !IMPORTANT;
-        padding: 10px 0px 0px 17px;
-        background: #CECECE;
-        box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.33);
-        border-radius: 6px;
-        z-index: 2;
-    }
-
-    .buttonToolbar {
-        display: block;
-        float: left;
-        clear: none;
-        margin: 0px 8px 0px 0px;
-        height: auto;
-        width: 25px;
-    }
-
-    #buttonText, #buttonEraser {
-        margin-left: 24px !IMPORTANT;
-    }
-
-    #toolbarTips {
-        line-height: 28px;
-    }
-
-    #buttonRedo, #buttonUndo {
-        margin-bottom: 5px;
-    }
-}
-
-/* Screen is not very tall */
-@media screen and (max-height: 666px) {
-    #toolbarContainer {
-        position: fixed;
-        bottom: 50px;
-        left: 50%;
-        margin-left: -289px;
-        display: block;
-        min-width: 340px;
         max-height: 50px !IMPORTANT;
         overflow-y: hidden !IMPORTANT;
         padding: 10px 0px 0px 17px;
@@ -88,8 +47,9 @@
         border-radius: 6px;
         padding-top: 17px;
         padding-bottom: 9px;
-        min-width: 50px;
-        max-height: 583px;
+        width: 50px;
+        height: auto;
+        /*max-height: 583px;*/
         overflow-y: hidden!IMPORTANT;
     }
 

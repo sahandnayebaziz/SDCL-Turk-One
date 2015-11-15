@@ -130,6 +130,37 @@ if (Meteor.isClient) {
 		canvas.on('object:added', saveSelf);
 		canvas.on('object:modified', saveSelf);
 		canvas.on('object:removed', saveSelf);
+		canvas.on('object:selected', function() {
+			$.each(memberAgents, function(index, value) {
+				var member = value;
+				if (member.memberType !== "selection") {
+					var DOMObject = $(member.reference);
+					DOMObject.css("display","none");
+				}
+				else {
+					var DOMObject = $(member.reference);
+					DOMObject.css("display","block");
+				}
+			});
+		});
+		canvas.on('selection:cleared', function() {
+			$.each(memberAgents, function(index, value) {
+				var member = value;
+				if (member.memberType !== "free") {
+					var DOMObject = $(member.reference);
+					DOMObject.css("display","none");
+				}
+				else {
+					var DOMObject = $(member.reference);
+					DOMObject.css("display","block");
+				}
+			});
+			// code for animation with completion
+			//DOMObject.addClass("animated fadeOut");
+			//DOMObject.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+			//	console.log("animation ended");
+			//});
+		});
 
 		nameForThisCanvas.on("change", saveSelf);
 		explainForThisCanvas.on("change", saveSelf);

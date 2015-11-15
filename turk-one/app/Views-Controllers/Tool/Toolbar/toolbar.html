@@ -1,56 +1,49 @@
 <template name="toolbar">
 	<div id="toolbarContainer" class="md-fixed noselect animated fadeIn">
 		<span class="buttonToolbar buttonColor" id="buttonBlack" data-color="#414141"></span>
-
-		<!--<span class="buttonColor" id="buttonWhite" data-color="#FFFFFF"></span>-->
 		<span class="buttonToolbar deselectedTool buttonColor" id="buttonBlue" data-color="#80D4FC"></span>
-								<span class="buttonToolbar deselectedTool buttonColor" id="buttonGreen"
-								      data-color="#A1F5AA"
-								      href="#" data-trigger="manual" data-toggle="1"
-								      title="select the colour of your brush"></span>
-
+		<span class="buttonToolbar deselectedTool buttonColor" id="buttonGreen"
+		      data-color="#A1F5AA"
+		      href="#" data-trigger="manual" data-toggle="1"
+		      title="select the colour of your brush"></span>
 		<span class="buttonToolbar deselectedTool buttonColor" id="buttonRed" data-color="#F78479"></span>
-
 		<span class="buttonToolbar deselectedTool buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
 
+		<span class="buttonToolbar deselectedTool" id="buttonMove" href="#"
+		      data-trigger="manual" data-toggle="3"
+		      title="With this tool you can move, resize or rotate every object on your canvas"></span>
 		<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText" href="#"
 		     data-trigger="manual" data-toggle="2"
 		     title="Add text to your sketch: click anywhere on the canvas to add, then click on the text to edit.">
-
 		<img src="/rectangle.png" class="buttonToolbar deselectedTool" id="buttonRectangle" href="#"
 		     data-trigger="manual" data-toggle="2"
 		     title="Add a rectangle to your sketch: click anywhere on the canvas to add a rectangle, then click on the object to move it around">
-
 		<img src="/circle.png" class="buttonToolbar deselectedTool" id="buttonCircle" href="#"
 		     data-trigger="manual" data-toggle="2"
 		     title="Add a circle to your sketch: click anywhere on the canvas to add a circle, then click on the text to edit."/>
 
-							<span class="buttonToolbar deselectedTool" id="buttonMove" href="#"
-							      data-trigger="manual" data-toggle="3"
-							      title="With this tool you can move, resize or rotate every object on your canvas"></span>
 
-		<img src="/send-front.png" class="buttonToolbar deselectedTool" id="buttonSendFront" href="#"
+
+		<img src="/send-front.png" class="buttonToolbar" id="buttonSendFront" href="#"
 		     data-trigger="manual" data-toggle="2"
 		     title="Click to make an object sit above all other objects">
-
-		<img src="/send-back.png" class="buttonToolbar deselectedTool" id="buttonSendBack" href="#"
+		<img src="/send-back.png" class="buttonToolbar" id="buttonSendBack" href="#"
 		     data-trigger="manual" data-toggle="2"
 		     title="Click to make an object sit below all other objects."/>
 
-							<span class="buttonToolbar deselectedTool" id="buttonEraser" href="#"
-							      data-trigger="manual" data-toggle="4"
-							      title="Erase: Click on object to delete or drag to select objects you want to delete, then click on the selected objects"></span>
+		<span class="buttonToolbar" id="buttonEraser" href="#"
+		      data-trigger="manual" data-toggle="4"
+		      title="Click to erase selection"></span>
 
-		<img src="/undo-icon.png" class="buttonToolbar deselectedTool buttonHistory"
+		<img src="/undo-icon.png" class="buttonToolbar buttonHistory"
 		     id="buttonUndo"
 		     href="#" data-trigger="manual" data-toggle="5" title="Undo">
-
-		<img src="/redo-icon.png" class="buttonToolbar deselectedTool buttonHistory"
+		<img src="/redo-icon.png" class="buttonToolbar buttonHistory"
 		     id="buttonRedo"
 		     href="#" data-trigger="manual" data-toggle="6" title="Redo">
 
-							<span class=" buttonToolbar deselectedTool" id="toolbarTips" data-toggle="modal"
-							      data-target="#tooltipModal">?</span>
+		<span class=" buttonToolbar deselectedTool" id="toolbarTips" data-toggle="modal"
+		      data-target="#tooltipModal">?</span>
 	</div>
 	<script>
 		//TODO: BRING THESE STOP WATCHES BACK TO TOOL!
@@ -146,9 +139,7 @@
 			$(".selectedTool").removeClass("selectedTool").addClass("deselectedTool");
 			$(tool).addClass("selectedTool");
 
-			if (($(tool).attr("id") != "buttonEraser") && ($(tool).attr("id") != "buttonText")) {
-				removeMouseDownEvents();
-			}
+			removeMouseDownEvents();
 		}
 
 		// toolbar color clicked
@@ -173,8 +164,18 @@
 
 		// toolbar eraser clicked
 		$("#buttonEraser").click(function () {
-			setSelectedTool(this);
-			enableEraser();
+			var canvas = canvasWithFocus;
+			if (canvas.getActiveGroup()) {
+				recordingStates = false;
+				canvas.getActiveGroup().forEachObject(function (a) {
+					canvas.remove(a);
+				});
+				canvas.discardActiveGroup();
+				recordingStates = true;
+			} else {
+				canvas.remove(canvas.getActiveObject());
+			}
+			canvas.renderAll();
 
 			ga('send', {
 				hitType: 'event',
@@ -182,30 +183,11 @@
 				eventAction: 'Eraser',
 				eventLabel: Session.get("ticket")
 			});
-		});
+		})
+		;
 		function removeMouseDownEvents() {
 			$.each(canvases, function () {
 				this.off("mouse:down");
-			});
-		}
-		function enableEraser() {
-			$.each(canvases, function () {
-				var canvas = this;
-
-				canvas.isDrawingMode = false;
-				canvas.on("mouse:down", function (e) {
-					if (this.getActiveGroup()) {
-						recordingStates = false;
-						canvas.getActiveGroup().forEachObject(function (a) {
-							canvas.remove(a);
-						});
-						canvas.discardActiveGroup();
-						recordingStates = true;
-					} else {
-						canvas.remove(canvas.getActiveObject());
-					}
-					canvas.renderAll();
-				});
 			});
 		}
 
@@ -338,6 +320,7 @@
 			});
 		});
 
+		// TODO: these need to work for a group of selected objects
 		$("#buttonSendFront").click(function () {
 
 			if (canvasWithFocus.getActiveObject()) {

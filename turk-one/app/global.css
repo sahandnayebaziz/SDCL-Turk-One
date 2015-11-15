@@ -7,6 +7,9 @@ body {
     /*this is used to fix the toolbar*/
     .md-fixed {
         position: fixed!IMPORTANT;
+    }
+
+    .overflow {
         height: calc(100% - 70px)!IMPORTANT;
         overflow-y: scroll!IMPORTANT;
     }
