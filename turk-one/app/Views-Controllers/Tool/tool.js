@@ -77,7 +77,7 @@ if (Meteor.isServer) {
 					infoModalTime: time,
 					infoModalNumber: 1
 				}
-			}, function(e, n) {
+			}, function (e, n) {
 				console.log("upped info modal");
 			})
 		},
@@ -86,7 +86,7 @@ if (Meteor.isServer) {
 				workerTicket: ticket,
 				reason: reason,
 				feedback: feedback
-			}, function(error) {
+			}, function (error) {
 				if (!error) {
 					console.log("created quit survey");
 				} else {
@@ -99,7 +99,7 @@ if (Meteor.isServer) {
 				$set: {
 					quit: true
 				}
-			}, function(error) {
+			}, function (error) {
 				if (!error) {
 					console.log("set flag quit");
 				}
@@ -110,7 +110,7 @@ if (Meteor.isServer) {
 				$set: {
 					submitted: true
 				}
-			}, function(error) {
+			}, function (error) {
 				if (!error) {
 					console.log("set flag submitted");
 				}
@@ -172,21 +172,17 @@ if (Meteor.isClient) {
 	];
 
 	Template.tool.rendered = function () {
-		if (!this._rendered) {
-			this._rendered = true;
 
-			if (!Session.get("tutorialDone")) {
-
-				introJs().setOptions({
-					"scrollToElement": true,
-					"showStepNumbers": false,
-					"showProgress": true,
-					"showBullets": false,
-					"exitOnOverlayClick": false,
-					steps: tutorialSteps
-				}).start();
-				Session.setPersistent("tutorialDone", true);
-			}
+		if (!Session.get("tutorialDone")) {
+			introJs().setOptions({
+				"scrollToElement": true,
+				"showStepNumbers": false,
+				"showProgress": true,
+				"showBullets": false,
+				"exitOnOverlayClick": false,
+				steps: tutorialSteps
+			}).start();
+			Session.setPersistent("tutorialDone", true);
 		}
 	};
 
@@ -249,11 +245,11 @@ if (Meteor.isClient) {
 			var reason = $("#quitForm input[name=quitReason]:checked").val()
 			var feedback = $("#quitText").val();
 
-			Meteor.call("submitQuitSurvey", Session.get("ticket"), reason, feedback, function(e, r) {
+			Meteor.call("submitQuitSurvey", Session.get("ticket"), reason, feedback, function (e, r) {
 				if (!e) {
 					// set workerticket
 					// nav away
-					Meteor.call("setTicketFlagQuit", Session.get("ticket"), function(e, r) {
+					Meteor.call("setTicketFlagQuit", Session.get("ticket"), function (e, r) {
 						if (!e) {
 							$('#quitModal').on('hidden.bs.modal', function () {
 								window.location.href = 'http://www.google.com'; // TODO: take to thank you page
@@ -265,14 +261,32 @@ if (Meteor.isClient) {
 
 		},
 		"click #tutorialRequest": function () {
-			introJs().setOptions({
-				"scrollToElement": true,
-				"showStepNumbers": false,
-				"showProgress": true,
-				"showBullets": false,
-				"exitOnOverlayClick": false,
-				steps: tutorialSteps
-			}).start();
+
+			$(function () {
+				$('[data-toggle="tooltip"]').tooltip('toggle');
+			});
+
+			//tour = new Shepherd.Tour({
+			//	defaults: {
+			//		classes: 'shepherd-theme-arrows'
+			//	}
+			//});
+			//
+			//tour.addStep('Would you like to get a tour', {
+			//	text: 'Would you like a tour of this page?',
+			//	buttons: [{text: "Yes"}, {text: "No", action: function () { tour.cancel() }}]
+			//});
+			//
+			//tour.addStep('example', {
+			//	title: 'Example Shepherd',
+			//	text: 'Creating a Shepherd is easy too! Just create ...',
+			//	attachTo: {element: '#toolDP', on: 'bottom'},
+			//	buttons: [{text: "hello"}]
+			//});
+
+
+
+			//tour.start();
 		},
 
 		"click #finishConfirm": function () {

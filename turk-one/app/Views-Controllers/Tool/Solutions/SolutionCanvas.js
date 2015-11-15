@@ -157,4 +157,10 @@ if (Meteor.isClient) {
 		}
 
 	});
+
+	Template.solutionCanvas.helpers({
+		humanizedNumber: function(number) {
+			return stringifyNumber(number)
+		}
+	});
 }

@@ -263,11 +263,11 @@
 </template>
 
 <template name="decisionPointInformationPanel">
-	<div class="row">
+	<div class="row animated fadeIn">
 		<div class="col-md-12 col-lg-10 col-lg-offset-1">
 			<div class="row" id="intro1">
 				<div class="col-xs-12">
-					<h4>{{name}}<br></h4>
+					<h4 id="toolDP">{{name}}<br></h4>
 
 					<p>{{description}}</p>
 
@@ -282,7 +282,7 @@
 			</div>
 			<div id="intro4">
 				<div id="buttonMenu" class="row center" role="group" aria-label="...">
-					<button id="finishRequest" class="btn btn-success btn-continue">REVIEW & FINISH
+					<button id="finishRequest" class="btn btn-success btn-continue" data-toggle="tooltip" data-placement="top" title="Tooltip on top">REVIEW & FINISH
 					</button>
 					<button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-target="#infoModal">TASK
 						INFO
