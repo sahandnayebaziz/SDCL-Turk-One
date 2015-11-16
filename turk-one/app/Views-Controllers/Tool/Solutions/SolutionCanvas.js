@@ -190,8 +190,11 @@ if (Meteor.isClient) {
 	});
 
 	Template.solutionCanvas.helpers({
-		humanizedNumber: function(number) {
-			return stringifyNumber(number)
+		humanizedNumber: function() {
+			return stringifyNumber(this.canvasNumber);
+		},
+		isFirstCanvas: function() {
+			return this.canvasNumber == 1;
 		}
 	});
 }

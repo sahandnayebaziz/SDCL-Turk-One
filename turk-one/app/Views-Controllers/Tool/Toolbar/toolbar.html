@@ -1,49 +1,52 @@
 <template name="toolbar">
 	<div id="toolbarContainer" class="md-fixed noselect animated fadeIn">
-		<span class="buttonToolbar buttonColor" id="buttonBlack" data-color="#414141"></span>
-		<span class="buttonToolbar deselectedTool buttonColor" id="buttonBlue" data-color="#80D4FC"></span>
+		<div id="toolsShown">
+			<span class="buttonToolbar buttonColor" id="buttonBlack" data-color="#414141"></span>
+			<span class="buttonToolbar deselectedTool buttonColor" id="buttonBlue" data-color="#80D4FC"></span>
 		<span class="buttonToolbar deselectedTool buttonColor" id="buttonGreen"
 		      data-color="#A1F5AA"
 		      href="#" data-trigger="manual" data-toggle="1"
 		      title="select the colour of your brush"></span>
-		<span class="buttonToolbar deselectedTool buttonColor" id="buttonRed" data-color="#F78479"></span>
-		<span class="buttonToolbar deselectedTool buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
+			<span class="buttonToolbar deselectedTool buttonColor" id="buttonRed" data-color="#F78479"></span>
+			<span class="buttonToolbar deselectedTool buttonColor" id="buttonYellow" data-color="#FBDE9E"></span>
 
 		<span class="buttonToolbar deselectedTool" id="buttonMove" href="#"
 		      data-trigger="manual" data-toggle="3"
 		      title="With this tool you can move, resize or rotate every object on your canvas"></span>
-		<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText" href="#"
-		     data-trigger="manual" data-toggle="2"
-		     title="Add text to your sketch: click anywhere on the canvas to add, then click on the text to edit.">
-		<img src="/rectangle.png" class="buttonToolbar deselectedTool" id="buttonRectangle" href="#"
-		     data-trigger="manual" data-toggle="2"
-		     title="Add a rectangle to your sketch: click anywhere on the canvas to add a rectangle, then click on the object to move it around">
-		<img src="/circle.png" class="buttonToolbar deselectedTool" id="buttonCircle" href="#"
-		     data-trigger="manual" data-toggle="2"
-		     title="Add a circle to your sketch: click anywhere on the canvas to add a circle, then click on the text to edit."/>
+			<img src="/type.png" class="buttonToolbar deselectedTool" id="buttonText" href="#"
+			     data-trigger="manual" data-toggle="2"
+			     title="Add text to your sketch: click anywhere on the canvas to add, then click on the text to edit.">
+			<img src="/rectangle.png" class="buttonToolbar deselectedTool" id="buttonRectangle" href="#"
+			     data-trigger="manual" data-toggle="2"
+			     title="Add a rectangle to your sketch: click anywhere on the canvas to add a rectangle, then click on the object to move it around">
+			<img src="/circle.png" class="buttonToolbar deselectedTool" id="buttonCircle" href="#"
+			     data-trigger="manual" data-toggle="2"
+			     title="Add a circle to your sketch: click anywhere on the canvas to add a circle, then click on the text to edit."/>
 
 
-
-		<img src="/send-front.png" class="buttonToolbar" id="buttonSendFront" href="#"
-		     data-trigger="manual" data-toggle="2"
-		     title="Click to make an object sit above all other objects">
-		<img src="/send-back.png" class="buttonToolbar" id="buttonSendBack" href="#"
-		     data-trigger="manual" data-toggle="2"
-		     title="Click to make an object sit below all other objects."/>
+			<img src="/send-front.png" class="buttonToolbar" id="buttonSendFront" href="#"
+			     data-trigger="manual" data-toggle="2"
+			     title="Click to make an object sit above all other objects">
+			<img src="/send-back.png" class="buttonToolbar" id="buttonSendBack" href="#"
+			     data-trigger="manual" data-toggle="2"
+			     title="Click to make an object sit below all other objects."/>
 
 		<span class="buttonToolbar" id="buttonEraser" href="#"
 		      data-trigger="manual" data-toggle="4"
 		      title="Click to erase selection"></span>
 
-		<img src="/undo-icon.png" class="buttonToolbar buttonHistory"
-		     id="buttonUndo"
-		     href="#" data-trigger="manual" data-toggle="5" title="Undo">
-		<img src="/redo-icon.png" class="buttonToolbar buttonHistory"
-		     id="buttonRedo"
-		     href="#" data-trigger="manual" data-toggle="6" title="Redo">
+			<img src="/undo-icon.png" class="buttonToolbar buttonHistory"
+			     id="buttonUndo"
+			     href="#" data-trigger="manual" data-toggle="5" title="Undo">
+			<img src="/redo-icon.png" class="buttonToolbar buttonHistory"
+			     id="buttonRedo"
+			     href="#" data-trigger="manual" data-toggle="6" title="Redo">
 
-		<span class=" buttonToolbar deselectedTool" id="toolbarTips" data-toggle="modal"
-		      data-target="#tooltipModal">?</span>
+		<span data-toggle="tooltip" data-placement="bottom" title="Learn about the tools" data-trigger="manual">
+			<span class="buttonToolbar deselectedTool" id="toolbarTips" data-toggle="modal"
+			      data-target="#tooltipModal">?</span>
+		</span>
+		</div>
 	</div>
 	<script>
 		//TODO: BRING THESE STOP WATCHES BACK TO TOOL!

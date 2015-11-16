@@ -1,16 +1,21 @@
 <template name="solutionCanvas">
 	<div class="canvasContainer" data-CDIndex="{{canvasNumber}}">
-		<canvas class="canvas-sketch" id="canvas-{{canvasNumber}}"></canvas>
-		<div class="canvas-forms">
+
+		<canvas class="canvas-sketch" id="canvas-{{canvasNumber}}" data-toggle="{{#if isFirstCanvas}}tooltip{{/if}}"
+		        data-placement="bottom"
+		        title="Draw your idea" data-trigger="manual"></canvas>
+
+		<div class="canvas-forms" data-toggle="{{#if isFirstCanvas}}tooltip{{/if}}" data-placement="bottom"
+		     title="Describe your idea" data-trigger="manual">
 			<div class="row">
 				<div class="col-md-12">
-					<input id="name-{{canvasNumber}}" type="text" placeholder="Name your {{humanizedNumber canvasNumber}} solution"
+					<input id="name-{{canvasNumber}}" type="text" placeholder="Name your {{humanizedNumber}} solution"
 					       class="form-control form-transparent form-name" value="{{name}}">
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-											<textarea id="explain-{{canvasNumber}}" placeholder="Explain your {{humanizedNumber canvasNumber}} solution"
+											<textarea id="explain-{{canvasNumber}}" placeholder="Explain your {{humanizedNumber}} solution"
 											          class="explain form-transparent form-control form-description"
 											          value="{{explain}}"></textarea>
 				</div>

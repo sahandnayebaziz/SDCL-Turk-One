@@ -269,7 +269,11 @@
 				<div class="col-xs-12">
 					<h4 id="toolDP">{{name}}<br></h4>
 
-					<p>{{description}}</p>
+					<p>
+						<span data-toggle="tooltip" data-placement="right" title="The problem you are trying to solve"
+						      data-trigger="manual"> {{description}}
+						</span>
+					</p>
 
 					<p>
 					<span class="text-muted">
@@ -281,13 +285,13 @@
 				</div>
 			</div>
 			<div id="intro4">
-				<div id="buttonMenu" class="row center" role="group" aria-label="...">
-					<button id="finishRequest" class="btn btn-success btn-continue" data-toggle="tooltip" data-placement="top" title="Tooltip on top">REVIEW & FINISH
-					</button>
+				<div id="buttonMenu" role="group" aria-label="..." data-toggle="tooltip" data-placement="right"
+				     title="Submit, re-read, or quit this HIT" data-trigger="manual">
+					<button id="finishRequest" class="btn btn-success btn-continue">REVIEW & SUBMIT</button>
+					<button id="tutorialRequest" class="btn btn-warning btn-continue" data-toggle="tooltip">TIPS</button>
 					<button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-target="#infoModal">TASK
 						INFO
 					</button>
-					<button id="tutorialRequest" class="btn btn-primary btn-continue" data-toggle="modal">TUTORIAL</button>
 					<button id="quitRequest" class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">
 						QUIT
 					</button>
@@ -312,9 +316,11 @@
 				//console.log("height" +$(window).height());
 				$('#buttonMenu').removeClass('btn-group');
 				$('#buttonMenu').addClass('btn-group-vertical');
+				
 			} else {
 				$('#buttonMenu').addClass('btn-group');
 				$('#buttonMenu').removeClass('btn-group-vertical');
+				$('[data-toggle="tooltip"]').setAttribute("data-placement", "bottom");
 			}
 		});
 

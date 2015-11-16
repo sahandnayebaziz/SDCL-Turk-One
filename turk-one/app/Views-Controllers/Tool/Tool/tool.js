@@ -262,9 +262,8 @@ if (Meteor.isClient) {
 		},
 		"click #tutorialRequest": function () {
 
-			$(function () {
-				$('[data-toggle="tooltip"]').tooltip('toggle');
-			});
+			$('[data-toggle="tooltip"]').tooltip('toggle');
+			// TODO: Tooltip isn't finding the help button in the toolbar correctly
 
 			//tour = new Shepherd.Tour({
 			//	defaults: {

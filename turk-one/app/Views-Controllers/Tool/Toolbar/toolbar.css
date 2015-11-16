@@ -3,6 +3,7 @@
     #toolbarContainer {
         position: fixed;
         bottom: 50px;
+        min-width: 440px;
         left: 50%;
         margin-left: -220px;
         display: block;
@@ -13,27 +14,20 @@
         box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.33);
         border-radius: 6px;
         z-index: 2;
+        text-align: center;
+    }
+
+    #toolsShown {
+        display: inline-block;
     }
 
     .buttonToolbar {
         display: block;
         float: left;
         clear: none;
-        margin: 0px 8px 0px 0px;
+        margin: 0px 9px 5px 0px;
         height: auto;
         width: 25px;
-    }
-
-    #buttonText, #buttonEraser {
-        margin-left: 24px !IMPORTANT;
-    }
-
-    #toolbarTips {
-        line-height: 28px;
-    }
-
-    #buttonRedo, #buttonUndo {
-        margin-bottom: 5px;
     }
 }
 
@@ -50,7 +44,7 @@
         width: 50px;
         height: auto;
         /*max-height: 583px;*/
-        overflow-y: hidden!IMPORTANT;
+        overflow-y: hidden !IMPORTANT;
     }
 
     .buttonToolbar {
@@ -152,6 +146,7 @@
     height: 28px;
     width: 28px;
     cursor: default;
+    line-height: 31px;
 }
 
 .tooltip-inner {
