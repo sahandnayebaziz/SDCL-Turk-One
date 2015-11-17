@@ -25,6 +25,7 @@ if (Meteor.isClient) {
 		memberAgents.push(new toolbarMemberAgent("#buttonSendFront", "selection"));
 		memberAgents.push(new toolbarMemberAgent("#buttonSendBack", "selection"));
 		memberAgents.push(new toolbarMemberAgent("#buttonEraser", "selection"));
+		memberAgents.push(new toolbarMemberAgent("#buttonDuplicate", "selection"));
 
 		$.each(memberAgents, function(index, value) {
 			var member = value;

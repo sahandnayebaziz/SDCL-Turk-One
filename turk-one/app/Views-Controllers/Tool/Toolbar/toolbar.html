@@ -31,9 +31,13 @@
 			     data-trigger="manual" data-toggle="2"
 			     title="Click to make an object sit below all other objects."/>
 
-		<span class="buttonToolbar" id="buttonEraser" href="#"
+		<img src="/delete.png" class="buttonToolbar" id="buttonEraser" href="#"
 		      data-trigger="manual" data-toggle="4"
-		      title="Click to erase selection"></span>
+		      title="Click to delete selection">
+
+            <img src="/duplicate.png" class="buttonToolbar" id="buttonDuplicate" href="#"
+                  data-trigger="manual" data-toggle="4"
+                  title="Click to duplicate selection">
 
 			<img src="/undo-icon.png" class="buttonToolbar buttonHistory"
 			     id="buttonUndo"
@@ -193,6 +197,42 @@
 				this.off("mouse:down");
 			});
 		}
+
+        // toolbar duplicate clicked
+        $("#buttonDuplicate").click(function () {
+
+            var canvas = canvasWithFocus;
+
+            if(canvas.getActiveGroup()) {
+                var group = canvas.getActiveGroup();
+
+                canvas.deactivateAll();
+                canvas.discardActiveGroup();
+
+                var clonedObjects = new fabric.Group();
+
+                group.forEachObject(function (o) {
+                    var object = fabric.util.object.clone(o);
+                    object.set({
+                        top: object.top + 25,
+                        left: object.left + 25,
+                        active: true,
+                    }).setCoords();
+                    clonedObjects.addWithUpdate(object);
+                    canvas.add(object);
+                });
+                clonedObjects.setCoords();
+                canvas.setActiveGroup(clonedObjects);
+            }
+            else if(canvas.getActiveObject()){
+                var object = fabric.util.object.clone(canvas.getActiveObject());
+                object.set("top", object.top +15);
+                object.set("left", object.left +15);
+                canvas.add(object);
+            }
+            canvas.renderAll();
+            simulateMoveClick();
+        });
 
 		// toolbar move controls clicked
 		$("#buttonMove").click(function () {
