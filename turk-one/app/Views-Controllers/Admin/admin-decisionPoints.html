@@ -37,10 +37,11 @@
 							<input type="text" class="form-control" name="type" placeholder="Decision point type ">
 						</fieldset>
 						<fieldset class="form-group">
-							<textarea class="form-control" name="description" rows="3" placeholder="Description"></textarea>
+							<textarea class="form-control" id="descriptionInput" name="description" rows="3"
+							          placeholder="Description"></textarea>
 						</fieldset>
 						<fieldset class="form-group">
-												<textarea class="form-control" name="requirements" rows="3"
+												<textarea class="form-control" id="requirementsInput" name="requirements" rows="3"
 												          placeholder="Requirements"></textarea>
 						</fieldset>
 
@@ -49,6 +50,36 @@
 					</form>
 				</div>
 			</div>
+			<div class="row top-buffer-100">
+				<div class="col-xs-12">
+					<h5>Markdown preview</h5>
+					<p class="text-muted">description</p>
+					{{#markdown}}{{currentDescription}}{{/markdown}}
+					<p class="text-muted">requirements</p>
+					{{#markdown}}{{currentRequirements}}{{/markdown}}
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="decisionPreview">
+	<div class="card bg-white">
+		<div class="card-block">
+			<h4 class="card-title">{{name}}</h4>
+
+			<p class="card-text">{{#markdown}}{{description}}{{/markdown}}</p>
+
+			<p class="card-text">{{#markdown}}{{requirements}}{{/markdown}}</p>
+		</div>
+		<ul class="list-group list-group-flush">
+			<li class="list-group-item">{{_id}}</li>
+		</ul>
+		<ul class="list-group list-group-flush">
+			<li class="list-group-item">{{decisionPointType}}</li>
+		</ul>
+		<div class="card-block">
+			<a href="#" class="card-link text-danger delete">Delete</a>
 		</div>
 	</div>
 </template>
