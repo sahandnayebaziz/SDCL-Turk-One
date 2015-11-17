@@ -133,58 +133,24 @@ if (Meteor.isClient) {
 	Meteor.subscribe("solutions");
 	Meteor.subscribe("decisionPoints");
 
-	var tutorialSteps = [
+	tutorialSteps = [
 		{
 			element: '#intro1',
-			intro: "This is your decision point. Read it carefully and try to think of alternative solutions to solve it. We want you to try to come up with multiple solutions for this decision point. We are not looking for the one best design but for a variety of designs that each have their own pros and cons",
+			intro: "This is the problem you are trying to solve. Please, do not worry about coming up with a perfect solution. We want you to explore the problem at a high level and offer a few different ideas you think could work!",
 			position: 'bottom'
 		},
 		{
 			element: '#intro2',
-			intro: "To help others understand your solutions you have to sketch them. In this area you have 5 sketch panels and their respective name and description fields. We are looking for high level sketches like you would make on a whiteboard. You can keep your sketches simple, but please keep them understandable. Also remember that a good sketch complements the textual description and visa versa.",
+			intro: "Sketch out your ideas. We are looking for high level sketches like you would make on a whiteboard. You can keep your sketches simple, but please keep them understandable. Don't forget to give each sketch a name and a description!",
 			position: 'bottom'
 		},
 		{
-			element: '#toolbarContainer',
-			intro: "These are your sketching tools. The tools automatically affect whichever canvas is highlighted. Click on the question mark to see how they work.",
-			position: 'bottom'
-		},
-		{
-			element: '#finishRequest',
-			intro: "Press REVIEW AND FINISH when you are ready to submit your work. This will give you the opportunity to review your designs one more time before submitting them. After reviewing, you can either submit your work or hit cancel and go back.",
-			position: 'bottom'
-		},
-		{
-			element: '#infoRequest',
-			intro: "Press TASK INFO if you want to review the general task information and the design criteria from the first page again.",
-			position: 'bottom'
-		},
-		{
-			element: '#tutorialRequest',
-			intro: "Press TUTORIAL if you want to see this tutorial again.",
-			position: 'bottom'
-		},
-		{
-			element: '#quitRequest',
-			intro: "Press QUIT whenever you want to quit your task. We would appreciate it greatly if you would give some feedback on the tool, task and a reason for quiting so we can improve it in the future.",
+			element: "#intro1",
+			intro: "Your controls are here as well. When you are finished, you can review and submit your ideas. If you'd like to quit the HIT, you can click quit. Take your time and click one of these when finished. Each gives you a chance to cancel!",
 			position: 'bottom'
 		}
 	];
 
-	Template.tool.rendered = function () {
-
-		if (!Session.get("tutorialDone")) {
-			introJs().setOptions({
-				"scrollToElement": true,
-				"showStepNumbers": false,
-				"showProgress": true,
-				"showBullets": false,
-				"exitOnOverlayClick": false,
-				steps: tutorialSteps
-			}).start();
-			Session.setPersistent("tutorialDone", true);
-		}
-	};
 
 	Template.tool.helpers({
 		shouldShow: function () {
@@ -237,6 +203,7 @@ if (Meteor.isClient) {
 		}
 	});
 
+
 	Template.tool.events({
 		"change input[name=quitReason]": function () {
 			$("#quitSubmit").removeClass("disabled");
@@ -263,35 +230,35 @@ if (Meteor.isClient) {
 			});
 
 		},
+		"click #quitRequest": function () {
+			hideAllTooltips();
+		},
+		"click #infoRequest": function () {
+			hideAllTooltips();
+		},
 		"click #tutorialRequest": function () {
+			hideAllTooltips();
+			introJs().setOptions({
+				"scrollToElement": true,
+				"showStepNumbers": false,
+				"showProgress": true,
+				"showBullets": false,
+				"exitOnOverlayClick": false,
+				steps: tutorialSteps
+			}).start();
+		},
+		"click #tipsRequest": function () {
 
 			$('[data-toggle="tooltip"]').tooltip('toggle');
+			$('#tutorialRequest').toggle();
+
 			// TODO: Tooltip isn't finding the help button in the toolbar correctly
 
-			//tour = new Shepherd.Tour({
-			//	defaults: {
-			//		classes: 'shepherd-theme-arrows'
-			//	}
-			//});
-			//
-			//tour.addStep('Would you like to get a tour', {
-			//	text: 'Would you like a tour of this page?',
-			//	buttons: [{text: "Yes"}, {text: "No", action: function () { tour.cancel() }}]
-			//});
-			//
-			//tour.addStep('example', {
-			//	title: 'Example Shepherd',
-			//	text: 'Creating a Shepherd is easy too! Just create ...',
-			//	attachTo: {element: '#toolDP', on: 'bottom'},
-			//	buttons: [{text: "hello"}]
-			//});
 
-
-
-			//tour.start();
 		},
-
 		"click #finishConfirm": function () {
+
+
 			$('#finishModal').on('hidden.bs.modal', function () {
 				Meteor.call("setTicketFlagSubmitted", Session.get("ticket"), function (e, r) {
 					if (!e) {
@@ -318,8 +285,20 @@ if (Meteor.isClient) {
 		}
 	});
 
+	Template.decisionPointInformationPanel.rendered = function () {
+		introJs().setOptions({
+			"scrollToElement": true,
+			"showStepNumbers": false,
+			"showProgress": true,
+			"showBullets": false,
+			"exitOnOverlayClick": false,
+			steps: tutorialSteps
+		}).start();
+	};
+
 	Template.decisionPointInformationPanel.events({
 		"click #finishRequest": function () {
+			hideAllTooltips();
 			Session.set("shouldGenerateReviews", true);
 
 			function completedTextFieldsForUsedSketches() {
@@ -356,6 +335,12 @@ if (Meteor.isClient) {
 			}
 		}
 	});
+
+	// GLOBAL HELPER METHODS
+	hideAllTooltips = function () {
+		$('[data-toggle="tooltip"]').tooltip('hide');
+		$('#tutorialRequest').toggle(false);
+	};
 }
 ;
 

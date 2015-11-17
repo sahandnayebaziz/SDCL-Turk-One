@@ -74,3 +74,7 @@ canvas.canvas-sketch {
     border-radius: 5px;
     margin-bottom: 20px;
 }
+
+#tutorialRequest {
+    display: none;
+}
