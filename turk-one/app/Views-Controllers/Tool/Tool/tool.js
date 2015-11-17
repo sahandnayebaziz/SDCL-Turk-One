@@ -199,6 +199,9 @@ if (Meteor.isClient) {
 		solutions: function () {
 			return Solutions.find({workerId: Session.get("ticket")}, {sort: {canvasNumber: 1}});
 		},
+		hasAtLeastOneSolution: function () {
+			return Solutions.findOne({workerId: Session.get("ticket")});
+		},
 		shouldGenerateReviews: function () {
 			return Session.get("shouldGenerateReviews");
 		},

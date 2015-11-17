@@ -15,9 +15,30 @@
 						</div>
 						<div class="col-lg-10 animated fadeIn" id="col-sketch">
 
-							{{#each solutions}}
-								{{> solutionCanvas}}
-							{{/each}}
+							{{#if hasAtLeastOneSolution}}
+								{{#each solutions}}
+									{{> solutionCanvas}}
+								{{/each}}
+							{{else}}
+								<div class="row top-buffer-100">
+									<div class="col-xs-12 text-center center-block">
+										<div class="sk-spinner sk-spinner-cube-grid">
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+										</div>
+										<p class="lead top-buffer-50">Loading your canvases...</p>
+									</div>
+								</div>
+
+							{{/if}}
+
 						</div>
 					</div>
 				</div>
@@ -316,7 +337,7 @@
 				//console.log("height" +$(window).height());
 				$('#buttonMenu').removeClass('btn-group');
 				$('#buttonMenu').addClass('btn-group-vertical');
-				
+
 			} else {
 				$('#buttonMenu').addClass('btn-group');
 				$('#buttonMenu').removeClass('btn-group-vertical');
