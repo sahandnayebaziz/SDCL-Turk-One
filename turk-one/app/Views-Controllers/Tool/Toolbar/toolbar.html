@@ -145,8 +145,7 @@
 		function setSelectedTool(tool) {
 			$(".selectedTool").removeClass("selectedTool").addClass("deselectedTool");
 			$(tool).addClass("selectedTool");
-
-			removeMouseDownEvents();
+            removeMouseEvents();
 		}
 
 		// toolbar color clicked
@@ -191,12 +190,6 @@
 				eventLabel: Session.get("ticket")
 			});
 		})
-		;
-		function removeMouseDownEvents() {
-			$.each(canvases, function () {
-				this.off("mouse:down");
-			});
-		}
 
         // toolbar duplicate clicked
         $("#buttonDuplicate").click(function () {
@@ -205,42 +198,69 @@
 
             if(canvas.getActiveGroup()) {
                 var group = canvas.getActiveGroup();
-
                 canvas.deactivateAll();
                 canvas.discardActiveGroup();
 
                 var clonedObjects = new fabric.Group();
 
                 group.forEachObject(function (o) {
-                    var object = fabric.util.object.clone(o);
-                    object.set({
-                        top: object.top + 25,
-                        left: object.left + 25,
-                        active: true,
-                    }).setCoords();
-                    clonedObjects.addWithUpdate(object);
-                    canvas.add(object);
+                    var clonedObject = cloneObject(o);
+                    clonedObjects.addWithUpdate(clonedObject);
+                    canvas.add(clonedObject);
                 });
                 clonedObjects.setCoords();
                 canvas.setActiveGroup(clonedObjects);
+
+                ga('send', {
+                    hitType: 'event',
+                    eventCategory: 'Toolbar',
+                    eventAction: 'Duplicate group',
+                    eventLabel: Session.get("ticket")
+                });
+
+            } else if(canvas.getActiveObject()){
+                var object = canvas.getActiveObject();
+                canvas.deactivateAll();
+                canvas.discardActiveGroup();
+
+                var clonedObject = cloneObject(object);
+                canvas.setActiveObject(clonedObject);
+                canvas.add(clonedObject);
+
+                ga('send', {
+                    hitType: 'event',
+                    eventCategory: 'Toolbar',
+                    eventAction: 'Duplicate single object',
+                    eventLabel: Session.get("ticket")
+                });
             }
-            else if(canvas.getActiveObject()){
-                var object = fabric.util.object.clone(canvas.getActiveObject());
-                object.set("top", object.top +15);
-                object.set("left", object.left +15);
-                canvas.add(object);
-            }
-            canvas.renderAll();
             simulateMoveClick();
+            canvas.renderAll();
         });
+
+        function cloneObject(object){
+            var clonedObject;
+            //check for async objects to determine the way to clone
+            if(fabric.util.getKlass(object.get("type")).async) {
+                object.clone(function(clone){
+                    clonedObject = clone;
+                });
+            } else {
+                clonedObject = object.clone();
+            }
+            clonedObject.set({
+                top: clonedObject.top + 25,
+                left: clonedObject.left + 25,
+                active: true
+            }).setCoords();
+
+            return clonedObject;
+        }
 
 		// toolbar move controls clicked
 		$("#buttonMove").click(function () {
 			setSelectedTool(this);
-
-			$.each(canvases, function () {
-				this.isDrawingMode = false;
-			});
+			setObjectSelection(true);
 
 			ga('send', {
 				hitType: 'event',
@@ -253,13 +273,12 @@
 		// this is an explicit mod of the above function that can be synthetically run from another click handler
 		function simulateMoveClick() {
 			setSelectedTool($("#buttonMove"));
-			$.each(canvases, function () {
-				this.isDrawingMode = false;
-			});
+			setObjectSelection(true);
 		}
 
 		// text button clicked
 		$("#buttonText").click(function () {
+            removeMouseEvents();
 			setSelectedTool(this);
 
 			$.each(canvases, function () {
@@ -269,7 +288,7 @@
 			$.each(canvases, function () {
 				this.on("mouse:down", function (e) {
 					var locationOnThisCanvas = this.getPointer(event.e);
-					this.add(new fabric.IText('Enter Text', {
+					this.add(new fabric.IText('Click and Type', {
 						fontFamily: 'times black',
 						left: locationOnThisCanvas.x,
 						top: locationOnThisCanvas.y,
@@ -291,41 +310,104 @@
 			});
 		});
 
-		// shape tools
-		$("#buttonRectangle").click(function () {
-			setSelectedTool(this);
+        function setObjectSelection(on){
+            if (on){
+                $.each(canvases, function () {
+                    this.isDrawingMode = false;
+                    this.selection = true;
+                    this.forEachObject(function(o){
+                        o.selectable = true;
+                    });
+                });
+            } else if(!on) {
+                $.each(canvases, function () {
+                    this.isDrawingMode = false;
+                    this.selection = false;
+                    this.forEachObject(function(o){
+                        o.selectable = false;
+                    });
+                });
+            } else {
+                console.log("no toggle preference passed");
+            }
+        }
 
-			$.each(canvases, function () {
-				this.isDrawingMode = false;
-			});
+        function removeMouseEvents() {
+            $.each(canvases, function () {
+                this.off("mouse:move");
+                this.off("mouse:up");
+                this.off("mouse:down");
+            });
+        }
 
-			$.each(canvases, function () {
-				this.on("mouse:down", function (e) {
-					var locationOnThisCanvas = this.getPointer(event.e);
-					this.add(new fabric.Rect({
-						width: 200,
-						height: 200,
-						stroke: Session.get("currentColor"),
-						fill: "transparent",
-						opacity: 1,
-						strokeWidth: 2,
-						left: locationOnThisCanvas.x,
-						top: locationOnThisCanvas.y,
-					}));
-					var newRectObject = this.item(this.getObjects().length - 1);
-					this.setActiveObject(newRectObject);
+        //Shape tools
+        $("#buttonRectangle").click(function () {
+            setSelectedTool(this);
+            removeMouseEvents();
+            setObjectSelection(false);
 
-					simulateMoveClick();
-				});
-			});
+            $.each(canvases, function () {
+                var rect, isUp, isDown, origX, origY;
 
-			ga('send', {
-				hitType: 'event',
-				eventCategory: 'Toolbar',
-				eventAction: 'Rectangle',
-				eventLabel: Session.get("ticket")
-			});
-		});
+                this.on('mouse:down', function(o){
+                    isUp = false;
+                    isDown = true;
+                    var pointer = this.getPointer(o.e);
+                    origX = pointer.x;
+                    origY = pointer.y;
+                    var pointer = this.getPointer(o.e);
+                    rect = new fabric.Rect({
+                        left: origX,
+                        top: origY,
+                        originX: 'left',
+                        originY: 'top',
+                        width: pointer.x-origX,
+                        height: pointer.y-origY,
+                        angle: 0,
+                        stroke: Session.get("currentColor"),
+                        fill: "transparent",
+                        opacity: 1,
+                        strokeWidth: 2,
+                        active: false,
+                        selectable: false,
+                    });
+                    rect.setCoords();
+                    this.add(rect);
+                });
+
+                this.on('mouse:move', function(o){
+                    if (!isDown) return;
+
+                    var pointer = this.getPointer(o.e);
+
+                    if(origX>pointer.x){
+                        rect.set({ left: Math.abs(pointer.x) });
+                    }
+                    if(origY>pointer.y){
+                        rect.set({ top: Math.abs(pointer.y) });
+                    }
+
+                    rect.set({ width: Math.abs(origX - pointer.x) });
+                    rect.set({ height: Math.abs(origY - pointer.y) });
+                    rect.setCoords();
+
+                    this.renderAll();
+                });
+
+                this.on('mouse:up', function(o){
+                    isDown = false;
+                    this.renderAll();
+                });
+            });
+
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Toolbar',
+                eventAction: 'Rectangle',
+                eventLabel: Session.get("ticket")
+            });
+        });
+
 
 		$("#buttonCircle").click(function () {
 			setSelectedTool(this);
