@@ -28,7 +28,7 @@
 
 					<form id="createDecision">
 						<fieldset class="form-group">
-							<input type="text" class="form-control" name="name" placeholder="Name">
+							<input type="text" id="nameInput" class="form-control" name="name" placeholder="Name">
 						</fieldset>
 						<fieldset class="form-group">
 							<input type="text" class="form-control" name="id" placeholder="ID #">
@@ -37,12 +37,10 @@
 							<input type="text" class="form-control" name="type" placeholder="Decision point type ">
 						</fieldset>
 						<fieldset class="form-group">
-							<textarea class="form-control" id="descriptionInput" name="description" rows="3"
-							          placeholder="Description"></textarea>
+							<textarea class="form-control" id="descriptionInput" name="requirements" rows="3" placeholder="Requirements"></textarea>
 						</fieldset>
 						<fieldset class="form-group">
-												<textarea class="form-control" id="requirementsInput" name="requirements" rows="3"
-												          placeholder="Requirements"></textarea>
+                            <textarea class="form-control" id="requirementsInput" name="Tips" rows="3" placeholder="Tips"></textarea>
 						</fieldset>
 
 						<button type="submit" class="btn btn-primary btn-continue">Create</button>
@@ -53,6 +51,8 @@
 			<div class="row top-buffer-100">
 				<div class="col-xs-12">
 					<h5>Markdown preview</h5>
+                    <p class="text-muted">title</p>
+                    {{#markdown}}{{currentName}}{{/markdown}}
 					<p class="text-muted">description</p>
 					{{#markdown}}{{currentDescription}}{{/markdown}}
 					<p class="text-muted">requirements</p>
@@ -66,7 +66,7 @@
 <template name="decisionPreview">
 	<div class="card bg-white">
 		<div class="card-block">
-			<h4 class="card-title">{{name}}</h4>
+			<span class="card-title">{{#markdown}}{{name}}{{/markdown}}</span>
 
 			<p class="card-text">{{#markdown}}{{description}}{{/markdown}}</p>
 

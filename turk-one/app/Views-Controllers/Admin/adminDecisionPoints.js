@@ -37,6 +37,9 @@ if (Meteor.isClient) {
 		},
 		currentRequirements: function () {
 			return Session.get("currentRequirements");
+		},
+		currentName: function () {
+			return Session.get("currentName");
 		}
 	});
 
@@ -61,6 +64,11 @@ if (Meteor.isClient) {
 			console.log($(event.target).val());
 			var value = $(event.target).val();
 			Session.set("currentRequirements", value);
+		},
+		"keyup #nameInput": function (event) {
+			console.log($(event.target).val());
+			var value = $(event.target).val();
+			Session.set("currentName", value);
 		}
 	});
 
