@@ -13,7 +13,8 @@ if (Meteor.isClient) {
 		var canvasWidthShouldBe = $("#col-sketch").width();
 		$(element).attr({"height": canvasHeightShouldBe, "width": canvasWidthShouldBe});
 
-		var canvas = new fabric.Canvas(idForNewCanvas);
+		var canvas = new fabric.Canvas(idForNewCanvas, {stateful:false, renderOnAddRemove:false }); //for faster performance
+		//var canvas = new fabric.Canvas(idForNewCanvas);
 		canvas.CDIndex = canvasNumber;
 
 		// add references to this canvas
