@@ -165,19 +165,20 @@
 				eventAction: 'Selecting a color',
 				eventLabel: Session.get("ticket")
 			});
-
 		});
 
 		// toolbar eraser clicked
 		$("#buttonEraser").click(function () {
 			var canvas = canvasWithFocus;
+            var index = canvas.CDIndex;
 			if (canvas.getActiveGroup()) {
-				recordingStates = false;
+                canvasHistory[index].recording = false;
 				canvas.getActiveGroup().forEachObject(function (a) {
 					canvas.remove(a);
 				});
 				canvas.discardActiveGroup();
-				recordingStates = true;
+                canvasHistory[index].recording = true;
+                canvasHistory[index].backStates.push(JSON.stringify(canvas));
 			} else {
 				canvas.remove(canvas.getActiveObject());
 			}
@@ -195,12 +196,13 @@
         $("#buttonDuplicate").click(function () {
 
             var canvas = canvasWithFocus;
+            var index = canvas.CDIndex;
 
             if(canvas.getActiveGroup()) {
+                canvasHistory[index].recording = false;
                 var group = canvas.getActiveGroup();
                 canvas.deactivateAll();
                 canvas.discardActiveGroup();
-
                 var clonedObjects = new fabric.Group();
 
                 group.forEachObject(function (o) {
@@ -210,6 +212,8 @@
                 });
                 clonedObjects.setCoords();
                 canvas.setActiveGroup(clonedObjects);
+                canvasHistory[index].recording = true;
+                canvasHistory[index].backStates.push(JSON.stringify(canvas));
 
                 ga('send', {
                     hitType: 'event',
@@ -251,6 +255,7 @@
             clonedObject.set({
                 top: clonedObject.top + 25,
                 left: clonedObject.left + 25,
+
                 active: true
             }).setCoords();
 
@@ -292,6 +297,8 @@
 						fontFamily: 'times black',
 						left: locationOnThisCanvas.x,
 						top: locationOnThisCanvas.y,
+                        originX: 'left',
+                        originY: 'top',
 						fontSize: 16
 					}));
 
@@ -310,26 +317,19 @@
 			});
 		});
 
-        function setObjectSelection(on){
-            if (on){
+
+        function setObjectSelection(toggle){
                 $.each(canvases, function () {
                     this.isDrawingMode = false;
-                    this.selection = true;
-                    this.forEachObject(function(o){
-                        o.selectable = true;
-                    });
+                    this.selection = toggle;
+                    for (var i = this.getObjects().length-1; i >= 0; i--){
+                        //check if the last object is set to toggle if and abort it true because then all objects are already set.
+                        if(this._objects[i].selectable === toggle){
+                            break;
+                        }
+                        this._objects[i].selectable = toggle;
+                    }
                 });
-            } else if(!on) {
-                $.each(canvases, function () {
-                    this.isDrawingMode = false;
-                    this.selection = false;
-                    this.forEachObject(function(o){
-                        o.selectable = false;
-                    });
-                });
-            } else {
-                console.log("no toggle preference passed");
-            }
         }
 
         function removeMouseEvents() {
@@ -367,9 +367,9 @@
                         stroke: Session.get("currentColor"),
                         fill: "transparent",
                         opacity: 1,
-                        strokeWidth: 2,
+                        strokeWidth: 3,
                         active: false,
-                        selectable: false,
+                        selectable: false
                     });
                     rect.setCoords();
                     this.add(rect);
@@ -411,6 +411,7 @@
 
 		$("#buttonCircle").click(function () {
 			setSelectedTool(this);
+            removeMouseEvents();
 
 			$.each(canvases, function () {
 				this.isDrawingMode = false;
@@ -421,12 +422,12 @@
 					var locationOnThisCanvas = this.getPointer(event.e);
 					this.add(new fabric.Circle({
 						radius: 100,
-						width: 200,
-						height: 200,
+						width: 150,
+						height: 150,
 						stroke: Session.get("currentColor"),
 						fill: "transparent",
 						opacity: 1,
-						strokeWidth: 2,
+						strokeWidth: 3,
 						left: locationOnThisCanvas.x,
 						top: locationOnThisCanvas.y,
 					}));
