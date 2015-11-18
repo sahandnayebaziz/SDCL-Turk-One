@@ -288,19 +288,11 @@
 		<div class="col-md-12 col-lg-10 col-lg-offset-1">
 			<div class="row">
 				<div class="col-xs-12">
-					<h4 id="toolDP">{{name}}<br></h4>
-
+					<span id="toolDP">{{#markdown}}{{name}}{{/markdown}}<br></span>
 					<p>
 						<span data-toggle="tooltip" data-placement="right" title="The problem you are trying to solve"
 						      data-trigger="manual">{{#markdown}}{{description}}{{/markdown}}</span>
 					</p>
-
-					<p>
-					<span class="text-muted">
-						<strong>REQUIREMENTS</strong>
-					</span>
-					</p>
-
 					<p>{{#markdown}}{{requirements}}{{/markdown}}</p>
 				</div>
 			</div>
