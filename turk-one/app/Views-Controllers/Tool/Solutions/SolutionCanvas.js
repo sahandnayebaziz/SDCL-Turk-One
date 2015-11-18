@@ -26,7 +26,7 @@ if (Meteor.isClient) {
 
 		// set canvas defaults
 		canvas.isDrawingMode = true;
-		canvas.freeDrawingBrush.width = 5;
+		canvas.freeDrawingBrush.width = 3;
 		canvas.freeDrawingBrush.color = Session.get("currentColor");
 		canvas.setBackgroundColor("white").renderAll();
 
