@@ -298,6 +298,7 @@ if (Meteor.isClient) {
 			"showBullets": false,
 			"exitOnOverlayClick": false,
 			"disableInteraction": true,
+			"skipLabel": "",
 			steps: tutorialSteps
 		}).start();
 
@@ -328,11 +329,11 @@ if (Meteor.isClient) {
 				$('#finishModal').modal('show');
 			} else {
 				var n = noty({
-					text: 'One or more of the sketches you made is missing a name or an explanation! Fill it in and try again :)',
+					text: 'One or more of your sketches are missing a name or an explanation! Please provide the missing text and try again',
 					layout: 'topLeft',
 					theme: 'relax', // or 'relax'
 					type: 'warning',
-					timeout: 6500,
+					timeout: 10000,
 					animation: {
 						open: 'animated bounceInLeft', // Animate.css class names
 						close: 'animated bounceOutLeft', // Animate.css class names
@@ -340,6 +341,23 @@ if (Meteor.isClient) {
 						speed: 500 // unavailable - no need
 					}
 				});
+				if (Session.get("hasBeenWarned")){
+					var n = noty({
+						text: 'Solutions submitted without name and/or explanation will be rejected',
+						layout: 'topLeft',
+						theme: 'relax', // or 'relax'
+						type: 'warning',
+						timeout: 10000,
+						animation: {
+							open: 'animated bounceInLeft', // Animate.css class names
+							close: 'animated bounceOutLeft', // Animate.css class names
+							easing: 'swing', // unavailable - no need
+							speed: 500 // unavailable - no need
+						}
+					});
+					$('#finishModal').modal('show');
+				}
+				Session.set("hasBeenWarned", true);
 			}
 		}
 	});
