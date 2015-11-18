@@ -148,6 +148,49 @@
             removeMouseEvents();
 		}
 
+        //Remove all mouse events
+        function removeMouseEvents() {
+            $.each(canvases, function () {
+                this.off("mouse:move");
+                this.off("mouse:up");
+                this.off("mouse:down");
+            });
+        }
+
+        //Toggle object selection on/off
+        function setObjectSelection(toggle){
+            $.each(canvases, function () {
+                this.isDrawingMode = false;
+                this.selection = toggle;
+                for (var i = this.getObjects().length-1; i >= 0; i--){
+                    //check if the last object is set to toggle if and abort it true because then all objects are already set.
+                    if(this._objects[i].selectable === toggle){
+                        break;
+                    }
+                    this._objects[i].selectable = toggle;
+                }
+            });
+        }
+
+        //Send an alert to the user
+        function notify(text, type){
+            var n = noty({
+                text: text,
+                layout: 'topRight',
+                theme: 'relax', // or 'relax'
+                type: type,
+                timeout: 2500,
+                animation: {
+                    open: 'animated bounceInRight', // Animate.css class names
+                    close: 'animated bounceOutRight', // Animate.css class names
+                    easing: 'swing', // unavailable - no need
+                    speed: 500 // unavailable - no need
+                }
+            });
+        }
+
+        // -------- NORMAL TOOLBAR TOOLS --------
+
 		// toolbar color clicked
 		$(".buttonColor").click(function () {
 			setSelectedTool(this);
@@ -167,8 +210,272 @@
 			});
 		});
 
+        // toolbar move controls clicked
+        $("#buttonMove").click(function () {
+            setSelectedTool(this);
+            setObjectSelection(true);
+
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Toolbar',
+                eventAction: 'Move Controls',
+                eventLabel: Session.get("ticket")
+            });
+        })
+
+        // this is an explicit mod of the above function that can be synthetically run from another click handler
+        function simulateMoveClick() {
+            setSelectedTool($("#buttonMove"));
+            setObjectSelection(true);
+        }
+
+        // text button clicked
+        $("#buttonText").click(function () {
+            removeMouseEvents();
+            setSelectedTool(this);
+
+            $.each(canvases, function () {
+                this.isDrawingMode = false;
+            });
+
+            $.each(canvases, function () {
+                this.on("mouse:down", function (e) {
+                    var locationOnThisCanvas = this.getPointer(event.e);
+                    this.add(new fabric.IText('Click and Type', {
+                        fontFamily: 'times black',
+                        left: locationOnThisCanvas.x,
+                        top: locationOnThisCanvas.y,
+                        originX: 'left',
+                        originY: 'top',
+                        selectable: false, 
+                        fontSize: 16
+                    }));
+
+                    var newTextObject = this.item(this.getObjects().length - 1);
+                    this.setActiveObject(newTextObject);
+                    simulateMoveClick();
+                    this.renderAll();
+                });
+            });
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Toolbar',
+                eventAction: 'Text',
+                eventLabel: Session.get("ticket")
+            });
+        });
+
+        //Adding rectangles to the canvas
+        $("#buttonRectangle").click(function () {
+            setSelectedTool(this);
+            removeMouseEvents();
+            setObjectSelection(false);
+
+            $.each(canvases, function () {
+                var rect, isUp, isDown, origX, origY;
+
+                this.on('mouse:down', function(o){
+                    isUp = false;
+                    isDown = true;
+                    var pointer = this.getPointer(o.e);
+                    origX = pointer.x;
+                    origY = pointer.y;
+                    var pointer = this.getPointer(o.e);
+                    rect = new fabric.Rect({
+                        left: origX,
+                        top: origY,
+                        originX: 'left',
+                        originY: 'top',
+                        width: pointer.x-origX,
+                        height: pointer.y-origY,
+                        angle: 0,
+                        stroke: Session.get("currentColor"),
+                        fill: "transparent",
+                        opacity: 1,
+                        strokeWidth: 3,
+                        active: false,
+                        selectable: false
+                    });
+                    rect.setCoords();
+                    this.add(rect);
+                });
+
+                this.on('mouse:move', function(o){
+                    if (!isDown) return;
+                    var pointer = this.getPointer(o.e);
+                    if(origX>pointer.x){
+                        rect.set({ left: Math.abs(pointer.x) });
+                    }
+                    if(origY>pointer.y){
+                        rect.set({ top: Math.abs(pointer.y) });
+                    }
+                    rect.set({ width: Math.abs(origX - pointer.x) });
+                    rect.set({ height: Math.abs(origY - pointer.y) });
+                    rect.setCoords();
+
+                    this.renderAll();
+                });
+
+                this.on('mouse:up', function(o){
+                    isDown = false;
+                    this.renderAll();
+                });
+            });
+
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Toolbar',
+                eventAction: 'Rectangle',
+                eventLabel: Session.get("ticket")
+            });
+        });
+
+        //adding circles to the canvas
+        $("#buttonCircle").click(function () {
+            setSelectedTool(this);
+            removeMouseEvents();
+
+            $.each(canvases, function () {
+                this.isDrawingMode = false;
+            });
+
+            $.each(canvases, function () {
+                this.on("mouse:down", function (e) {
+                    var locationOnThisCanvas = this.getPointer(event.e);
+                    this.add(new fabric.Circle({
+                        radius: 100,
+                        width: 150,
+                        height: 150,
+                        stroke: Session.get("currentColor"),
+                        fill: "transparent",
+                        opacity: 1,
+                        strokeWidth: 3,
+                        left: locationOnThisCanvas.x,
+                        top: locationOnThisCanvas.y,
+                        selectable: false
+                    }));
+                    var newRectObject = this.item(this.getObjects().length - 1);
+                    this.setActiveObject(newRectObject);
+                    simulateMoveClick();
+                    this.renderAll();
+                });
+            });
+
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Toolbar',
+                eventAction: 'Circle',
+                eventLabel: Session.get("ticket")
+            });
+        });
+
+        // UNDO AND REDO
+        $("#buttonUndo").click(function () {
+
+            var index = canvasWithFocus.CDIndex;
+            var back = canvasHistory[index].backStates;
+
+            if (back.length > 1) {
+                notify("Undo", "information");
+                canvasHistory[index].recording = false;
+                var fromState = back.pop();
+                canvasHistory[index].forwardStates.push(fromState);
+                var toState = back[back.length - 1];
+                canvasWithFocus.loadFromJSON(toState);
+                canvasWithFocus.renderAll();
+                canvasHistory[index].recording = true;
+            }
+
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Toolbar',
+                eventAction: 'Undo',
+                eventLabel: Session.get("ticket")
+            });
+        });
+
+        $("#buttonRedo").click(function () {
+
+            var index = canvasWithFocus.CDIndex;
+            var forward = canvasHistory[index].forwardStates;
+
+            if (forward.length > 0) {
+                notify("Redo", "information");
+                canvasHistory[index].recording = false;
+                var toState = forward.pop();
+                canvasHistory[index].backStates.push(toState);
+
+                canvasWithFocus.loadFromJSON(toState);
+                canvasWithFocus.renderAll();
+                canvasHistory[index].recording = true;
+            }
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Toolbar',
+                eventAction: 'Redo',
+                eventLabel: Session.get("ticket")
+            });
+        });
+
+        //Tooltips (Google analytics)
+        $("#toolbarTips").click(function () {
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Toolbar',
+                eventAction: 'Toolbar Tips',
+                eventLabel: Session.get("ticket")
+            });
+        });
+
+        // --------  SELECTION TOOLBAR TOOLS --------
+
+        // TODO: these need to work for a group of selected objects
+        // Send to Front
+        $("#buttonSendFront").click(function () {
+
+            if (canvasWithFocus.getActiveObject()) {
+                notify("Send object to front", "information");
+                var target = canvasWithFocus.getActiveObject();
+                canvasWithFocus.bringToFront(target);
+                canvasWithFocus.deactivateAll();
+                canvasWithFocus.renderAll();
+            }
+            if (canvasWithFocus.getActiveGroup()){
+                notify("Only single objects can be sent to front", "warning");
+            }
+
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Toolbar',
+                eventAction: 'Send front',
+                eventLabel: Session.get("ticket")
+            });
+        });
+
+        // Send to Back
+        $("#buttonSendBack").click(function () {
+            if (canvasWithFocus.getActiveObject()) {
+                notify("Send object to back", "information");
+                var target = canvasWithFocus.getActiveObject();
+                canvasWithFocus.sendToBack(target);
+                canvasWithFocus.deactivateAll();
+                canvasWithFocus.renderAll();
+            }
+            if (canvasWithFocus.getActiveGroup()){
+                notify("Only single objects can be sent to back", "warning");
+            }
+
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Toolbar',
+                eventAction: 'Send back',
+                eventLabel: Session.get("ticket")
+            });
+        });
+
 		// toolbar eraser clicked
 		$("#buttonEraser").click(function () {
+            notify("Delete object(s)", "information");
 			var canvas = canvasWithFocus;
             var index = canvas.CDIndex;
 			if (canvas.getActiveGroup()) {
@@ -192,13 +499,24 @@
 			});
 		})
 
-        // toolbar duplicate clicked
+        //Duplicate
         $("#buttonDuplicate").click(function () {
-
+            notify("Duplicating object(s)", "information");
             var canvas = canvasWithFocus;
             var index = canvas.CDIndex;
 
             if(canvas.getActiveGroup()) {
+
+                if (canvas.getActiveGroup().getObjects().length > 50) {
+                    ga('send', {
+                        hitType: 'event',
+                        eventCategory: 'Toolbar',
+                        eventAction: 'Tried to duplicate more that 50 objects',
+                        eventLabel: Session.get("ticket")
+                    });
+                    notify("Duplication of many objects can take some time and can slow down your canvas!", "warning");
+                }
+
                 canvasHistory[index].recording = false;
                 var group = canvas.getActiveGroup();
                 canvas.deactivateAll();
@@ -242,6 +560,7 @@
             canvas.renderAll();
         });
 
+        //Clone objects helper
         function cloneObject(object){
             var clonedObject;
             //check for async objects to determine the way to clone
@@ -262,277 +581,8 @@
             return clonedObject;
         }
 
-		// toolbar move controls clicked
-		$("#buttonMove").click(function () {
-			setSelectedTool(this);
-			setObjectSelection(true);
 
-			ga('send', {
-				hitType: 'event',
-				eventCategory: 'Toolbar',
-				eventAction: 'Move Controls',
-				eventLabel: Session.get("ticket")
-			});
-		})
-
-		// this is an explicit mod of the above function that can be synthetically run from another click handler
-		function simulateMoveClick() {
-			setSelectedTool($("#buttonMove"));
-			setObjectSelection(true);
-		}
-
-		// text button clicked
-		$("#buttonText").click(function () {
-            removeMouseEvents();
-			setSelectedTool(this);
-
-			$.each(canvases, function () {
-				this.isDrawingMode = false;
-			});
-
-			$.each(canvases, function () {
-				this.on("mouse:down", function (e) {
-					var locationOnThisCanvas = this.getPointer(event.e);
-					this.add(new fabric.IText('Click and Type', {
-						fontFamily: 'times black',
-						left: locationOnThisCanvas.x,
-						top: locationOnThisCanvas.y,
-                        originX: 'left',
-                        originY: 'top',
-						fontSize: 16
-					}));
-
-					var newTextObject = this.item(this.getObjects().length - 1);
-					this.setActiveObject(newTextObject);
-
-					simulateMoveClick();
-				});
-			});
-
-			ga('send', {
-				hitType: 'event',
-				eventCategory: 'Toolbar',
-				eventAction: 'Text',
-				eventLabel: Session.get("ticket")
-			});
-		});
-
-
-        function setObjectSelection(toggle){
-                $.each(canvases, function () {
-                    this.isDrawingMode = false;
-                    this.selection = toggle;
-                    for (var i = this.getObjects().length-1; i >= 0; i--){
-                        //check if the last object is set to toggle if and abort it true because then all objects are already set.
-                        if(this._objects[i].selectable === toggle){
-                            break;
-                        }
-                        this._objects[i].selectable = toggle;
-                    }
-                });
-        }
-
-        function removeMouseEvents() {
-            $.each(canvases, function () {
-                this.off("mouse:move");
-                this.off("mouse:up");
-                this.off("mouse:down");
-            });
-        }
-
-        //Shape tools
-        $("#buttonRectangle").click(function () {
-            setSelectedTool(this);
-            removeMouseEvents();
-            setObjectSelection(false);
-
-            $.each(canvases, function () {
-                var rect, isUp, isDown, origX, origY;
-
-                this.on('mouse:down', function(o){
-                    isUp = false;
-                    isDown = true;
-                    var pointer = this.getPointer(o.e);
-                    origX = pointer.x;
-                    origY = pointer.y;
-                    var pointer = this.getPointer(o.e);
-                    rect = new fabric.Rect({
-                        left: origX,
-                        top: origY,
-                        originX: 'left',
-                        originY: 'top',
-                        width: pointer.x-origX,
-                        height: pointer.y-origY,
-                        angle: 0,
-                        stroke: Session.get("currentColor"),
-                        fill: "transparent",
-                        opacity: 1,
-                        strokeWidth: 3,
-                        active: false,
-                        selectable: false
-                    });
-                    rect.setCoords();
-                    this.add(rect);
-                });
-
-                this.on('mouse:move', function(o){
-                    if (!isDown) return;
-
-                    var pointer = this.getPointer(o.e);
-
-                    if(origX>pointer.x){
-                        rect.set({ left: Math.abs(pointer.x) });
-                    }
-                    if(origY>pointer.y){
-                        rect.set({ top: Math.abs(pointer.y) });
-                    }
-
-                    rect.set({ width: Math.abs(origX - pointer.x) });
-                    rect.set({ height: Math.abs(origY - pointer.y) });
-                    rect.setCoords();
-
-                    this.renderAll();
-                });
-
-                this.on('mouse:up', function(o){
-                    isDown = false;
-                    this.renderAll();
-                });
-            });
-
-            ga('send', {
-                hitType: 'event',
-                eventCategory: 'Toolbar',
-                eventAction: 'Rectangle',
-                eventLabel: Session.get("ticket")
-            });
-        });
-
-
-		$("#buttonCircle").click(function () {
-			setSelectedTool(this);
-            removeMouseEvents();
-
-			$.each(canvases, function () {
-				this.isDrawingMode = false;
-			});
-
-			$.each(canvases, function () {
-				this.on("mouse:down", function (e) {
-					var locationOnThisCanvas = this.getPointer(event.e);
-					this.add(new fabric.Circle({
-						radius: 100,
-						width: 150,
-						height: 150,
-						stroke: Session.get("currentColor"),
-						fill: "transparent",
-						opacity: 1,
-						strokeWidth: 3,
-						left: locationOnThisCanvas.x,
-						top: locationOnThisCanvas.y,
-					}));
-					var newRectObject = this.item(this.getObjects().length - 1);
-					this.setActiveObject(newRectObject);
-
-					simulateMoveClick();
-				});
-			});
-
-			ga('send', {
-				hitType: 'event',
-				eventCategory: 'Toolbar',
-				eventAction: 'Circle',
-				eventLabel: Session.get("ticket")
-			});
-		});
-
-		// TODO: these need to work for a group of selected objects
-		$("#buttonSendFront").click(function () {
-
-			if (canvasWithFocus.getActiveObject()) {
-				var target = canvasWithFocus.getActiveObject();
-				canvasWithFocus.bringToFront(target);
-				canvasWithFocus.deactivateAll();
-				canvasWithFocus.renderAll();
-			}
-
-			ga('send', {
-				hitType: 'event',
-				eventCategory: 'Toolbar',
-				eventAction: 'Send front',
-				eventLabel: Session.get("ticket")
-			});
-		});
-
-		$("#buttonSendBack").click(function () {
-			if (canvasWithFocus.getActiveObject()) {
-				var target = canvasWithFocus.getActiveObject();
-				canvasWithFocus.sendToBack(target);
-				canvasWithFocus.deactivateAll();
-				canvasWithFocus.renderAll();
-			}
-
-			ga('send', {
-				hitType: 'event',
-				eventCategory: 'Toolbar',
-				eventAction: 'Send back',
-				eventLabel: Session.get("ticket")
-			});
-		});
-
-
-		// UNDO AND REDO
-		$("#buttonUndo").click(function () {
-
-			var index = canvasWithFocus.CDIndex;
-			var back = canvasHistory[index].backStates;
-
-			if (back.length > 1) {
-				canvasHistory[index].recording = false;
-				var fromState = back.pop();
-				canvasHistory[index].forwardStates.push(fromState);
-				var toState = back[back.length - 1];
-				canvasWithFocus.loadFromJSON(toState);
-				canvasWithFocus.renderAll();
-				canvasHistory[index].recording = true;
-			}
-
-			ga('send', {
-				hitType: 'event',
-				eventCategory: 'Toolbar',
-				eventAction: 'Undo',
-				eventLabel: Session.get("ticket")
-			});
-		});
-		$("#buttonRedo").click(function () {
-			var index = canvasWithFocus.CDIndex;
-			var forward = canvasHistory[index].forwardStates;
-
-			if (forward.length > 0) {
-				canvasHistory[index].recording = false;
-				var toState = forward.pop();
-				canvasHistory[index].backStates.push(toState);
-
-				canvasWithFocus.loadFromJSON(toState);
-				canvasWithFocus.renderAll();
-				canvasHistory[index].recording = true;
-			}
-			ga('send', {
-				hitType: 'event',
-				eventCategory: 'Toolbar',
-				eventAction: 'Redo',
-				eventLabel: Session.get("ticket")
-			});
-		});
-
-		$("#toolbarTips").click(function () {
-			ga('send', {
-				hitType: 'event',
-				eventCategory: 'Toolbar',
-				eventAction: 'Toolbar Tips',
-				eventLabel: Session.get("ticket")
-			});
-		});
+        // FOCUS
 
 		// guessing focus
 		function findFocus() {
