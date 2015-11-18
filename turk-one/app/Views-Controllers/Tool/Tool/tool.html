@@ -277,10 +277,9 @@
 		<div class="col-md-12 col-lg-10 col-lg-offset-1">
 			<div class="row">
 				<div class="col-xs-12">
-					<span id="toolDP">{{#markdown}}{{name}}{{/markdown}}<br></span>
+					<span id="toolDP" data-placement="bottom" title="The problem you are trying to solve" data-trigger="manual" data-toggle="tooltip">{{#markdown}}{{name}}{{/markdown}}<br></span>
 					<p>
-						<span data-toggle="tooltip" data-placement="right" title="The problem you are trying to solve"
-						      data-trigger="manual">{{#markdown}}{{description}}{{/markdown}}</span>
+						<span>{{#markdown}}{{description}}{{/markdown}}</span>
 					</p>
 					<p>{{#markdown}}{{requirements}}{{/markdown}}</p>
 				</div>
@@ -289,7 +288,7 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div id="buttonMenu" role="group" aria-label="..." data-toggle="tooltip" data-placement="right"
-						     title="Submit, re-read, or quit this HIT" data-trigger="manual">
+						     title="Submit, re-do tutorial, or quit HIT" data-trigger="manual">
 							<button id="finishRequest" class="btn btn-success btn-continue">REVIEW & SUBMIT</button>
 							<button id="tipsRequest" class="btn btn-warning btn-continue" data-toggle="tooltip">TIPS</button>
 							<button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-target="#infoModal">TASK
@@ -303,7 +302,7 @@
 				</div>
 				<div class="row">
 					<div class="col-xs-12">
-						<button id="tutorialRequest" class="btn btn-warning btn-continue top-buffer-50">TUTORIAL</button>
+						<button id="tutorialRequest" class="btn btn-warning btn-continue top-buffer-50" >TUTORIAL</button>
 					</div>
 				</div>
 			</div>

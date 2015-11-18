@@ -136,18 +136,19 @@ if (Meteor.isClient) {
 	tutorialSteps = [
 		{
 			element: '#intro1',
-			intro: "This is the problem you are trying to solve. Please, do not worry about coming up with a perfect solution. We want you to explore the problem at a high level and offer a few different ideas you think could work!",
-			position: 'bottom'
+			intro: "Here is your task description, try to cover as many requirements in your solutions. Do not worry about coming up with a perfect solution. We want you to explore the problem at a high level and offer a few different solutions you think could work",
+			position: 'bottom-middle-aligned'
 		},
 		{
 			element: '#intro2',
-			intro: "Sketch out your ideas. We are looking for high level sketches like you would make on a whiteboard. You can keep your sketches simple, but please keep them understandable. Don't forget to give each sketch a name and a description!",
-			position: 'bottom'
+			intro: "Sketch and explain your ideas in these 5 different canvasses and text fields. We are looking for high level sketches, like you would make on a whiteboard. Your sketches can be simple. However, try to make sketches that help others to understand your solutions",
+			position: 'bottom-middle-aligned',
+
 		},
 		{
 			element: "#intro1",
-			intro: "Your controls are here as well. When you are finished, you can review and submit your ideas. If you'd like to quit the HIT, you can click quit. Take your time and click one of these when finished. Each gives you a chance to cancel!",
-			position: 'bottom'
+			intro: "When you are finished, you can review and submit your ideas by clicking on REVIEW & SUBMIT. If you'd like to quit the HIT, please use this quit button and leave some feedback why you feel this HIT is not for you. Each of these buttons gives you a chance to cancel, so feel free to try them out",
+			position: 'bottom-middle-aligned'
 		}
 	];
 
@@ -244,8 +245,12 @@ if (Meteor.isClient) {
 				"showProgress": true,
 				"showBullets": false,
 				"exitOnOverlayClick": false,
+				"disableInteraction": true,
 				steps: tutorialSteps
 			}).start();
+
+
+			$(".introjs-tooltiptext").css("text-align", "center");
 		},
 		"click #tipsRequest": function () {
 
@@ -292,8 +297,11 @@ if (Meteor.isClient) {
 			"showProgress": true,
 			"showBullets": false,
 			"exitOnOverlayClick": false,
+			"disableInteraction": true,
 			steps: tutorialSteps
 		}).start();
+
+		$(".introjs-tooltiptext").css("text-align", "center");
 	};
 
 	Template.decisionPointInformationPanel.events({
