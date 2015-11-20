@@ -3,7 +3,7 @@
 	{{#if shouldShow}}
 		<div class="container-fluid container-tool">
 			<div class="row">
-				<div id="dpBlock" class="col-md-12 col-lg-4 bottom-buffer-50 md-fixed ">
+				<div id="dpBlock" class="col-md-12 col-lg-4 bottom-buffer-50 md-fixed overflow">
 					{{#with decisionPoint}}
 						{{>decisionPointInformationPanel}}
 					{{/with}}
@@ -15,9 +15,30 @@
 						</div>
 						<div class="col-lg-10 animated fadeIn" id="col-sketch">
 
-							{{#each solutions}}
-								{{> solutionCanvas}}
-							{{/each}}
+							{{#if hasAtLeastOneSolution}}
+								{{#each solutions}}
+									{{> solutionCanvas}}
+								{{/each}}
+							{{else}}
+								<div class="row top-buffer-100">
+									<div class="col-xs-12 text-center center-block">
+										<div class="sk-spinner sk-spinner-cube-grid">
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+											<div class="sk-cube"></div>
+										</div>
+										<p class="lead top-buffer-50">Loading your canvases...</p>
+									</div>
+								</div>
+
+							{{/if}}
+
 						</div>
 					</div>
 				</div>
@@ -43,14 +64,14 @@
 							<p><strong class="text-danger">Once you click "confirm", you will not have a chance to return and
 								continue sketching your solutions.</strong></p>
 
-							<p>As a reminder, your sketches will be reviewed using the following criteria:</p>
+							<p>As a reminder, your sketches will be reviewed using the following:</p>
 
 							<p>
 							<ul class="small">
 								<li>It is specified in English</li>
-								<li>It has a proper name and textual explanation</li>
-								<li>It has a sensible accompanying sketch that shows the alternative solution</li>
-								<li>It is relevant to the decision point.</li>
+								<li>It has a name and textual explanation of your solution</li>
+								<li>It has a sketch that shows your solution</li>
+								<li>It attempts to cover some of the proposed requirements</li>
 							</ul>
 							</p>
 
@@ -160,25 +181,14 @@
 					</div>
 					<div class="modal-body">
 						<h5>
-							Educational Traffic Flow Simulation Program
+							Educational Traffic Simulation Application
 						</h5>
-
-						<p><br>You are part of a team of software developers who are working together to design a traffic flow
-							simulator
-							program. The overall purpose of the simulator program is educational: university-level civil engineering
-							students
-							will be using it to understand the effects that different traffic signal timings have on traffic flow.
-						</p>
-
-						<p>The overall design problem has already been broken down into a large number of much smaller
-							decision points: individual aspects of the design that can be considered in isolation of each other. You
-							have been tasked with working on one of those decision points, by providing one or more alternative
-							solutions
-							that would satisfactorily address the requirements of that decision point.<br><br>
-							<span>{{decisionPointText}}</span>
-						</p>
-
-						{{> criteria}}
+                        <p><br>We are creating a tool to simulate traffic.
+                            For that we need interfaces to create maps, cars, and rules.
+                            You will design solutions for one of these interfaces.
+                            The traffic simulator application will be used to educate university-level civil engineering students.
+                            Thanks for helping us!
+                        </p>
 					</div>
 				</div>
 			</div>
@@ -198,7 +208,7 @@
 						<div class="row">
 							<div class="col-xs-12">
 								<img src="/vertical.png" class="img-responsive"
-								     alt="change colors with the color balls, T adds text, 4 arrows is a move resize rotate selector, pink gummy is an eraser, big arrows are undo redo">
+								     alt="change colors with the color balls, T adds text, 4 arrows is a move resize rotate selector, big arrows are undo redo">
 							</div>
 						</div>
 					</div>
@@ -263,34 +273,37 @@
 </template>
 
 <template name="decisionPointInformationPanel">
-	<div class="row">
+	<div class="row animated fadeIn" id="intro1">
 		<div class="col-md-12 col-lg-10 col-lg-offset-1">
-			<div class="row" id="intro1">
+			<div class="row">
 				<div class="col-xs-12">
-					<h4>{{name}}<br></h4>
-
-					<p>{{description}}</p>
-
+					<span id="toolDP" data-placement="bottom" title="The problem you are trying to solve" data-trigger="manual" data-toggle="tooltip">{{#markdown}}{{name}}{{/markdown}}<br></span>
 					<p>
-					<span class="text-muted">
-						<strong>REQUIREMENTS</strong>
-					</span>
+						<span>{{#markdown}}{{description}}{{/markdown}}</span>
 					</p>
-
-					<p>{{requirements}}</p>
+					<p>{{#markdown}}{{requirements}}{{/markdown}}</p>
 				</div>
 			</div>
-			<div id="intro4">
-				<div id="buttonMenu" class="row center" role="group" aria-label="...">
-					<button id="finishRequest" class="btn btn-success btn-continue">REVIEW & FINISH
-					</button>
-					<button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-target="#infoModal">TASK
-						INFO
-					</button>
-					<button id="tutorialRequest" class="btn btn-primary btn-continue" data-toggle="modal">TUTORIAL</button>
-					<button id="quitRequest" class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">
-						QUIT
-					</button>
+			<div id="intro3">
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="buttonMenu" role="group" aria-label="..." data-toggle="tooltip" data-placement="right"
+						     title="Submit, re-do tutorial, or quit HIT" data-trigger="manual">
+							<button id="finishRequest" class="btn btn-success btn-continue">REVIEW & SUBMIT</button>
+							<button id="tipsRequest" class="btn btn-warning btn-continue" data-toggle="tooltip">TIPS</button>
+							<button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-target="#infoModal">TASK
+								INFO
+							</button>
+							<button id="quitRequest" class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">
+								QUIT
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<button id="tutorialRequest" class="btn btn-warning btn-continue top-buffer-50" >TUTORIAL</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -312,9 +325,11 @@
 				//console.log("height" +$(window).height());
 				$('#buttonMenu').removeClass('btn-group');
 				$('#buttonMenu').addClass('btn-group-vertical');
+
 			} else {
 				$('#buttonMenu').addClass('btn-group');
 				$('#buttonMenu').removeClass('btn-group-vertical');
+				$('[data-toggle="tooltip"]').setAttribute("data-placement", "bottom");
 			}
 		});
 
@@ -346,7 +361,7 @@
 			});
 		});
 
-		$("#tutorialRequest").click(function () {
+		$("#tipsRequest").click(function () {
 			ga('send', {
 				hitType: 'event',
 				eventCategory: 'Button',

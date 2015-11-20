@@ -31,6 +31,15 @@ if (Meteor.isClient) {
 		decisionPoints: function () {
 			// find all decisions, sorted by id
 			return DecisionPoints.find({}, {sort: {_id: 1}});
+		},
+		currentName: function () {
+			return Session.get("currentName");
+		},
+		currentDescription: function () {
+			return Session.get("currentDescription");
+		},
+		currentRequirements: function () {
+			return Session.get("currentRequirements");
 		}
 	});
 
@@ -45,6 +54,21 @@ if (Meteor.isClient) {
 		},
 		"click .deleteSolution": function () {
 			Meteor.call("deleteSolution", this._id);
+		},
+		"keyup #nameInput": function (event) {
+			console.log($(event.target).val());
+			var value = $(event.target).val();
+			Session.set("currentName", value);
+		},
+		"keyup #descriptionInput": function (event) {
+			console.log($(event.target).val());
+			var value = $(event.target).val();
+			Session.set("currentDescription", value);
+		},
+		"keyup #requirementsInput": function (event) {
+			console.log($(event.target).val());
+			var value = $(event.target).val();
+			Session.set("currentRequirements", value);
 		}
 	});
 

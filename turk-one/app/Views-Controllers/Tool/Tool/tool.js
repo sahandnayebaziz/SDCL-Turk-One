@@ -77,7 +77,7 @@ if (Meteor.isServer) {
 					infoModalTime: time,
 					infoModalNumber: 1
 				}
-			}, function(e, n) {
+			}, function (e, n) {
 				console.log("upped info modal");
 			})
 		},
@@ -86,7 +86,7 @@ if (Meteor.isServer) {
 				workerTicket: ticket,
 				reason: reason,
 				feedback: feedback
-			}, function(error) {
+			}, function (error) {
 				if (!error) {
 					console.log("created quit survey");
 				} else {
@@ -99,7 +99,7 @@ if (Meteor.isServer) {
 				$set: {
 					quit: true
 				}
-			}, function(error) {
+			}, function (error) {
 				if (!error) {
 					console.log("set flag quit");
 				}
@@ -110,7 +110,7 @@ if (Meteor.isServer) {
 				$set: {
 					submitted: true
 				}
-			}, function(error) {
+			}, function (error) {
 				if (!error) {
 					console.log("set flag submitted");
 				}
@@ -133,62 +133,25 @@ if (Meteor.isClient) {
 	Meteor.subscribe("solutions");
 	Meteor.subscribe("decisionPoints");
 
-	var tutorialSteps = [
+	tutorialSteps = [
 		{
 			element: '#intro1',
-			intro: "This is your decision point. Read it carefully and try to think of alternative solutions to solve it. We want you to try to come up with multiple solutions for this decision point. We are not looking for the one best design but for a variety of designs that each have their own pros and cons",
-			position: 'bottom'
+			intro: "Here is your task description, try to cover as many requirements in your solutions. Do not worry about coming up with a perfect solution. We want you to explore the problem at a high level and offer a few different solutions you think could work",
+			position: 'bottom-middle-aligned'
 		},
 		{
 			element: '#intro2',
-			intro: "To help others understand your solutions you have to sketch them. In this area you have 5 sketch panels and their respective name and description fields. We are looking for high level sketches like you would make on a whiteboard. You can keep your sketches simple, but please keep them understandable. Also remember that a good sketch complements the textual description and visa versa.",
-			position: 'bottom'
+			intro: "Sketch and explain your ideas in these 5 different canvasses and text fields. We are looking for high level sketches, like you would make on a whiteboard. Your sketches can be simple. However, try to make sketches that help others to understand your solutions",
+			position: 'bottom-middle-aligned',
+
 		},
 		{
-			element: '#toolbarContainer',
-			intro: "These are your sketching tools. The tools automatically affect whichever canvas is highlighted. Click on the question mark to see how they work.",
-			position: 'bottom'
-		},
-		{
-			element: '#finishRequest',
-			intro: "Press REVIEW AND FINISH when you are ready to submit your work. This will give you the opportunity to review your designs one more time before submitting them. After reviewing, you can either submit your work or hit cancel and go back.",
-			position: 'bottom'
-		},
-		{
-			element: '#infoRequest',
-			intro: "Press TASK INFO if you want to review the general task information and the design criteria from the first page again.",
-			position: 'bottom'
-		},
-		{
-			element: '#tutorialRequest',
-			intro: "Press TUTORIAL if you want to see this tutorial again.",
-			position: 'bottom'
-		},
-		{
-			element: '#quitRequest',
-			intro: "Press QUIT whenever you want to quit your task. We would appreciate it greatly if you would give some feedback on the tool, task and a reason for quiting so we can improve it in the future.",
-			position: 'bottom'
+			element: "#intro1",
+			intro: "When you are finished, you can review and submit your ideas by clicking on REVIEW & SUBMIT. If you'd like to quit the HIT, please use this quit button and leave some feedback why you feel this HIT is not for you. Each of these buttons gives you a chance to cancel, so feel free to try them out",
+			position: 'bottom-middle-aligned'
 		}
 	];
 
-	Template.tool.rendered = function () {
-		if (!this._rendered) {
-			this._rendered = true;
-
-			if (!Session.get("tutorialDone")) {
-
-				introJs().setOptions({
-					"scrollToElement": true,
-					"showStepNumbers": false,
-					"showProgress": true,
-					"showBullets": false,
-					"exitOnOverlayClick": false,
-					steps: tutorialSteps
-				}).start();
-				Session.setPersistent("tutorialDone", true);
-			}
-		}
-	};
 
 	Template.tool.helpers({
 		shouldShow: function () {
@@ -202,6 +165,9 @@ if (Meteor.isClient) {
 		},
 		solutions: function () {
 			return Solutions.find({workerId: Session.get("ticket")}, {sort: {canvasNumber: 1}});
+		},
+		hasAtLeastOneSolution: function () {
+			return Solutions.findOne({workerId: Session.get("ticket")});
 		},
 		shouldGenerateReviews: function () {
 			return Session.get("shouldGenerateReviews");
@@ -226,17 +192,18 @@ if (Meteor.isClient) {
 			}
 
 			return canvases.filter(isCanvasComplex).length;
-		},
-		decisionPointText: function () {
-			if (DecisionPoints.findOne(this.decisionPointId)) {
-				if (DecisionPoints.findOne().decisionPointType == 'UI') {
-					return "The decision point on which you are asked to work concerns the user interface of the simulator. That is, you will need to design the visual elements and interaction that the user has with the program for that decision point."
-				} else {
-					return "The decision point on which you are asked to work concerns the implementation of the simulator. That is, you will need to design the classes and interfaces that the programmer will need to implement for that decision point."
-				}
-			}
 		}
+		//decisionPointText: function () {
+		//	if (DecisionPoints.findOne(this.decisionPointId)) {
+		//		if (DecisionPoints.findOne().decisionPointType == 'UI') {
+		//			return "The decision point on which you are asked to work concerns the user interface of the simulator. That is, you will need to design the visual elements and interaction that the user has with the program for that decision point."
+		//		} else {
+		//			return "The decision point on which you are asked to work concerns the implementation of the simulator. That is, you will need to design the classes and interfaces that the programmer will need to implement for that decision point."
+		//		}
+		//	}
+		//}
 	});
+
 
 	Template.tool.events({
 		"change input[name=quitReason]": function () {
@@ -249,11 +216,11 @@ if (Meteor.isClient) {
 			var reason = $("#quitForm input[name=quitReason]:checked").val()
 			var feedback = $("#quitText").val();
 
-			Meteor.call("submitQuitSurvey", Session.get("ticket"), reason, feedback, function(e, r) {
+			Meteor.call("submitQuitSurvey", Session.get("ticket"), reason, feedback, function (e, r) {
 				if (!e) {
 					// set workerticket
 					// nav away
-					Meteor.call("setTicketFlagQuit", Session.get("ticket"), function(e, r) {
+					Meteor.call("setTicketFlagQuit", Session.get("ticket"), function (e, r) {
 						if (!e) {
 							$('#quitModal').on('hidden.bs.modal', function () {
 								window.location.href = 'http://www.google.com'; // TODO: take to thank you page
@@ -264,18 +231,39 @@ if (Meteor.isClient) {
 			});
 
 		},
+		"click #quitRequest": function () {
+			hideAllTooltips();
+		},
+		"click #infoRequest": function () {
+			hideAllTooltips();
+		},
 		"click #tutorialRequest": function () {
+			hideAllTooltips();
 			introJs().setOptions({
 				"scrollToElement": true,
 				"showStepNumbers": false,
 				"showProgress": true,
 				"showBullets": false,
 				"exitOnOverlayClick": false,
+				"disableInteraction": true,
 				steps: tutorialSteps
 			}).start();
-		},
 
+
+			$(".introjs-tooltiptext").css("text-align", "center");
+		},
+		"click #tipsRequest": function () {
+
+			$('[data-toggle="tooltip"]').tooltip('toggle');
+			$('#tutorialRequest').toggle();
+
+			// TODO: Tooltip isn't finding the help button in the toolbar correctly
+
+
+		},
 		"click #finishConfirm": function () {
+
+
 			$('#finishModal').on('hidden.bs.modal', function () {
 				Meteor.call("setTicketFlagSubmitted", Session.get("ticket"), function (e, r) {
 					if (!e) {
@@ -302,8 +290,24 @@ if (Meteor.isClient) {
 		}
 	});
 
+	Template.decisionPointInformationPanel.rendered = function () {
+		introJs().setOptions({
+			"scrollToElement": true,
+			"showStepNumbers": false,
+			"showProgress": true,
+			"showBullets": false,
+			"exitOnOverlayClick": false,
+			"disableInteraction": true,
+			"skipLabel": "",
+			steps: tutorialSteps
+		}).start();
+
+		$(".introjs-tooltiptext").css("text-align", "center");
+	};
+
 	Template.decisionPointInformationPanel.events({
 		"click #finishRequest": function () {
+			hideAllTooltips();
 			Session.set("shouldGenerateReviews", true);
 
 			function completedTextFieldsForUsedSketches() {
@@ -325,11 +329,11 @@ if (Meteor.isClient) {
 				$('#finishModal').modal('show');
 			} else {
 				var n = noty({
-					text: 'One or more of the sketches you made is missing a name or an explanation! Fill it in and try again :)',
+					text: 'One or more of your sketches are missing a name or an explanation! Please provide the missing text and try again',
 					layout: 'topLeft',
 					theme: 'relax', // or 'relax'
 					type: 'warning',
-					timeout: 6500,
+					timeout: 10000,
 					animation: {
 						open: 'animated bounceInLeft', // Animate.css class names
 						close: 'animated bounceOutLeft', // Animate.css class names
@@ -337,9 +341,32 @@ if (Meteor.isClient) {
 						speed: 500 // unavailable - no need
 					}
 				});
+				if (Session.get("hasBeenWarned")){
+					var n = noty({
+						text: 'Solutions submitted without name and/or explanation will be rejected',
+						layout: 'topLeft',
+						theme: 'relax', // or 'relax'
+						type: 'warning',
+						timeout: 10000,
+						animation: {
+							open: 'animated bounceInLeft', // Animate.css class names
+							close: 'animated bounceOutLeft', // Animate.css class names
+							easing: 'swing', // unavailable - no need
+							speed: 500 // unavailable - no need
+						}
+					});
+					$('#finishModal').modal('show');
+				}
+				Session.set("hasBeenWarned", true);
 			}
 		}
 	});
+
+	// GLOBAL HELPER METHODS
+	hideAllTooltips = function () {
+		$('[data-toggle="tooltip"]').tooltip('hide');
+		$('#tutorialRequest').toggle(false);
+	};
 }
 ;
 
