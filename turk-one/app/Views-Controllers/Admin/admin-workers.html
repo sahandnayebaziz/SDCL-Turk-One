@@ -94,7 +94,7 @@
 
 <template name="worker">
 	{{> adminNav}}
-	<div class="container-fluid top-buffer-50">
+	<div class="container-fluid top-buffer-50 bottom-buffer-100">
 		<div class="row">
 			<div class="col-xs-10 col-xs-offset-1">
 				<div class="row bottom-buffer-25">
@@ -176,7 +176,7 @@
 				<p><span class="text-muted">time spent name:</span> {{timeInName}}s</p>
 
 				<p><span class="text-muted">time spent explain:</span> {{timeInExplain}}s</p>
-				<canvas id="canvas-{{canvasNumber}}" class="canvas-sketch"></canvas>
+				{{> solutionVisualImage}}
 			</div>
 		</div>
 		{{#if ../submitted}}
@@ -191,20 +191,20 @@
 			</div>
 		{{/if}}
 
-		<script>
-			var canvasId = "canvas-" + {{canvasNumber}};
-			var element = $("#" + canvasId);
-			var canvasHeightShouldBe = 500;
-			var canvasWidthShouldBe = $("#col-sketch").width() - 50;
-			$(element).attr({"height": canvasHeightShouldBe, "width": canvasWidthShouldBe});
+		<!--<script>-->
+			<!--var canvasId = "canvas-" + {{canvasNumber}};-->
+			<!--var element = $("#" + canvasId);-->
+			<!--var canvasHeightShouldBe = 500;-->
+			<!--var canvasWidthShouldBe = $("#col-sketch").width() - 50;-->
+			<!--$(element).attr({"height": canvasHeightShouldBe, "width": canvasWidthShouldBe});-->
 
-			var canvas = new fabric.Canvas(canvasId);
-			canvas.loadFromJSON({{state}}).renderAll();
-			canvas.selection = false;
-			canvas.forEachObject(function (o) {
-				o.selectable = false;
-			});
+			<!--var canvas = new fabric.Canvas(canvasId);-->
+			<!--canvas.loadFromJSON({{state}}).renderAll();-->
+			<!--canvas.selection = false;-->
+			<!--canvas.forEachObject(function (o) {-->
+				<!--o.selectable = false;-->
+			<!--});-->
 
-		</script>
+		<!--</script>-->
 	</li>
 </template>
