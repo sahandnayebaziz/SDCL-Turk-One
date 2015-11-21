@@ -52,6 +52,14 @@ body {
     margin-bottom: 25px;
 }
 
+.top-buffer-10 {
+    margin-top: 10px;
+}
+
+.bottom-buffer-10 {
+    margin-bottom: 10px;
+}
+
 .center {
     float:none;
     margin: 0 auto;
