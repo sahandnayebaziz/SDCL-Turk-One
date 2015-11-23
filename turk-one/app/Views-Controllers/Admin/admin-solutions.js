@@ -67,9 +67,4 @@ if (Meteor.isClient) {
 		idForNewCanvas = null;
 		imageElement = null;
 	});
-	Template.decisionPreview.events({
-		"click .delete": function () {
-			Meteor.call("deleteDecisionPoint", this._id);
-		}
-	});
 }

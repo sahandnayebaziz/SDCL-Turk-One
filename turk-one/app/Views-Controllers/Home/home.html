@@ -24,6 +24,7 @@
 		var v = new Date();
 		if (Session.get("ticketedFor" + w)) {
 			Session.setPersistent("ticket", Session.get("ticketedFor" + w));
+			Session.setPersistent("decisionPoint", d);
 			console.log("ticket exists and was set");
 		} else {
 			Meteor.call("createWorkerTicketId", w, s, d, v, function(e, r){
@@ -32,6 +33,7 @@
 				} else {
 					// examine result
 					Session.setPersistent("ticket", r);
+					Session.setPersistent("decisionPoint", d);
 					Session.setPersistent("ticketedFor" + w, r);
 					Session.setPersistent("tutorialDone", false);
 					Session.setPersistent("tipsToggled", false);

@@ -27,11 +27,6 @@
     border-right-color: rgb(134, 76, 0)!IMPORTANT;
 }
 
-
-.container-tool {
-    margin-top: 60px;
-}
-
 .canvasContainer {
     opacity: 0.4;
     transition: opacity .13s ease-out;

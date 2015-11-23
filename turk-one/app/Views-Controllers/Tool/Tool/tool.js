@@ -1,11 +1,29 @@
 /**
  * Created by sahand on 10/7/15.
  */
+//Send an alert to the user
+notify = function(text, type){
+	var n = noty({
+		text: text,
+		layout: 'topRight',
+		theme: 'relax', // or 'relax'
+		type: type,
+		timeout: 2500,
+		animation: {
+			open: 'animated bounceInRight', // Animate.css class names
+			close: 'animated bounceOutRight', // Animate.css class names
+			easing: 'swing', // unavailable - no need
+			speed: 500 // unavailable - no need
+		}
+	});
+};
+
 if (Meteor.isServer) {
 	Meteor.methods({
-		createSolution: function (ticket, canvasNumber) {
+		createSolution: function (ticket, canvasNumber, decisionPointId) {
 			var newDoc = Solutions.insert({
 				workerId: ticket,
+				decisionPointId: decisionPointId,
 				state: "{\"objects\":[],\"background\":\"white\"}",
 				createdAt: new Date(),
 				dateUpdated: new Date(),
@@ -154,7 +172,7 @@ if (Meteor.isClient) {
 
 
 	Template.tool.helpers({
-		shouldShow: function () {
+		allowedToContinueWorking: function () {
 			return !this.submitted && !this.quit;
 		},
 		workerTicket: function () {
@@ -190,11 +208,9 @@ if (Meteor.isClient) {
 			function isCanvasComplex(canvas) {
 				return canvas._objects.length > 0;
 			}
-
 			return canvases.filter(isCanvasComplex).length;
 		}
 	});
-
 
 	Template.tool.events({
 		"change input[name=quitReason]": function () {
@@ -278,78 +294,6 @@ if (Meteor.isClient) {
 		},
 		"click #finishCancel": function () {
 			Session.set("shouldGenerateReviews", false);
-		}
-	});
-
-	Template.decisionPointInformationPanel.rendered = function () {
-		introJs().setOptions({
-			"scrollToElement": true,
-			"showStepNumbers": false,
-			"showProgress": true,
-			"showBullets": false,
-			"exitOnOverlayClick": false,
-			"disableInteraction": true,
-			"skipLabel": "",
-			steps: tutorialSteps
-		}).start();
-
-		$(".introjs-tooltiptext").css("text-align", "center");
-	};
-
-	Template.decisionPointInformationPanel.events({
-		"click #finishRequest": function () {
-			hideAllTooltips();
-			Session.set("shouldGenerateReviews", true);
-
-			function completedTextFieldsForUsedSketches() {
-				var allFieldsAreFilled = true;
-				$.each(canvases, function () {
-					var canvasNumber = this.CDIndex;
-					if (this._objects.length > 0) {
-						var nameForThisCanvas = $("#name-" + canvasNumber);
-						var explainForThisCanvas = $("#explain-" + canvasNumber);
-						if (nameForThisCanvas.val() == "" || explainForThisCanvas.val() == "") {
-							allFieldsAreFilled = false;
-						}
-					}
-				});
-				return allFieldsAreFilled;
-			}
-
-			if (completedTextFieldsForUsedSketches()) {
-				$('#finishModal').modal('show');
-			} else {
-				var n = noty({
-					text: 'One or more of your sketches are missing a name or an explanation! Please provide the missing text and try again',
-					layout: 'topLeft',
-					theme: 'relax', // or 'relax'
-					type: 'warning',
-					timeout: 10000,
-					animation: {
-						open: 'animated bounceInLeft', // Animate.css class names
-						close: 'animated bounceOutLeft', // Animate.css class names
-						easing: 'swing', // unavailable - no need
-						speed: 500 // unavailable - no need
-					}
-				});
-				if (Session.get("hasBeenWarned")){
-					var n = noty({
-						text: 'Solutions submitted without name and/or explanation will be rejected',
-						layout: 'topLeft',
-						theme: 'relax', // or 'relax'
-						type: 'warning',
-						timeout: 10000,
-						animation: {
-							open: 'animated bounceInLeft', // Animate.css class names
-							close: 'animated bounceOutLeft', // Animate.css class names
-							easing: 'swing', // unavailable - no need
-							speed: 500 // unavailable - no need
-						}
-					});
-					$('#finishModal').modal('show');
-				}
-				Session.set("hasBeenWarned", true);
-			}
 		}
 	});
 
