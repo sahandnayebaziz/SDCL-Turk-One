@@ -2,7 +2,7 @@
  * Created by sahand on 10/7/15.
  */
 //Send an alert to the user
-notify = function(text, type){
+notify = function (text, type) {
 	var n = noty({
 		text: text,
 		layout: 'topRight',
@@ -158,7 +158,7 @@ if (Meteor.isClient) {
 			position: 'bottom-middle-aligned'
 		},
 		{
-			element: '#intro2',
+			element: '#toolView2',
 			intro: "Sketch and explain your ideas in these 5 different canvasses and text fields. We are looking for high level sketches, like you would make on a whiteboard. Your sketches can be simple. However, try to make sketches that help others to understand your solutions",
 			position: 'bottom-middle-aligned',
 
@@ -208,10 +208,13 @@ if (Meteor.isClient) {
 			function isCanvasComplex(canvas) {
 				return canvas._objects.length > 0;
 			}
+
 			return canvases.filter(isCanvasComplex).length;
+		},
+		sizeClassIsLarge: function (toolViewNumber) {
+			return Session.get("sizeClassIsLargeForToolView" + toolViewNumber);
 		}
 	});
-
 	Template.tool.events({
 		"change input[name=quitReason]": function () {
 			$("#quitSubmit").removeClass("disabled");
@@ -294,7 +297,31 @@ if (Meteor.isClient) {
 		},
 		"click #finishCancel": function () {
 			Session.set("shouldGenerateReviews", false);
+		},
+		"click #sizeClassSwitch": function () {
+			var toolView1 = $("#toolView1");
+			var toolView2 = $("#toolView2");
+
+			toolView1.toggleClass('col-lg-3 col-lg-9');
+			toolView2.toggleClass('col-lg-9 col-lg-offset-3 col-lg-3 col-lg-offset-9');
+
+			$("#sizeClassInnerElementLeft").toggleClass('sizeClassInnerElementSmall sizeClassInnerElementLarge');
+			$("#sizeClassInnerElementRight").toggleClass('sizeClassInnerElementSmall sizeClassInnerElementLarge');
+
+			toolView1.one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",
+				function () {
+					Session.set("sizeClassIsLargeForToolView" + 1, toolView1.hasClass('col-lg-9'));
+				});
+
+			toolView2.one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",
+				function (event) {
+					Session.set("sizeClassIsLargeForToolView" + 2, toolView2.hasClass('col-lg-9'));
+				});
 		}
+	});
+	Template.tool.onRendered(function () {
+		Session.set("sizeClassIsLargeForToolView" + 1, false);
+		Session.set("sizeClassIsLargeForToolView" + 2, true);
 	});
 
 	// GLOBAL HELPER METHODS

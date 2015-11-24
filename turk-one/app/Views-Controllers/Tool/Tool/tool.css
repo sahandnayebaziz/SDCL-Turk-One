@@ -1,30 +1,92 @@
-#dpBlock {
+/*enable animation of columns*/
+#toolView1, #toolView2 {
     min-height: 100px;
+    z-index: 1;
+}
+
+.row div {
+    /*min-height: 100px;*/
+    -webkit-transition: width 0.69s ease, margin 0.69s ease;
+    -moz-transition: width 0.69s ease, margin 0.69s ease;
+    -o-transition: width 0.69s ease, margin 0.69s ease;
+    transition: width 0.69s ease, margin 0.69s ease;
 }
 
 .tooltip-inner {
-    border: solid 1px rgba(0, 0, 0, 0.22)!IMPORTANT;
-    background-color: rgb(254, 242, 0)!IMPORTANT;
-    color: rgb(134, 76, 0)!IMPORTANT;
+    border: solid 1px rgba(0, 0, 0, 0.22) !IMPORTANT;
+    background-color: rgb(254, 242, 0) !IMPORTANT;
+    color: rgb(134, 76, 0) !IMPORTANT;
     max-width: 320px;
     /* width: 350px; */
-    opacity: 1!IMPORTANT;
+    opacity: 1 !IMPORTANT;
+}
+
+#sizeClassSwitchContainer {
+    z-index: 2;
+    background-color: rgba(242, 242, 242, 0.93);
+    /*background-color: pink;*/
+    position: fixed;
+    top: 0px;
+    min-height: 50px !IMPORTANT;
+}
+
+#sizeClassSwitch {
+    z-index: 2;
+    width: 44px !IMPORTANT;
+    height: 30px !IMPORTANT;
+    background-color: rgba(0, 0, 0, 0.2);
+    position: fixed;
+    margin-top: 10px;
+    margin-left: calc(50% - 22px);
+    border-radius: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    cursor: pointer;
+}
+
+.sizeClassInnerElement {
+    display: block;
+    height: 22px;
+    float: left;
+    margin-top: 4px;
+    border-radius: 4px;
+    -webkit-transition: width 0.69s ease, margin 0.69s ease;
+    -moz-transition: width 0.69s ease, margin 0.69s ease;
+    -o-transition: width 0.69s ease, margin 0.69s ease;
+    transition: width 0.69s ease, margin 0.69s ease;
+}
+
+#sizeClassInnerElementLeft {
+    background-color: #F2F2F2;
+    margin-right: 3px;
+}
+
+#sizeClassInnerElementRight {
+    background-color: #F2F2F2;
+}
+
+.sizeClassInnerElementLarge {
+    width: 22px;
+}
+
+.sizeClassInnerElementSmall {
+    width: 10px;
 }
 
 .tooltip.bs-tether-element-attached-bottom .tooltip-arrow {
-    border-top-color: rgb(134, 76, 0)!IMPORTANT;
+    border-top-color: rgb(134, 76, 0) !IMPORTANT;
 }
 
 .tooltip.bs-tether-element-attached-top .tooltip-arrow {
-    border-bottom-color: rgb(134, 76, 0)!IMPORTANT;
+    border-bottom-color: rgb(134, 76, 0) !IMPORTANT;
 }
 
 .tooltip.bs-tether-element-attached-right .tooltip-arrow {
-    border-left-color: rgb(134, 76, 0)!IMPORTANT;
+    border-left-color: rgb(134, 76, 0) !IMPORTANT;
 }
 
 .tooltip.bs-tether-element-attached-left .tooltip-arrow {
-    border-right-color: rgb(134, 76, 0)!IMPORTANT;
+    border-right-color: rgb(134, 76, 0) !IMPORTANT;
 }
 
 .canvasContainer {

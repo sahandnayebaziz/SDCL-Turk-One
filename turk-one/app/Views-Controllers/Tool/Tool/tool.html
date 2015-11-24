@@ -2,44 +2,62 @@
 
 	{{#if allowedToContinueWorking}}
 		<div class="container-fluid">
+			<div class="row fixed top-buffer-25">
+				<div id="sizeClassSwitchContainer" class="col-xs-12">
+					<!--<img id="sizeClassSwitch" class="img img-responsive center-block" src="/sizeClass1.png">-->
+					<span id="sizeClassSwitch" class="center-block">
+						<span id="sizeClassInnerElementLeft" class="sizeClassInnerElement sizeClassInnerElementSmall"></span>
+						<span id="sizeClassInnerElementRight" class="sizeClassInnerElement sizeClassInnerElementLarge"></span>
+					</span>
+				</div>
+			</div>
 			<div class="row top-buffer-50 bottom-buffer-50">
-				<div id="dpBlock" class="col-md-12 col-lg-4 col-xl-5 md-fixed overflow">
+				<div id="toolView1" class="col-md-12 col-lg-3 md-fixed overflow">
 					{{#with decisionPoint}}
 						{{>decisionPointInformationPanel}}
 					{{/with}}
 				</div>
-				<div class="col-md-12 col-lg-8 col-lg-offset-4 col-xl-7 col-xl-offset-5 bottom-buffer-100" id="intro2">
+				<div id="toolView2" class="col-md-12 col-lg-9 col-lg-offset-3 bottom-buffer-100">
 					<div class="row">
-						<div class="col-lg-1 col-md-12">
-							{{> toolbar}}
-						</div>
-						<div class="col-lg-11 animated fadeIn" id="col-sketch">
-
-							{{#if hasAtLeastOneSolution}}
-								{{#each solutions}}
-									{{> solutionCanvas}}
-								{{/each}}
-							{{else}}
-								<div class="row top-buffer-100">
-									<div class="col-xs-12 text-center center-block">
-										<div class="sk-spinner sk-spinner-cube-grid">
-											<div class="sk-cube"></div>
-											<div class="sk-cube"></div>
-											<div class="sk-cube"></div>
-											<div class="sk-cube"></div>
-											<div class="sk-cube"></div>
-											<div class="sk-cube"></div>
-											<div class="sk-cube"></div>
-											<div class="sk-cube"></div>
-											<div class="sk-cube"></div>
+						{{#if sizeClassIsLarge 2}}
+							<div class="col-lg-1 col-md-12">
+								{{> toolbar}}
+							</div>
+							<div class="col-lg-11 animated fadeIn" id="col-sketch">
+								{{#if hasAtLeastOneSolution}}
+									{{#each solutions}}
+										{{> solutionCanvas}}
+									{{/each}}
+								{{else}}
+									<div class="row top-buffer-100">
+										<div class="col-xs-12 text-center center-block">
+											<div class="sk-spinner sk-spinner-cube-grid">
+												<div class="sk-cube"></div>
+												<div class="sk-cube"></div>
+												<div class="sk-cube"></div>
+												<div class="sk-cube"></div>
+												<div class="sk-cube"></div>
+												<div class="sk-cube"></div>
+												<div class="sk-cube"></div>
+												<div class="sk-cube"></div>
+												<div class="sk-cube"></div>
+											</div>
+											<p class="lead top-buffer-50">Loading your canvases...</p>
 										</div>
-										<p class="lead top-buffer-50">Loading your canvases...</p>
+									</div>
+								{{/if}}
+							</div>
+						{{else}}
+							{{#if hasAtLeastOneSolution}}
+								<div class="row">
+									<div class="col-xs-10 col-xs-offset-1">
+										{{#each solutions}}
+											{{> solutionVisualImage}}
+										{{/each}}
 									</div>
 								</div>
-
 							{{/if}}
-
-						</div>
+						{{/if}}
 					</div>
 				</div>
 			</div>
