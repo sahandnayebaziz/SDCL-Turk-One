@@ -539,11 +539,9 @@
 
 			$.each($(".canvasContainer"), function () {
 				if (parseInt($(this).attr("data-cdindex")) == index) {
-					$(this).removeClass("unfocusedCanvas");
 					$(this).addClass("focusedCanvas");
 				} else {
 					$(this).removeClass("focusedCanvas");
-					$(this).addClass("unfocusedCanvas");
 				}
 			});
 

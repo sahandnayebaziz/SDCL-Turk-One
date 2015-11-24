@@ -150,6 +150,7 @@ if (Meteor.isClient) {
 
 	Meteor.subscribe("solutions");
 	Meteor.subscribe("decisionPoints");
+	Meteor.subscribe("configurations");
 
 	tutorialSteps = [
 		{
@@ -213,6 +214,15 @@ if (Meteor.isClient) {
 		},
 		sizeClassIsLarge: function (toolViewNumber) {
 			return Session.get("sizeClassIsLargeForToolView" + toolViewNumber);
+		},
+		allowShowingOthersWork: function () {
+			if (Configurations.findOne(1)) {
+				var mainConfiguration = Configurations.findOne(1);
+				return mainConfiguration.shouldShowOthersWork
+			}
+		},
+		showingOthersWork: function () {
+			return Session.get("showingOthersWork") == true;
 		}
 	});
 	Template.tool.events({
@@ -302,21 +312,21 @@ if (Meteor.isClient) {
 			var toolView1 = $("#toolView1");
 			var toolView2 = $("#toolView2");
 
-			toolView1.toggleClass('col-lg-3 col-lg-9');
-			toolView2.toggleClass('col-lg-9 col-lg-offset-3 col-lg-3 col-lg-offset-9');
+			toolView1.one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",
+					function () {
+						Session.set("sizeClassIsLargeForToolView" + 1, toolView1.hasClass('col-lg-9'));
+					});
+
+			toolView2.one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",
+					function (event) {
+						Session.set("sizeClassIsLargeForToolView" + 2, toolView2.hasClass('col-lg-9'));
+					});
 
 			$("#sizeClassInnerElementLeft").toggleClass('sizeClassInnerElementSmall sizeClassInnerElementLarge');
 			$("#sizeClassInnerElementRight").toggleClass('sizeClassInnerElementSmall sizeClassInnerElementLarge');
 
-			toolView1.one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",
-				function () {
-					Session.set("sizeClassIsLargeForToolView" + 1, toolView1.hasClass('col-lg-9'));
-				});
-
-			toolView2.one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",
-				function (event) {
-					Session.set("sizeClassIsLargeForToolView" + 2, toolView2.hasClass('col-lg-9'));
-				});
+			toolView1.toggleClass('col-lg-3 col-lg-9');
+			toolView2.toggleClass('col-lg-9 col-lg-offset-3 col-lg-3 col-lg-offset-9');
 		}
 	});
 	Template.tool.onRendered(function () {

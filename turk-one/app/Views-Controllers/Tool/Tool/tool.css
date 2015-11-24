@@ -89,9 +89,12 @@
     border-right-color: rgb(134, 76, 0) !IMPORTANT;
 }
 
+.canvasContainer, .canvasContainer.focusedCanvas {
+    transition: opacity .13s ease-out;
+}
+
 .canvasContainer {
     opacity: 0.4;
-    transition: opacity .13s ease-out;
 }
 
 .canvasContainer.focusedCanvas {

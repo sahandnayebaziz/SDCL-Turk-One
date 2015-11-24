@@ -1,0 +1,19 @@
+<template name="othersWorkImages">
+	<div class="row">
+		<div class="col-xs-10 col-xs-offset-1">
+			{{#each otherSolutions}}
+				{{> solutionVisualImage}}
+			{{/each}}
+		</div>
+	</div>
+</template>
+
+<template name="othersWorkInteractive">
+	<div class="row">
+		<div class="col-xs-10 col-xs-offset-1">
+			{{#each otherSolutions}}
+				{{> solutionVisualLocked}}
+			{{/each}}
+		</div>
+	</div>
+</template>

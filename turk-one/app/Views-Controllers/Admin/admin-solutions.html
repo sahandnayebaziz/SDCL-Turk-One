@@ -72,28 +72,5 @@
 
 </template>
 
-<template name="solutionVisual">
-	<div class="row bottom-buffer-100" style="height: 500px;">
-		<div class="col-xs-12" id="col-sketch">
-			<canvas class="canvas-sketch" id="canvas{{_id}}"></canvas>
-			<script>
-				var idForNewCanvas = "canvas{{_id}}";
-				var element = $("#" + idForNewCanvas);
-				var canvas = new fabric.Canvas(idForNewCanvas);
-				var canvasHeightShouldBe = 500;
-				var canvasWidthShouldBe = $("#col-sketch").width();
-				$(element).attr({"height": canvasHeightShouldBe, "width": canvasWidthShouldBe});
 
-				var canvas = new fabric.Canvas(idForNewCanvas);
-				canvas.isDrawingMode = false;
-				canvas.setBackgroundColor("white").renderAll();
-				canvas.loadFromJSON({{state}}, canvas.renderAll.bind(canvas));
-				canvas.selection = false;
-				canvas.forEachObject(function (o) {
-					o.selectable = false;
-				});
-			</script>
-		</div>
-	</div>
-</template>
 

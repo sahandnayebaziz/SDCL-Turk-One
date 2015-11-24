@@ -19,18 +19,6 @@ if (Meteor.isClient) {
 		Session.set("showingOthersWork", false);
 	};
 
-	Template.decisionPointInformationPanel.helpers({
-		allowShowingOthersWork: function () {
-			if (Configurations.findOne(1)) {
-				var mainConfiguration = Configurations.findOne(1);
-				return mainConfiguration.shouldShowOthersWork
-			}
-		},
-		showingOthersWork: function () {
-			return Session.get("showingOthersWork") == true;
-		}
-	});
-
 	Template.decisionPointInformationPanel.events({
 		"click #finishRequest": function () {
 			hideAllTooltips();
@@ -88,20 +76,6 @@ if (Meteor.isClient) {
 		},
 		"click #requestShowOthersWork": function () {
 			Session.set("showingOthersWork", !Session.get("showingOthersWork"));
-		}
-	});
-
-	Template.othersWork.helpers({
-		// TODO: Turn this helper and the solutions helper on tool into smaller, more specified subscribes instead of subscribes to all of the Solutions collection
-		otherSolutions: function () {
-			return Solutions.find({
-					decisionPointId: Session.get("decisionPoint"),
-					complexity: {$gt: 1},
-					workerId: {$ne: Session.get("ticket")},
-				},
-				{
-					sort: {dateUpdated: -1}
-				});
 		}
 	});
 }
