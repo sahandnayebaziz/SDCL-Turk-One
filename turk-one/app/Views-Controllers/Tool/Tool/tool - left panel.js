@@ -3,18 +3,18 @@
  */
 if (Meteor.isClient) {
 	Template.decisionPointInformationPanel.rendered = function () {
-			//introJs().setOptions({
-			//	"scrollToElement": true,
-			//	"showStepNumbers": false,
-			//	"showProgress": true,
-			//	"showBullets": false,
-			//	"exitOnOverlayClick": false,
-			//	"disableInteraction": true,
-			//	"skipLabel": "",
-			//	steps: tutorialSteps
-			//}).start();
-			//
-			//$(".introjs-tooltiptext").css("text-align", "center");
+		//introJs().setOptions({
+		//	"scrollToElement": true,
+		//	"showStepNumbers": false,
+		//	"showProgress": true,
+		//	"showBullets": false,
+		//	"exitOnOverlayClick": false,
+		//	"disableInteraction": true,
+		//	"skipLabel": "",
+		//	steps: tutorialSteps
+		//}).start();
+
+		$(".introjs-tooltiptext").css("text-align", "center");
 
 		Session.set("showingOthersWork", false);
 	};

@@ -320,6 +320,123 @@ if (Meteor.isClient) {
 		}
 	});
 	Template.tool.onRendered(function () {
+		//TODO: BRING THESE STOP WATCHES BACK TO TOOL!
+		// initialize stopwatch arrays
+		interactionStopwatches = [];
+		locationStopwatches = [];
+		readingStopwatches = []; // these have a higher tolerance for inactivity (160 seconds instead of 10)
+
+		// functions that operate on stopwatches in those arrays
+		function resetInteractionTimers() {
+			$.each(interactionStopwatches, function () {
+				this.reset();
+			});
+		}
+		function resetLocationTimers() {
+			$.each(locationStopwatches, function () {
+				this.reset();
+			});
+		}
+		function resetReadingTimers() {
+			$.each(readingStopwatches, function () {
+				this.reset();
+			});
+		}
+		function activateLocationTimers() {
+			$.each(locationStopwatches, function () {
+				this.start();
+			});
+		}
+
+		// stopwatch running for canvas with focus
+		stopwatchWithFocus = null;
+
+		// stopwatch running for total time on tools page
+		pageStopwatch = new Stopwatch();
+		locationStopwatches.push(pageStopwatch);
+		pageStopwatch.start();
+
+		// stopwatch that will run when writing a name
+		typingTimerName = new Stopwatch();
+		interactionStopwatches.push(typingTimerName);
+
+		// stopwatch that will run when writing an explanation
+		typingTimerExplanation = new Stopwatch();
+		interactionStopwatches.push(typingTimerExplanation);
+
+		// initialize idle timers
+		idleTime = 0;
+		var idleInterval = setInterval(timerIncrement, 1000); // every second
+		$(this).mousemove(function (e) {
+			idleTime = 0;
+		}); // reset the timer
+		$(this).keypress(function (e) {
+			idleTime = 0;
+		});  // reset the timer
+		function timerIncrement() {
+			idleTime = idleTime + 1;
+			if (idleTime <= 10) {
+				activateLocationTimers();
+			}
+			if (idleTime > 10) { // after ten seconds
+				resetInteractionTimers();
+				resetLocationTimers();
+			}
+			if (idleTime > 160) { // after 2 minutes
+				resetReadingTimers();
+			}
+		}
+
+		// set up for canvases
+		// this array will hold references to each Fabric canvas instance, and is looped through in the below toolbar
+		// actions to 'broadcast' the toolbar selects across the canvases
+		canvases = [];
+
+		// focusedCanvas
+		canvasWithFocus = null;
+
+		// used for maintaing sanity while drawing straight or free-form lines
+		isDrawing = false;
+
+		// state object for undo/redo stacks
+		canvasHistory = {};
+
+		// focusedText?
+		focusedText = false;
+
+		// timer hooks for modals
+		infoModalStopwatch = new Stopwatch();
+		readingStopwatches.push(infoModalStopwatch);
+
+		$("#infoModal").on('shown.bs.modal', function () {
+			infoModalStopwatch.start();
+		});
+
+		$("#infoModal").on('hide.bs.modal', function () {
+			infoModalStopwatch.stop();
+			Meteor.call("updateInfoModalTime", Session.get("ticket"), infoModalStopwatch.getElapsed().seconds);
+			infoModalStopwatch.reset();
+		});
+
+		// create persistent objects in database for these sketches
+		function createSolutionIfNotExits(canvasNumber, ticket, decisionPoint) {
+			if (Session.get("insertedSolutionFor" + ticket + canvasNumber)) {
+			} else {
+				Meteor.call("createSolution", ticket, canvasNumber, decisionPoint, function (e, r) {
+					if (!e) {
+						Session.setPersistent("objectId" + ticket + canvasNumber, r);
+						Session.setPersistent("insertedSolutionFor" + ticket + canvasNumber, "true");
+					}
+				})
+			}
+		}
+
+		createSolutionIfNotExits(1, Session.get("ticket"), Session.get("decisionPoint"));
+		createSolutionIfNotExits(2, Session.get("ticket"), Session.get("decisionPoint"));
+		createSolutionIfNotExits(3, Session.get("ticket"), Session.get("decisionPoint"));
+		createSolutionIfNotExits(4, Session.get("ticket"), Session.get("decisionPoint"));
+		createSolutionIfNotExits(5, Session.get("ticket"), Session.get("decisionPoint"));
+
 		Session.set("sizeClassIsLargeForToolView" + 1, false);
 		Session.set("sizeClassIsLargeForToolView" + 2, true);
 	});

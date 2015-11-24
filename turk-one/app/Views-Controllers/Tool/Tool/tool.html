@@ -23,7 +23,7 @@
 							<div class="col-lg-1 col-md-12">
 								{{> toolbar}}
 							</div>
-							<div class="col-lg-11 animated fadeIn" id="col-sketch">
+							<div class="col-lg-11" id="col-sketch">
 								{{#if hasAtLeastOneSolution}}
 									{{#each solutions}}
 										{{> solutionCanvas}}
@@ -235,41 +235,6 @@
 			</div>
 		</div>
 
-		<script>
-			// timer hooks for modals
-			infoModalStopwatch = new Stopwatch();
-			readingStopwatches.push(infoModalStopwatch);
-
-			$("#infoModal").on('shown.bs.modal', function () {
-				infoModalStopwatch.start();
-			});
-
-			$("#infoModal").on('hide.bs.modal', function () {
-				infoModalStopwatch.stop();
-				Meteor.call("updateInfoModalTime", Session.get("ticket"), infoModalStopwatch.getElapsed().seconds);
-				infoModalStopwatch.reset();
-			});
-
-			// create persistent objects in database for these sketches
-			function createSolutionIfNotExits(canvasNumber, ticket, decisionPoint) {
-				if (Session.get("insertedSolutionFor" + ticket + canvasNumber)) {
-				} else {
-					Meteor.call("createSolution", ticket, canvasNumber, decisionPoint, function (e, r) {
-						if (!e) {
-							Session.setPersistent("objectId" + ticket + canvasNumber, r);
-							Session.setPersistent("insertedSolutionFor" + ticket + canvasNumber, "true");
-						}
-					})
-				}
-			}
-
-			createSolutionIfNotExits(1, Session.get("ticket"), Session.get("decisionPoint"));
-			createSolutionIfNotExits(2, Session.get("ticket"), Session.get("decisionPoint"));
-			createSolutionIfNotExits(3, Session.get("ticket"), Session.get("decisionPoint"));
-			createSolutionIfNotExits(4, Session.get("ticket"), Session.get("decisionPoint"));
-			createSolutionIfNotExits(5, Session.get("ticket"), Session.get("decisionPoint"));
-
-		</script>
 	{{else}}
 		{{#if quit}}
 			<div class="container">

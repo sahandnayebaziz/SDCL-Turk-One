@@ -1,113 +1,102 @@
 <template name="decisionPointInformationPanel">
-	{{#if allowShowingOthersWork}}
-		<div class="row animated fadeIn bottom-buffer-50">
-			<div class="col-md-12 col-lg-10 col-lg-offset-1">
-				<button id="requestShowOthersWork" class="btn btn-default btn-highlight btn-block btn-continue">Show other's
-					work
-				</button>
-			</div>
-		</div>
-	{{/if}}
-	{{#if showingOthersWork}}
-		{{> othersWork}}
-	{{else}}
-		<div class="row animated fadeIn" id="intro1">
-			<div class="col-md-12 col-lg-10 col-lg-offset-1">
-				<div class="row">
-					<div class="col-xs-12">
+	<div class="row animated fadeIn" id="intro1">
+		<div class="col-md-12 col-lg-10 col-lg-offset-1">
+			<div class="row">
+				<div class="col-xs-12">
 					<span id="toolDP" data-placement="bottom" title="The problem you are trying to solve" data-trigger="manual"
 					      data-toggle="tooltip"><span>{{#markdown}}{{description}}{{/markdown}}</span><br></span>
+				</div>
+			</div>
+			<div id="intro3">
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="buttonMenu" role="group" aria-label="..." data-toggle="tooltip" data-placement="right"
+						     title="Submit, re-do tutorial, or quit HIT" data-trigger="manual">
+							<button id="finishRequest" class="btn btn-success btn-continue">REVIEW & SUBMIT</button>
+							<button id="tipsRequest" class="btn btn-warning btn-continue" data-toggle="tooltip">TIPS</button>
+							<button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-target="#infoModal">
+								TASK
+								INFO
+							</button>
+							<button id="quitRequest" class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">
+								QUIT
+							</button>
+						</div>
 					</div>
 				</div>
-				<div id="intro3">
-					<div class="row">
-						<div class="col-xs-12">
-							<div id="buttonMenu" role="group" aria-label="..." data-toggle="tooltip" data-placement="right"
-							     title="Submit, re-do tutorial, or quit HIT" data-trigger="manual">
-								<button id="finishRequest" class="btn btn-success btn-continue">REVIEW & SUBMIT</button>
-								<button id="tipsRequest" class="btn btn-warning btn-continue" data-toggle="tooltip">TIPS</button>
-								<button id="infoRequest" class="btn btn-info btn-continue" data-toggle="modal" data-target="#infoModal">
-									TASK
-									INFO
-								</button>
-								<button id="quitRequest" class="btn btn-danger btn-continue" data-toggle="modal" data-target="#quitModal">
-									QUIT
-								</button>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-xs-12">
-							<button id="tutorialRequest" class="btn btn-warning btn-continue top-buffer-50">TUTORIAL</button>
-						</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<button id="tutorialRequest" class="btn btn-warning btn-continue top-buffer-50">TUTORIAL</button>
 					</div>
 				</div>
 			</div>
+			{{#if allowShowingOthersWork}}
+				{{> othersWork}}
+			{{/if}}
 		</div>
-		<script>
-			//choose layout for menu based on screen size
+	</div>
+	<script>
+		//choose layout for menu based on screen size
+		if ($(window).width() > 991) {
+			//console.log($(window).width());
+			$('#buttonMenu').addClass('btn-group-vertical');
+		} else {
+			$('#buttonMenu').addClass('btn-group');
+		}
+
+		// puts the button menu in vertical on smaller screens
+		$(window).resize(function () {
 			if ($(window).width() > 991) {
-				//console.log($(window).width());
+				//console.log("width" +$(window).width());
+				//console.log("height" +$(window).height());
+				$('#buttonMenu').removeClass('btn-group');
 				$('#buttonMenu').addClass('btn-group-vertical');
+
 			} else {
 				$('#buttonMenu').addClass('btn-group');
+				$('#buttonMenu').removeClass('btn-group-vertical');
+				$('[data-toggle="tooltip"]').setAttribute("data-placement", "bottom");
 			}
+		});
 
-			// puts the button menu in vertical on smaller screens
-			$(window).resize(function () {
-				if ($(window).width() > 991) {
-					//console.log("width" +$(window).width());
-					//console.log("height" +$(window).height());
-					$('#buttonMenu').removeClass('btn-group');
-					$('#buttonMenu').addClass('btn-group-vertical');
-
-				} else {
-					$('#buttonMenu').addClass('btn-group');
-					$('#buttonMenu').removeClass('btn-group-vertical');
-					$('[data-toggle="tooltip"]').setAttribute("data-placement", "bottom");
-				}
+		//Google analytics
+		$("#finishRequest").click(function () {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Review and Finish',
+				eventLabel: Session.get("ticket")
 			});
+		});
 
-			//Google analytics
-			$("#finishRequest").click(function () {
-				ga('send', {
-					hitType: 'event',
-					eventCategory: 'Button',
-					eventAction: 'Review and Finish',
-					eventLabel: Session.get("ticket")
-				});
+		$("#quitRequest").click(function () {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Quit',
+				eventLabel: Session.get("ticket")
 			});
+		});
 
-			$("#quitRequest").click(function () {
-				ga('send', {
-					hitType: 'event',
-					eventCategory: 'Button',
-					eventAction: 'Quit',
-					eventLabel: Session.get("ticket")
-				});
+		$("#infoRequest").click(function () {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Info',
+				eventLabel: Session.get("ticket")
 			});
+		});
 
-			$("#infoRequest").click(function () {
-				ga('send', {
-					hitType: 'event',
-					eventCategory: 'Button',
-					eventAction: 'Info',
-					eventLabel: Session.get("ticket")
-				});
+		$("#tipsRequest").click(function () {
+			ga('send', {
+				hitType: 'event',
+				eventCategory: 'Button',
+				eventAction: 'Tutorial',
+				eventLabel: Session.get("ticket")
 			});
+		});
 
-			$("#tipsRequest").click(function () {
-				ga('send', {
-					hitType: 'event',
-					eventCategory: 'Button',
-					eventAction: 'Tutorial',
-					eventLabel: Session.get("ticket")
-				});
-			});
-
-		</script>
-	{{/if}}
-
+	</script>
 </template>
 
 <template name="othersWork">
