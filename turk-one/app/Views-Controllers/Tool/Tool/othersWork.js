@@ -29,4 +29,8 @@ if (Meteor.isClient) {
 				});
 		}
 	});
+
+	Template.othersWorkInteractive.onRendered(function(){
+
+	});
 }

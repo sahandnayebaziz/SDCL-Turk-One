@@ -8,12 +8,17 @@ if (Meteor.isClient) {
 		var canvas = new fabric.Canvas(idForNewCanvas);
 		var canvasHeightShouldBe = 500;
 		var canvasWidthShouldBe = $("#colsketch" + this.data._id).width();
-		console.log(canvasWidthShouldBe);
 		$(element).attr({"height": canvasHeightShouldBe, "width": canvasWidthShouldBe});
 
 		var canvas = new fabric.Canvas(idForNewCanvas);
 		canvas.isDrawingMode = false;
 		canvas.setBackgroundColor("white").renderAll();
 		canvas.loadFromJSON(this.data.state, canvas.renderAll.bind(canvas));
+
+		canvas.CDID = this.data._id;
+		if ($.inArray(canvas, othersWorkCanvases) == -1) {
+			othersWorkCanvases.push(canvas);
+		}
+
 	});
 }

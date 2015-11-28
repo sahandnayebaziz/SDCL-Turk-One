@@ -2,25 +2,31 @@
 
 	{{#if allowedToContinueWorking}}
 		<div class="container-fluid">
-			<div class="row fixed top-buffer-25">
-				<div id="sizeClassSwitchContainer" class="col-xs-12">
-					<!--<img id="sizeClassSwitch" class="img img-responsive center-block" src="/sizeClass1.png">-->
+			{{#if allowShowingOthersWork}}
+				<div class="row fixed top-buffer-25">
+					<div id="sizeClassSwitchContainer" class="col-xs-12">
 					<span id="sizeClassSwitch" class="center-block">
 						<span id="sizeClassInnerElementLeft" class="sizeClassInnerElement sizeClassInnerElementSmall"></span>
 						<span id="sizeClassInnerElementRight" class="sizeClassInnerElement sizeClassInnerElementLarge"></span>
 					</span>
+					</div>
 				</div>
-			</div>
+			{{/if}}
 			<div class="row top-buffer-50 bottom-buffer-50">
-				<div id="toolView1" class="col-md-12 col-lg-3 md-fixed overflow">
+				<div id="toolView1" class="col-md-12 col-lg-3 md-fixed overflow bottom-buffer-150">
 					{{#with decisionPoint}}
-						{{>decisionPointInformationPanel}}
-						{{#if sizeClassIsLarge 1}}
-							{{> othersWorkInteractive}}
-						{{else}}
-							{{> othersWorkImages}}
+						<div class="row">
+							<div class="col-xs-12 bottom-buffer-100">
+								{{>decisionPointInformationPanel}}
+							</div>
+						</div>
+						{{#if allowShowingOthersWork}}
+							{{#if sizeClassIsLarge 1}}
+								{{> othersWorkInteractive}}
+							{{else}}
+								{{> othersWorkImages}}
+							{{/if}}
 						{{/if}}
-
 					{{/with}}
 
 				</div>

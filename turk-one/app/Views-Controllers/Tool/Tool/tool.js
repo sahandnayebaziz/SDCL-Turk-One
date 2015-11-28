@@ -449,6 +449,7 @@ if (Meteor.isClient) {
 
 		Session.set("sizeClassIsLargeForToolView" + 1, false);
 		Session.set("sizeClassIsLargeForToolView" + 2, true);
+
 	});
 
 	// GLOBAL HELPER METHODS
