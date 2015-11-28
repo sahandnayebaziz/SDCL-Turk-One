@@ -23,7 +23,6 @@ if (Meteor.isClient) {
 				canvases.splice(i, 1);
 			}
 		}
-
 		canvases.push(canvas);
 
 		canvasHistory[canvas.CDIndex] = {backStates: [], forwardStates: [], recording: true};

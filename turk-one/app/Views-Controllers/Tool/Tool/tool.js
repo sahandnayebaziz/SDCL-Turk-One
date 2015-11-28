@@ -470,6 +470,8 @@ if (Meteor.isClient) {
 
 		toolView2ScrollTarget = null;
 
+		otherWorkCanvases = [];
+
 	});
 
 	// GLOBAL HELPER METHODS
