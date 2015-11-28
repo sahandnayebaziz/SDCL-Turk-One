@@ -18,7 +18,14 @@ if (Meteor.isClient) {
 		canvas.CDIndex = canvasNumber;
 
 		// add references to this canvas
+		for (var i = 0; i < canvases.length; i++) {
+			if (canvases[i].CDIndex === canvas.CDIndex) {
+				canvases.splice(i, 1);
+			}
+		}
+
 		canvases.push(canvas);
+
 		canvasHistory[canvas.CDIndex] = {backStates: [], forwardStates: [], recording: true};
 
 		var stopwatch = new Stopwatch();

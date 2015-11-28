@@ -1,8 +1,7 @@
 <template name="solutionVisualLocked">
 	<div class="row bottom-buffer-25" style="height: 500px;">
 		<div class="col-xs-12" id="colsketch{{_id}}">
-			<div class="otherWprkContainer" data-CDID="{{_id}}">
-				<img class="img img-responsive solutionImage" id="image{{_id}}">
+			<div class="otherWorkContainer" data-CDID="{{_id}}">
 				<canvas id="canvas{{_id}}"></canvas>
 			</div>
 		</div>
@@ -22,13 +21,21 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-4">
-					<div id="othersWorkDuplicateButton" class="pull-right">
+				<div class="col-xs-8 pull-right">
+					<div class="othersWorkDuplicateButton pull-right duplicate">
 						<div class="row text-center">
 							<span id="duplicatePlus">+</span>
 						</div>
 						<div class="row text-center duplicateTextContainer">
 							<span id="duplicateText">Duplicate</span>
+						</div>
+					</div>
+					<div class="othersWorkDuplicateButton pull-right copy othersWorkInteractive {{#if didSelectOnCanvasId}} button-lg-enabled {{/if}}">
+						<div class="row text-center">
+							<span id="duplicatePlus">+</span>
+						</div>
+						<div class="row text-center duplicateTextContainer">
+							<span id="duplicateText">Copy selected</span>
 						</div>
 					</div>
 				</div>

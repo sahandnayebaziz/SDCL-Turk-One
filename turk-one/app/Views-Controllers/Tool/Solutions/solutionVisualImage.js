@@ -70,4 +70,10 @@ if (Meteor.isClient) {
 		// how great the effect is or if this happens automatically yet.
 
 	});
+
+	Template.solutionVisualImage.events({
+		"click .solutionImage": function () {
+			changeSizeClass();
+		}
+	})
 }

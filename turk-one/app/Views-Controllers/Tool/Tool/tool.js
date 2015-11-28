@@ -309,26 +309,44 @@ if (Meteor.isClient) {
 			Session.set("shouldGenerateReviews", false);
 		},
 		"click #sizeClassSwitch": function () {
-			var toolView1 = $("#toolView1");
-			var toolView2 = $("#toolView2");
-
-			toolView1.one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",
-					function () {
-						Session.set("sizeClassIsLargeForToolView" + 1, toolView1.hasClass('col-lg-9'));
-					});
-
-			toolView2.one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",
-					function (event) {
-						Session.set("sizeClassIsLargeForToolView" + 2, toolView2.hasClass('col-lg-9'));
-					});
-
-			$("#sizeClassInnerElementLeft").toggleClass('sizeClassInnerElementSmall sizeClassInnerElementLarge');
-			$("#sizeClassInnerElementRight").toggleClass('sizeClassInnerElementSmall sizeClassInnerElementLarge');
-
-			toolView1.toggleClass('col-lg-3 col-lg-9');
-			toolView2.toggleClass('col-lg-9 col-lg-offset-3 col-lg-3 col-lg-offset-9');
+			changeSizeClass();
 		}
 	});
+
+	changeSizeClass = function() {
+		var toolView1 = $("#toolView1");
+		var toolView2 = $("#toolView2");
+
+		toolView1.one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",
+				function () {
+					Session.set("sizeClassIsLargeForToolView" + 1, toolView1.hasClass('col-lg-9'));
+				});
+
+		toolView2.one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",
+				function (event) {
+					Session.set("sizeClassIsLargeForToolView" + 2, toolView2.hasClass('col-lg-9'));
+					if (toolView2ScrollTarget) {
+						//window.scrollTo(0, $($('[data-cdindex=' + toolView2ScrollTarget + ']')[0]).offset().top - 100);
+						// could not get this to work yet because of race conditions between the subview of the canvases,
+						// and the animation ending. Will calculate the height for now based on what we know about canvases
+						window.scrollTo(0, 75 + (647 * (toolView2ScrollTarget - 1)) - 100);
+						toolView2ScrollTarget = null;
+					}
+				});
+
+		$("#sizeClassInnerElementLeft").toggleClass('sizeClassInnerElementSmall sizeClassInnerElementLarge');
+		$("#sizeClassInnerElementRight").toggleClass('sizeClassInnerElementSmall sizeClassInnerElementLarge');
+
+		toolView1.toggleClass('col-lg-3 col-lg-9');
+		toolView2.toggleClass('col-lg-9 col-lg-offset-3 col-lg-3 col-lg-offset-9');
+	};
+
+	scrollToolViewsToCanvas = function(CDIndex) {
+		var toolView1 = $("#toolView1");
+		toolView1.scrollTop(0);
+		toolView2ScrollTarget = CDIndex;
+	};
+
 	Template.tool.onRendered(function () {
 		//TODO: BRING THESE STOP WATCHES BACK TO TOOL!
 		// initialize stopwatch arrays
@@ -449,6 +467,8 @@ if (Meteor.isClient) {
 
 		Session.set("sizeClassIsLargeForToolView" + 1, false);
 		Session.set("sizeClassIsLargeForToolView" + 2, true);
+
+		toolView2ScrollTarget = null;
 
 	});
 
