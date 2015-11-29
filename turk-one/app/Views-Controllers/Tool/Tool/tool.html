@@ -64,9 +64,19 @@
 							{{#if hasAtLeastOneSolution}}
 								<div class="row">
 									<div class="col-xs-10 col-xs-offset-1">
+										{{#if toolIsRequestingTargetSelection}}
+											<button class="cancelTargetSelection bottom-buffer-25 btn btn-primary btn-block btn-continue">
+												CANCEL
+											</button>
+										{{/if}}
 										{{#each solutions}}
 											{{> solutionVisualImage}}
 										{{/each}}
+										{{#if toolIsRequestingTargetSelection}}
+											<button class="cancelTargetSelection top-buffer-25 bottom-buffer-25 btn btn-primary btn-block btn-continue">
+												CANCEL
+											</button>
+										{{/if}}
 									</div>
 								</div>
 							{{/if}}

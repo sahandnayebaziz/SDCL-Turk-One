@@ -59,19 +59,18 @@ if (Meteor.isClient) {
 	});
 
 
-
 	Template.solutionVisualLocked.events({
 		"click .duplicate": function () {
 
 			selectedTargetCanvas = new $.Deferred();
 
-			applyDuplicate = function(state) {
-				return function() {
+			applyDuplicate = function (state) {
+				return function () {
 					return state;
 				}
 			}(this.state);
 
-			selectedTargetCanvas.done(function(canvasNumber) {
+			selectedTargetCanvas.done(function (canvasNumber) {
 				var canvas = canvases[canvasNumber - 1];
 				var state = applyDuplicate();
 				canvas.loadFromJSON(state, canvas.renderAll.bind(canvas));
@@ -80,66 +79,82 @@ if (Meteor.isClient) {
 			});
 
 			setFlashingSolutionImageViews(true, "");
+			Session.set("isRequestingTargetSelection", true);
 
 		},
 		"click .copy": function () {
+			selectedTargetCanvas = new $.Deferred();
 			var targetID = this._id;
 			var canvas = null;
-			var numberToCopy = 0;
-			var numberCopied = 0;
-
 			$.each(otherWorkCanvases, function () {
 				if (this.CDID == targetID) {
 					canvas = this;
 				}
 			});
-
-			function returnIfFinished() {
-				if (numberCopied == numberToCopy) {
-					changeSizeClass()
+			applyObjectOrGroup = function (activeObject, activeGroup) {
+				return function () {
+					return {
+						object: activeObject,
+						group: activeGroup
+					}
 				}
-			}
+			}(canvas.getActiveObject(), canvas.getActiveGroup());
+			selectedTargetCanvas.done(function (canvasNumber) {
+				var data = applyObjectOrGroup();
+				var numberToCopy = 0;
+				var numberCopied = 0;
 
-			function addToCanvasOne(object, options) {
-				if (options) {
-					object.set({
-						top:  options.top,
-						left: options.left
-					});
+				function returnIfFinished() {
+					if (numberCopied == numberToCopy) {
+						changeSizeClass()
+					}
 				}
-				canvases[0].add(object).renderAll();
-				numberCopied++;
-				returnIfFinished();
-			}
 
-			if (canvas.getActiveObject()) {
-				numberToCopy = 1;
-				var object = canvas.getActiveObject();
-				if (fabric.util.getKlass(object.get("type")).async) {
-					object.clone(function (c) {
-						addToCanvasOne(c);
-					});
-				} else {
-					addToCanvasOne(object.clone());
+				function addToCanvas(object, options) {
+					if (options) {
+						object.set({
+							top: options.top,
+							left: options.left
+						});
+					}
+					canvases[canvasNumber - 1].add(object).renderAll();
+					numberCopied++;
+					returnIfFinished();
 				}
-			} else if (canvas.getActiveGroup()) {
-				var group = canvas.getActiveGroup();
-				numberToCopy = group._objects.length;
-				$.each(group._objects, function() {
-					var object = this;
-					var options = {
-						top: object.originalState.top,
-						left: object.originalState.left
-					};
+
+				if (data.object) {
+					numberToCopy = 1;
+					var object = data.object;
 					if (fabric.util.getKlass(object.get("type")).async) {
 						object.clone(function (c) {
-							addToCanvasOne(c, options);
+							addToCanvas(c);
 						});
 					} else {
-						addToCanvasOne(object.clone(), options);
+						addToCanvas(object.clone());
 					}
-				});
-			}
+				} else if (data.group) {
+					var group = data.group;
+					numberToCopy = group._objects.length;
+					$.each(group._objects, function () {
+						var object = this;
+						var options = {
+							top: object.originalState.top,
+							left: object.originalState.left
+						};
+						if (fabric.util.getKlass(object.get("type")).async) {
+							object.clone(function (c) {
+								addToCanvas(c, options);
+							});
+						} else {
+							addToCanvas(object.clone(), options);
+						}
+					});
+				}
+
+			});
+
+			setFlashingSolutionImageViews(true, "");
+			Session.set("isRequestingTargetSelection", true);
 		}
 	});
 }

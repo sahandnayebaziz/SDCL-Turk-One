@@ -223,6 +223,9 @@ if (Meteor.isClient) {
 		},
 		showingOthersWork: function () {
 			return Session.get("showingOthersWork") == true;
+		},
+		toolIsRequestingTargetSelection: function () {
+			return Session.get("isRequestingTargetSelection");
 		}
 	});
 	Template.tool.events({
@@ -310,6 +313,11 @@ if (Meteor.isClient) {
 		},
 		"click #sizeClassSwitch": function () {
 			changeSizeClass();
+		},
+		"click .cancelTargetSelection": function () {
+			selectedTargetCanvas = null;
+			setFlashingSolutionImageViews(false, "");
+			Session.set("isRequestingTargetSelection", false);
 		}
 	});
 
