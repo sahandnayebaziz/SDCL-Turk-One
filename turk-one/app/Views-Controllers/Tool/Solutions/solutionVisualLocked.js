@@ -58,22 +58,29 @@ if (Meteor.isClient) {
 		}
 	});
 
+
+
 	Template.solutionVisualLocked.events({
 		"click .duplicate": function () {
-			var didPlaceDuplicate = false;
-			for (var i = 0; i < canvases.length; i++) {
-				if (canvases[i]._objects.length == 0 && !didPlaceDuplicate) {
-					didPlaceDuplicate = true;
-					var canvas = canvases[i];
-					canvas.loadFromJSON(this.state, canvas.renderAll.bind(canvas));
-					changeSizeClass();
-					scrollToolViewsToCanvas(canvas.CDIndex);
-					notify("Duplicated to your " + stringifyNumber(canvas.CDIndex) + " canvas.", "info");
+
+			selectedTargetCanvas = new $.Deferred();
+
+			applyDuplicate = function(state) {
+				return function() {
+					return state;
 				}
-			}
-			if (!didPlaceDuplicate) {
-				console.log("determined all canvases to have work");
-			}
+			}(this.state);
+
+			selectedTargetCanvas.done(function(canvasNumber) {
+				var canvas = canvases[canvasNumber - 1];
+				var state = applyDuplicate();
+				canvas.loadFromJSON(state, canvas.renderAll.bind(canvas));
+				changeSizeClass();
+				scrollToolViewsToCanvas(canvas.CDIndex);
+			});
+
+			setFlashingSolutionImageViews(true, "");
+
 		},
 		"click .copy": function () {
 			var targetID = this._id;

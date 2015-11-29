@@ -3,3 +3,18 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+.solutionImageTargetOverlay {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: calc(100% - 30px);
+    top: 0px;
+    background-color: rgba(74, 144, 226, 0.69);
+    animation-duration: 3s;
+    -webkit-animation-duration: 3s;
+    -moz-animation-duration: 3s;
+    -o-animation-duration: 3s;
+    cursor: pointer;
+    border-radius: 6px;
+}

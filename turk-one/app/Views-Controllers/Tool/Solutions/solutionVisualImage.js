@@ -74,6 +74,12 @@ if (Meteor.isClient) {
 	Template.solutionVisualImage.events({
 		"click .solutionImage": function () {
 			changeSizeClass();
+		},
+		"click .solutionImageTargetOverlay": function () {
+			if (selectedTargetCanvas) {
+				setFlashingSolutionImageViews(false, "");
+				selectedTargetCanvas.resolve(this.canvasNumber);
+			}
 		}
 	})
 }
