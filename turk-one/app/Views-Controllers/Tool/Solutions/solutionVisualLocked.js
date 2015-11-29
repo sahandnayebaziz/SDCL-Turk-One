@@ -71,6 +71,7 @@ if (Meteor.isClient) {
 			}(this.state);
 
 			selectedTargetCanvas.done(function (canvasNumber) {
+				Session.set("isRequestingTargetSelection", false);
 				var canvas = canvases[canvasNumber - 1];
 				var state = applyDuplicate();
 				canvas.loadFromJSON(state, canvas.renderAll.bind(canvas));
@@ -100,6 +101,7 @@ if (Meteor.isClient) {
 				}
 			}(canvas.getActiveObject(), canvas.getActiveGroup());
 			selectedTargetCanvas.done(function (canvasNumber) {
+				Session.set("isRequestingTargetSelection", false);
 				var data = applyObjectOrGroup();
 				var numberToCopy = 0;
 				var numberCopied = 0;
