@@ -106,7 +106,7 @@ if (Meteor.isClient) {
 				if (data.id) {
 					Meteor.call("addSolutionAsReferenceToNewSolution", data.id, canvases[canvasNumber - 1].CDID, function (e, r) {
 						if (!e) {
-							notify("saved reference from " + data.id + " to " + canvases[canvasNumber - 1].CDID);
+
 						}
 					});
 				}
@@ -164,7 +164,7 @@ if (Meteor.isClient) {
 				if (data.id) {
 					Meteor.call("addSolutionAsReferenceToNewSolution", data.id, canvases[canvasNumber - 1].CDID, function (e, r) {
 						if (!e) {
-							notify("saved reference from " + data.id + " to " + canvases[canvasNumber - 1].CDID);
+
 						}
 					});
 				}
