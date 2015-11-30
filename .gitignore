@@ -1,2 +1,10 @@
 .meteor/local
 .meteor/meteorite
+
+.idea/.name
+
+.idea/encodings.xml
+
+*.xml
+
+.idea/SDCL-Turk-One.iml
