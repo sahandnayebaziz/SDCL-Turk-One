@@ -195,13 +195,13 @@ if (Meteor.isClient) {
 				this.on("mouse:down", function (e) {
 					var locationOnThisCanvas = this.getPointer(event.e);
 					this.add(new fabric.Circle({
-						radius: 100,
-						width: 150,
-						height: 150,
+						radius: 70,
+						width: 100,
+						height: 100,
 						stroke: Session.get("currentColor"),
 						fill: "transparent",
 						opacity: 1,
-						strokeWidth: 3,
+						strokeWidth: 4,
 						left: locationOnThisCanvas.x,
 						top: locationOnThisCanvas.y,
 						selectable: false
