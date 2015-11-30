@@ -18,9 +18,9 @@ if (Meteor.isClient) {
 		//Remove all mouse events
 		function removeMouseEvents() {
 			$.each(canvases, function () {
-				//this.off("mouse:move");
-				//this.off("mouse:up");
-				//this.off("mouse:down");
+				this.off("mouse:move");
+				this.off("mouse:up");
+				this.off("mouse:down");
 			});
 		}
 
