@@ -7,7 +7,7 @@ if (Meteor.isClient) {
 		var element = $("#" + idForNewCanvas);
 		var canvas = new fabric.Canvas(idForNewCanvas);
 		var canvasHeightShouldBe = 500;
-		var canvasWidthShouldBe = $("#colsketch" + this.data._id).width();
+		var canvasWidthShouldBe = $("#toolView1ImageContainer").width();
 		$(element).attr({"height": canvasHeightShouldBe, "width": canvasWidthShouldBe});
 
 		var canvas = new fabric.Canvas(idForNewCanvas);
@@ -15,6 +15,31 @@ if (Meteor.isClient) {
 		canvas.setBackgroundColor("white").renderAll();
 		canvas.loadFromJSON(this.data.state, canvas.renderAll.bind(canvas));
 		canvas.CDID = this.data._id;
+
+
+
+		// zoom canvas if necessary
+		function determineCanvasContentWidth() {
+			var objs = canvas.getObjects().map(function(o) {
+				return o.set('active', true);
+			});
+			var group = new fabric.Group(objs, {
+				originX: 'center',
+				originY: 'center'
+			});
+			canvas._activeObject = null;
+			canvas.setActiveGroup(group.setCoords()).renderAll();
+			var detectedWidth = canvas.getActiveGroup().getWidth();
+			return detectedWidth;
+		}
+		var contentWidth = determineCanvasContentWidth();
+		canvas.clear().renderAll();
+		canvas.loadFromJSON(this.data.state, canvas.renderAll.bind(canvas));
+
+		if (contentWidth > canvasWidthShouldBe) {
+			canvas.setZoom(canvasWidthShouldBe / contentWidth).renderAll();
+		}
+
 
 		// add references to this canvas
 		for (var i = 0; i < otherWorkCanvases.length; i++) {
@@ -25,7 +50,7 @@ if (Meteor.isClient) {
 		otherWorkCanvases.push(canvas);
 
 		$.each(canvas.getObjects(), function () {
-			this.lockMovementX = this.lockMovementY = true;
+			this.lockMovementX = this.lockMovementY = this.lockScalingX = this.lockScalingY = this.lockRotation = this.lockUniScaling = true;
 		});
 
 		// Really terrible hack to fix unknown rendering bug when clicking the top left corner

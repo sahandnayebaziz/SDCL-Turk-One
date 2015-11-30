@@ -6,7 +6,6 @@ if (Meteor.isClient) {
 		var canvasNumber = this.data.canvasNumber;
 		var savedCanvasState = this.data.state;
 
-
 		var idForNewCanvas = "canvas-" + canvasNumber;
 		var element = $("#" + idForNewCanvas);
 		var canvasHeightShouldBe = 500;
@@ -19,8 +18,7 @@ if (Meteor.isClient) {
 
 		$(element).attr({"height": canvasHeightShouldBe, "width": canvasWidthShouldBe});
 
-		var canvas = new fabric.Canvas(idForNewCanvas, {stateful:false, renderOnAddRemove:false }); //for faster performance
-		//var canvas = new fabric.Canvas(idForNewCanvas);
+		var canvas = new fabric.Canvas(idForNewCanvas);
 		canvas.CDIndex = canvasNumber;
 
 		// add references to this canvas

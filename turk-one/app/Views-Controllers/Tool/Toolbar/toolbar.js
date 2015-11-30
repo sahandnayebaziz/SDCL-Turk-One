@@ -18,9 +18,9 @@ if (Meteor.isClient) {
 		//Remove all mouse events
 		function removeMouseEvents() {
 			$.each(canvases, function () {
-				this.off("mouse:move");
-				this.off("mouse:up");
-				this.off("mouse:down");
+				//this.off("mouse:move");
+				//this.off("mouse:up");
+				//this.off("mouse:down");
 			});
 		}
 
@@ -28,14 +28,6 @@ if (Meteor.isClient) {
 		function setObjectSelection(toggle){
 			$.each(canvases, function () {
 				this.isDrawingMode = false;
-				this.selection = toggle;
-				for (var i = this.getObjects().length-1; i >= 0; i--){
-					//check if the last object is set to toggle if and abort it true because then all objects are already set.
-					if(this._objects[i].selectable === toggle){
-						break;
-					}
-					this._objects[i].selectable = toggle;
-				}
 			});
 		}
 
