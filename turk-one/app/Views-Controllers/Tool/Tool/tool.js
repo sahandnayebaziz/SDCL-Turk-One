@@ -133,6 +133,19 @@ if (Meteor.isServer) {
 					console.log("set flag submitted");
 				}
 			})
+		},
+		setSolutionsSubmitted: function (solutions) {
+			for (var i = 0; i < solutions.length; i++) {
+				Solutions.update(solutions[i]._id, {
+					$set: {
+						submitted: true
+					}
+				}, function (error) {
+					if (!error) {
+						console.log("set solution flag submitted");
+					}
+				})
+			}
 		}
 	});
 
@@ -285,25 +298,19 @@ if (Meteor.isClient) {
 
 		},
 		"click #finishConfirm": function () {
-
-
 			$('#finishModal').on('hidden.bs.modal', function () {
 				Meteor.call("setTicketFlagSubmitted", Session.get("ticket"), function (e, r) {
-					if (!e) {
-						var n = noty({
-							text: 'Success! Your work has been submitted.',
-							layout: 'topRight',
-							theme: 'relax', // or 'relax'
-							type: 'success',
-							timeout: 4000,
-							animation: {
-								open: 'animated bounceInRight', // Animate.css class names
-								close: 'animated bounceOutRight', // Animate.css class names
-								easing: 'swing', // unavailable - no need
-								speed: 500 // unavailable - no need
+					if (e) {
+						notify("there was an error submitting your work. Please refresh your browser and try again", "warning");
+					} else {
+						var solutions = Solutions.find({workerId: Session.get("ticket")}, {sort: {canvasNumber: 1}}).fetch();
+						Meteor.call("setSolutionsSubmitted", solutions, function (e, r) {
+							if (e) {
+								notify("there was an error submitting your work. Please refresh your browser and try again", "warning");
+							} else {
+								Router.go("/exit/" + Session.get("ticket"));
 							}
 						});
-						Router.go("/exit/" + Session.get("ticket"));
 					}
 				});
 			}).modal('hide');
@@ -321,26 +328,26 @@ if (Meteor.isClient) {
 		}
 	});
 
-	changeSizeClass = function() {
+	changeSizeClass = function () {
 		var toolView1 = $("#toolView1");
 		var toolView2 = $("#toolView2");
 
 		toolView1.one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",
-				function () {
-					Session.set("sizeClassIsLargeForToolView" + 1, toolView1.hasClass('col-lg-9'));
-				});
+			function () {
+				Session.set("sizeClassIsLargeForToolView" + 1, toolView1.hasClass('col-lg-9'));
+			});
 
 		toolView2.one("webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend",
-				function (event) {
-					Session.set("sizeClassIsLargeForToolView" + 2, toolView2.hasClass('col-lg-9'));
-					if (toolView2ScrollTarget) {
-						//window.scrollTo(0, $($('[data-cdindex=' + toolView2ScrollTarget + ']')[0]).offset().top - 100);
-						// could not get this to work yet because of race conditions between the subview of the canvases,
-						// and the animation ending. Will calculate the height for now based on what we know about canvases
-						window.scrollTo(0, 75 + (647 * (toolView2ScrollTarget - 1)) - 100);
-						toolView2ScrollTarget = null;
-					}
-				});
+			function (event) {
+				Session.set("sizeClassIsLargeForToolView" + 2, toolView2.hasClass('col-lg-9'));
+				if (toolView2ScrollTarget) {
+					//window.scrollTo(0, $($('[data-cdindex=' + toolView2ScrollTarget + ']')[0]).offset().top - 100);
+					// could not get this to work yet because of race conditions between the subview of the canvases,
+					// and the animation ending. Will calculate the height for now based on what we know about canvases
+					window.scrollTo(0, 75 + (647 * (toolView2ScrollTarget - 1)) - 100);
+					toolView2ScrollTarget = null;
+				}
+			});
 
 		$("#sizeClassInnerElementLeft").toggleClass('sizeClassInnerElementSmall sizeClassInnerElementLarge');
 		$("#sizeClassInnerElementRight").toggleClass('sizeClassInnerElementSmall sizeClassInnerElementLarge');
@@ -349,7 +356,7 @@ if (Meteor.isClient) {
 		toolView2.toggleClass('col-lg-9 col-lg-offset-3 col-lg-3 col-lg-offset-9');
 	};
 
-	scrollToolViewsToCanvas = function(CDIndex) {
+	scrollToolViewsToCanvas = function (CDIndex) {
 		var toolView1 = $("#toolView1");
 		toolView1.scrollTop(0);
 		toolView2ScrollTarget = CDIndex;
@@ -368,16 +375,19 @@ if (Meteor.isClient) {
 				this.reset();
 			});
 		}
+
 		function resetLocationTimers() {
 			$.each(locationStopwatches, function () {
 				this.reset();
 			});
 		}
+
 		function resetReadingTimers() {
 			$.each(readingStopwatches, function () {
 				this.reset();
 			});
 		}
+
 		function activateLocationTimers() {
 			$.each(locationStopwatches, function () {
 				this.start();
