@@ -161,21 +161,11 @@ if (Meteor.isClient) {
 		{
 			element: '#toolView2',
 			intro: "Sketch and explain your ideas in these 5 different canvasses and text fields. We are looking for high level sketches, like you would make on a whiteboard. Your sketches can be simple. However, try to make sketches that help others to understand your solutions",
-			position: 'bottom-middle-aligned'
+			position: 'bottom-middle-aligned',
 
 		},
 		{
-			element: "#othersWorkTitle",
-			intro: "Turkers before you have already submitted some solutions, you can use them as inspiration. If you click on one of the solutions of others you will switch to more detailed view.",
-			position: 'top'
-		},
-		{
-			element: "#othersWork",
-			intro: "This is the more detailed view of the solutions by others. Besides reading the description and title of the solutions of others, you can als duplicate the entire canvas, or a selection of objects, to one of your own 5 canvasses.",
-			position: 'top'
-		},
-		{
-			element: "#intro3",
+			element: "#intro1",
 			intro: "When you are finished, you can review and submit your ideas by clicking on REVIEW & SUBMIT. If you'd like to quit the HIT, please use this quit button and leave some feedback why you feel this HIT is not for you. Each of these buttons gives you a chance to cancel, so feel free to try them out",
 			position: 'bottom-middle-aligned'
 		}
@@ -364,40 +354,6 @@ if (Meteor.isClient) {
 		toolView1.scrollTop(0);
 		toolView2ScrollTarget = CDIndex;
 	};
-
-	Template.decisionPointInformationPanel.rendered = function () {
-		var intro = introJs();
-
-		intro.setOptions({
-			"scrollToElement": true,
-			"showStepNumbers": false,
-			"showProgress": true,
-			"showBullets": false,
-			"exitOnOverlayClick": false,
-			"disableInteraction": true,
-			"skiplabel": "",
-			steps: tutorialSteps
-		});
-
-		intro.onbeforechange(function(targetElement) {
-			console.log("fuckin tutorial man solid ");
-			console.log(targetElement.id);
-			switch (targetElement.id)
-			{
-				case "othersWork":
-					changeSizeClass();
-					break;
-				case "intro3":
-					changeSizeClass();
-					break;
-			}
-		});
-
-		intro.start();
-
-		$(".introjs-tooltiptext").css("text-align", "center");
-	};
-
 
 	Template.tool.onRendered(function () {
 		//TODO: BRING THESE STOP WATCHES BACK TO TOOL!

@@ -16,7 +16,6 @@ if (Meteor.isClient) {
 		}
 	});
 
-
 	Template.othersWorkInteractive.helpers({
 		// TODO: Turn this helper and the solutions helper on tool into smaller, more specified subscribes instead of subscribes to all of the Solutions collection
 		otherSolutions: function () {
@@ -32,6 +31,7 @@ if (Meteor.isClient) {
 	});
 
 	Template.othersWorkInteractive.onRendered(function () {
+
 		//
 		// Application logic
 //		var submittingFeedback = new $.Deferred();
