@@ -253,6 +253,9 @@ if (Meteor.isClient) {
 		},
 		timeInMinutes: function () {
 			return parseInt(this.time / 60);
+		},
+		referenceSolutions: function () {
+			return Solutions.find({_id: {$in: this.references}});
 		}
 	});
 

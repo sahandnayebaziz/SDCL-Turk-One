@@ -20,6 +20,7 @@ if (Meteor.isClient) {
 
 		var canvas = new fabric.Canvas(idForNewCanvas);
 		canvas.CDIndex = canvasNumber;
+		canvas.CDID = this.data._id;
 
 		// add references to this canvas
 		for (var i = 0; i < canvases.length; i++) {

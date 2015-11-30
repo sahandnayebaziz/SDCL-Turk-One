@@ -89,16 +89,27 @@ if (Meteor.isClient) {
 
 			selectedTargetCanvas = new $.Deferred();
 
-			applyDuplicate = function (state) {
+			applyDuplicate = function (state, referenceId) {
 				return function () {
-					return state;
+					return {
+						state: state,
+						id: referenceId
+					}
 				}
-			}(this.state);
+			}(this.state, this._id);
 
 			selectedTargetCanvas.done(function (canvasNumber) {
 				Session.set("isRequestingTargetSelection", false);
 				var canvas = canvases[canvasNumber - 1];
-				var state = applyDuplicate();
+				var data = applyDuplicate();
+				var state = data.state;
+				if (data.id) {
+					Meteor.call("addSolutionAsReferenceToNewSolution", data.id, canvases[canvasNumber - 1].CDID, function (e, r) {
+						if (!e) {
+							notify("saved reference from " + data.id + " to " + canvases[canvasNumber - 1].CDID);
+						}
+					});
+				}
 				canvas.loadFromJSON(state, canvas.renderAll.bind(canvas));
 				changeSizeClass();
 				scrollToolViewsToCanvas(canvas.CDIndex);
@@ -117,14 +128,15 @@ if (Meteor.isClient) {
 					canvas = this;
 				}
 			});
-			applyObjectOrGroup = function (activeObject, activeGroup) {
+			applyObjectOrGroup = function (activeObject, activeGroup, referenceId) {
 				return function () {
 					return {
 						object: activeObject,
-						group: activeGroup
+						group: activeGroup,
+						id: referenceId
 					}
 				}
-			}(canvas.getActiveObject(), canvas.getActiveGroup());
+			}(canvas.getActiveObject(), canvas.getActiveGroup(), targetID);
 			selectedTargetCanvas.done(function (canvasNumber) {
 				Session.set("isRequestingTargetSelection", false);
 				var data = applyObjectOrGroup();
@@ -147,6 +159,14 @@ if (Meteor.isClient) {
 					canvases[canvasNumber - 1].add(object).renderAll();
 					numberCopied++;
 					returnIfFinished();
+				}
+
+				if (data.id) {
+					Meteor.call("addSolutionAsReferenceToNewSolution", data.id, canvases[canvasNumber - 1].CDID, function (e, r) {
+						if (!e) {
+							notify("saved reference from " + data.id + " to " + canvases[canvasNumber - 1].CDID);
+						}
+					});
 				}
 
 				if (data.object) {

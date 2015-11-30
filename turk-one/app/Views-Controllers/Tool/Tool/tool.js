@@ -146,6 +146,17 @@ if (Meteor.isServer) {
 					}
 				})
 			}
+		},
+		addSolutionAsReferenceToNewSolution: function (referenceSolutionId, newSolutionId) {
+			Solutions.update(newSolutionId, {
+				$addToSet: {
+					references: referenceSolutionId
+				}
+			}, function (error) {
+				if (!error) {
+					console.log("added reference to solution");
+				}
+			});
 		}
 	});
 
