@@ -11,6 +11,12 @@ if (Meteor.isClient) {
 		var element = $("#" + idForNewCanvas);
 		var canvasHeightShouldBe = 500;
 		var canvasWidthShouldBe = $("#col-sketch").width();
+
+		// limit canvas width to 1000px wide
+		if (canvasWidthShouldBe > 1000) {
+			canvasWidthShouldBe = 1000;
+		}
+
 		$(element).attr({"height": canvasHeightShouldBe, "width": canvasWidthShouldBe});
 
 		var canvas = new fabric.Canvas(idForNewCanvas, {stateful:false, renderOnAddRemove:false }); //for faster performance
