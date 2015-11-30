@@ -5,15 +5,27 @@
 			<div class="col-xs-10 col-xs-offset-1">
 				<div class="row top-buffer-50">
 					<div class="col-xs-6">
-						{{#with mainConfiguration}}
-						<h6>Tool options</h6>
-						<form id="configurationForm">
-							<label>
-								<input type="checkbox" name="showOthersWork" checked="{{#if shouldShowOthersWork}}checked{{/if}}">
-								Show other's work
-							</label>
-						</form>
-						{{/with}}
+						{{#if mainConfiguration}}
+							{{#with mainConfiguration}}
+								<h6>Tool options</h6>
+
+								<form id="configurationForm">
+									<label>
+										<input type="checkbox" name="showOthersWork" checked="{{#if shouldShowOthersWork}}checked{{/if}}">
+										Show other's work
+									</label>
+								</form>
+							{{/with}}
+						{{else}}
+							<h6>Tool options</h6>
+
+							<form id="configurationForm">
+								<label>
+									<input type="checkbox" name="showOthersWork" checked="{{#if shouldShowOthersWork}}checked{{/if}}">
+									Show other's work
+								</label>
+							</form>
+						{{/if}}
 					</div>
 				</div>
 			</div>

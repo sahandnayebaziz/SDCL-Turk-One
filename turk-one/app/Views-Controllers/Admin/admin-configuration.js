@@ -8,7 +8,6 @@ if (Meteor.isServer) {
 
 	Meteor.methods({
 		updateConfiguration: function (shouldShowOthersWork) {
-			Configurations.remove(1);
 			Configurations.upsert(
 					{
 						_id: 1
