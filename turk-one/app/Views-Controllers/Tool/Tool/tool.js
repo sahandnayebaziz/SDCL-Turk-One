@@ -416,6 +416,7 @@ if (Meteor.isClient) {
 			Session.set("shouldGenerateReviews", false);
 		},
 		"click #sizeClassSwitch": function () {
+			hideAllTooltips();
 			changeSizeClass();
 		},
 		"click .cancelTargetSelection": function () {
@@ -597,10 +598,10 @@ if (Meteor.isClient) {
 
 		}
 		if (mainConfiguration.shouldShowOthersWork){
-			hopscotch.configure({showCloseButton: false});
+			//hopscotch.configure({showCloseButton: false});
 			hopscotch.startTour(tourWithOthers);
 		}else{
-			hopscotch.configure({showCloseButton: false});
+			//hopscotch.configure({showCloseButton: false});
 			hopscotch.startTour(tour);
 		}
 
