@@ -6,15 +6,15 @@ if (Meteor.isClient) {
 		// TODO: Turn this helper and the solutions helper on tool into smaller, more specified subscribes instead of subscribes to all of the Solutions collection
 		otherSolutions: function () {
 			return Solutions.find({
-						submitted: true,
-						rejected: {$ne: true},
-						decisionPointId: this._id,
-						complexity: {$gt: 1},
-						workerId: {$ne: Session.get("ticket")},
-					},
-					{
-						sort: {dateUpdated: -1}
-					});
+					submitted: true,
+					status: {$ne: "rejected"},
+					decisionPointId: this._id,
+					complexity: {$gt: 1},
+					workerId: {$ne: Session.get("ticket")}
+				},
+				{
+					sort: {dateUpdated: -1}
+				});
 		}
 	});
 
@@ -23,6 +23,7 @@ if (Meteor.isClient) {
 		otherSolutions: function () {
 			return Solutions.find({
 					submitted: true,
+					status: {$ne: "rejected"},
 					decisionPointId: this._id,
 					complexity: {$gt: 1},
 					workerId: {$ne: Session.get("ticket")},
@@ -36,18 +37,18 @@ if (Meteor.isClient) {
 	Template.othersWorkImages.onRendered(function () {
 		if (Session.get("savedSet" + Session.get("ticket")) != true) {
 			var solutions = Solutions.find({
-						submitted: true,
-						decisionPointId: this.data._id,
-						complexity: {$gt: 1},
-						workerId: {$ne: Session.get("ticket")}
-					},
-					{
-						sort: {dateUpdated: -1}
-					}).fetch();
-			var solutionIds = $.map(solutions, function(s) {
+					submitted: true,
+					decisionPointId: this.data._id,
+					complexity: {$gt: 1},
+					workerId: {$ne: Session.get("ticket")}
+				},
+				{
+					sort: {dateUpdated: -1}
+				}).fetch();
+			var solutionIds = $.map(solutions, function (s) {
 				return s._id
 			});
-			Meteor.call("logAllSolutionIdsAvailableToWorker", Session.get("ticket"), solutionIds, function(e,r) {
+			Meteor.call("logAllSolutionIdsAvailableToWorker", Session.get("ticket"), solutionIds, function (e, r) {
 				if (!e) {
 					Session.setPersistent("savedSet" + Session.get("ticket"), true);
 				} else {
