@@ -192,11 +192,27 @@
 			</div>
 		</div>
 		{{#if references}}
-			<p>references</p>
+			<h6>references</h6>
 			<div class="row">
-				{{#each referenceSolutions}}
+				{{#each references}}
 					<div class="col-xs-6">
-						<a href="/worker/{{workerId}}">{{> solutionVisualImage}}</a>
+						{{#with solutionForReference id}}
+							<a href="/worker/{{workerId}}">{{> solutionVisualImage}}</a>
+						{{/with}}
+						<p>{{type}}</p>
+					</div>
+				{{/each}}
+			</div>
+		{{/if}}
+		{{#if referencedBy}}
+			<h6>referenced by</h6>
+			<div class="row">
+				{{#each referencedBy}}
+					<div class="col-xs-6">
+						{{#with solutionForReference id}}
+							<a href="/worker/{{workerId}}">{{> solutionVisualImage}}</a>
+						{{/with}}
+						<p>{{type}}</p>
 					</div>
 				{{/each}}
 			</div>

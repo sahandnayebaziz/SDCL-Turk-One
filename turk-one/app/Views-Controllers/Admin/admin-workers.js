@@ -70,13 +70,13 @@ if (Meteor.isClient) {
 							});
 							break;
 						case "in-progress":
-								conditionalsToAllow.push({
-									$and: [
-										{"reviewed": {$exists: false}},
-										{"submitted": {$exists: false}},
-										{"quit": {$exists: false}}
-									]
-								});
+							conditionalsToAllow.push({
+								$and: [
+									{"reviewed": {$exists: false}},
+									{"submitted": {$exists: false}},
+									{"quit": {$exists: false}}
+								]
+							});
 							break;
 						case "quit":
 							conditionalsToAllow.push({"quit": true});
@@ -254,8 +254,8 @@ if (Meteor.isClient) {
 		timeInMinutes: function () {
 			return parseInt(this.time / 60);
 		},
-		referenceSolutions: function () {
-			return Solutions.find({_id: {$in: this.references}});
+		solutionForReference: function (id) {
+			return Solutions.findOne(id);
 		}
 	});
 

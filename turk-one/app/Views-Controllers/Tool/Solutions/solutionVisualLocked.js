@@ -93,7 +93,8 @@ if (Meteor.isClient) {
 				return function () {
 					return {
 						state: state,
-						id: referenceId
+						id: referenceId,
+						type: "duplicate"
 					}
 				}
 			}(this.state, this._id);
@@ -104,7 +105,7 @@ if (Meteor.isClient) {
 				var data = applyDuplicate();
 				var state = data.state;
 				if (data.id) {
-					Meteor.call("addSolutionAsReferenceToNewSolution", data.id, canvases[canvasNumber - 1].CDID, function (e, r) {
+					Meteor.call("addSolutionAsReferenceToNewSolution", data.id, canvases[canvasNumber - 1].CDID, data.type, function (e, r) {
 						if (!e) {
 
 						}
@@ -133,7 +134,8 @@ if (Meteor.isClient) {
 					return {
 						object: activeObject,
 						group: activeGroup,
-						id: referenceId
+						id: referenceId,
+						type: "copy"
 					}
 				}
 			}(canvas.getActiveObject(), canvas.getActiveGroup(), targetID);
@@ -145,7 +147,8 @@ if (Meteor.isClient) {
 
 				function returnIfFinished() {
 					if (numberCopied == numberToCopy) {
-						changeSizeClass()
+						changeSizeClass();
+						// pass numberToCopy to new canvas and select the n last elements
 					}
 				}
 
@@ -162,7 +165,7 @@ if (Meteor.isClient) {
 				}
 
 				if (data.id) {
-					Meteor.call("addSolutionAsReferenceToNewSolution", data.id, canvases[canvasNumber - 1].CDID, function (e, r) {
+					Meteor.call("addSolutionAsReferenceToNewSolution", data.id, canvases[canvasNumber - 1].CDID, data.type, function (e, r) {
 						if (!e) {
 
 						}

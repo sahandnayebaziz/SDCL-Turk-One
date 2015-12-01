@@ -147,18 +147,47 @@ if (Meteor.isServer) {
 				})
 			}
 		},
-		addSolutionAsReferenceToNewSolution: function (referenceSolutionId, newSolutionId) {
+		addSolutionAsReferenceToNewSolution: function (referenceSolutionId, newSolutionId, type) {
 			Solutions.update(newSolutionId, {
 				$addToSet: {
-					references: referenceSolutionId
+					references: {
+						id: referenceSolutionId,
+						type: type
+					}
 				}
 			}, function (error) {
 				if (!error) {
 					console.log("added reference to solution");
 				}
 			});
-		}
-	});
+
+			Solutions.update(referenceSolutionId, {
+				$addToSet: {
+					referencedBy: {
+						id: newSolutionId,
+						type: type
+					}
+				}
+			}, function (error) {
+				if (!error) {
+					console.log("added reference to solution");
+				}
+		});
+	;
+},
+	logAllSolutionIdsAvailableToWorker: function (ticket, solutions) {
+		WorkerTickets.update(ticket, {
+			$set: {
+				referencesAvailable: solutions
+			}
+		}, function (error) {
+			if (!error) {
+				console.log("added references available");
+			}
+		});
+	}
+})
+	;
 
 	Meteor.publish("solutions", function () {
 		return Solutions.find();
