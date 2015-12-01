@@ -39,13 +39,12 @@ if (Meteor.isClient) {
 			});
 		}
 
-
-
 		// -------- NORMAL TOOLBAR TOOLS --------
 
 		// toolbar color clicked
 		$(".buttonColor").click(function () {
 			setSelectedTool(this);
+			setObjectSelection(true);
 			var colorChosen = this.getAttribute("data-color");
 
 			Session.set("currentColor", colorChosen);
