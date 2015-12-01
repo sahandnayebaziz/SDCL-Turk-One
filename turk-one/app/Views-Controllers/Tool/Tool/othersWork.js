@@ -34,6 +34,36 @@ if (Meteor.isClient) {
 		}
 	});
 
+	Template.othersWorkInteractive.onRendered(function () {
+		tourThroughDecisionPoint = {
+			id: "dp",
+			steps: [
+				{
+					delay: 500,
+					yOffset: 100,
+					title: "Using the work of others",
+					content: "You can click on the work of others or the grey icon in the top to get a more detailed view of the solutions. Not only can you then read the description and title of the solutions but you can also duplicate the entire canvas, or a selection of objects, to one of your own 5 canvasses.",
+					target: "#intro4",
+					multipage: true,
+					placement: 'bottom',
+					fixedElement: true,
+					onNext: function () {
+
+						changeSizeClass();
+					}
+				},
+				{
+					title: "this does not show"
+				}
+			]
+		};
+		if (hopscotch.getState() == "tool:3") {
+			hopscotch.endTour(tourWithOthers);
+			hopscotch.endTour(tour);
+			hopscotch.startTour(tourThroughDecisionPoint);
+		}
+	});
+
 	Template.othersWorkImages.onRendered(function () {
 		if (Session.get("savedSet" + Session.get("ticket")) != true) {
 			var solutions = Solutions.find({
@@ -55,6 +85,10 @@ if (Meteor.isClient) {
 					console.log(e);
 				}
 			})
+		}
+		if (hopscotch.getState() == "dp:1") {
+			hopscotch.endTour(tourThroughDecisionPoint);
+			hopscotch.startTour(tourFinishControls);
 		}
 	});
 

@@ -205,7 +205,7 @@ if (Meteor.isClient) {
 	Meteor.subscribe("configurations");
 
 	tour = {
-		id: "hello-hopscotch",
+		id: "tool",
 		steps: [
 			{
 				yOffset: 200,
@@ -232,7 +232,7 @@ if (Meteor.isClient) {
 	};
 
 	tourWithOthers = {
-		id: "hello-hopscotch2",
+		id: "tool",
 		steps: [
 			{
 				yOffset: 200,
@@ -255,21 +255,20 @@ if (Meteor.isClient) {
 				content: "Turkers before you have already submitted some solutions for this problem, you can use them as inspiration. You are allowed to copy elements from other people's work and improve or change it.",
 				target: "#intro3",
 				placement: 'top',
+				multipage: true,
 				onNext: function () {
 					changeSizeClass();
 				}
 			},
 			{
-				yOffset: 800,
-				delay: 2000,
-				title: "Using the work of others",
-				content: "You can click on the work of others or the grey icon in the top to get a more detailed view of the solutions. Not only can you then read the description and title of the solutions but you can also duplicate the entire canvas, or a selection of objects, to one of your own 5 canvasses.",
-				target: "#intro3",
-				placement: 'top',
-				onNext: function () {
-					changeSizeClass();
-				}
-			},
+				title: "this does not show"
+			}
+		]
+	};
+
+	tourFinishControls = {
+		id: "finish",
+		steps: [
 			{
 				delay: 1000,
 				title: "Submitting your work",
@@ -380,15 +379,20 @@ if (Meteor.isClient) {
 		},
 		"click #tutorialRequest": function () {
 			hideAllTooltips();
-			var mainConfiguration;
+			// assuming should show other's work
+			var otherSolutionsCount = Solutions.find({
+				submitted: true,
+				status: {$ne: "rejected"},
+				decisionPointId: this._id,
+				complexity: {$gt: 1},
+				workerId: {$ne: Session.get("ticket")}
+			}).fetch().length;
 
-			if (Configurations.findOne(1)) {
-				mainConfiguration = Configurations.findOne(1);
+			console.log(otherSolutionsCount + " many solutions");
 
-			}
-			if (mainConfiguration.shouldShowOthersWork && atLeastoneOtherWork()){
+			if (otherSolutionsCount > 0) {
 				hopscotch.startTour(tourWithOthers);
-			}else{
+			} else {
 				hopscotch.startTour(tour);
 			}
 		},
@@ -608,20 +612,20 @@ if (Meteor.isClient) {
 	});
 
 	Template.decisionPointInformationPanel.rendered = function () {
-		var mainConfiguration;
+		var otherSolutionsCount = Solutions.find({
+			submitted: true,
+			status: {$ne: "rejected"},
+			decisionPointId: this.data._id,
+			complexity: {$gt: 1},
+			workerId: {$ne: Session.get("ticket")}
+		}).fetch().length;
 
-		if (Configurations.findOne(1)) {
-			 mainConfiguration = Configurations.findOne(1);
-		}
-		if (mainConfiguration.shouldShowOthersWork && atLeastoneOtherWork())
-		{
-			hopscotch.configure({showCloseButton: false});
+		hopscotch.configure({showCloseButton: false});
+		if (otherSolutionsCount > 0) {
 			hopscotch.startTour(tourWithOthers);
-		}else{
-			hopscotch.configure({showCloseButton: false});
+		} else {
 			hopscotch.startTour(tour);
 		}
-
 	};
 
 	// GLOBAL HELPER METHODS
