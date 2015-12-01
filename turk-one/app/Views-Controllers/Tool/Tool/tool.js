@@ -204,25 +204,80 @@ if (Meteor.isClient) {
 	Meteor.subscribe("decisionPoints");
 	Meteor.subscribe("configurations");
 
-	tutorialSteps = [
-		{
-			element: '#intro1',
-			intro: "Here is your task description, try to cover as many requirements in your solutions. Do not worry about coming up with a perfect solution. We want you to explore the problem at a high level and offer a few different solutions you think could work",
-			position: 'bottom-middle-aligned'
-		},
-		{
-			element: '#toolView2',
-			intro: "Sketch and explain your ideas in these 5 different canvasses and text fields. We are looking for high level sketches, like you would make on a whiteboard. Your sketches can be simple. However, try to make sketches that help others to understand your solutions",
-			position: 'bottom-middle-aligned',
+	tour = {
+		id: "hello-hopscotch",
+		steps: [
+			{
+				yOffset: 200,
+				title: "Here is your task description",
+				content: "Try to cover as many requirements in your solutions. Do not worry about coming up with a perfect solution. We want you to explore the problem at a high level and offer a few different solutions you think could work.",
+				target: '#intro1',
+				placement: 'right'
+			},
+			{
+				yOffset: 200,
+				xOffset: 150,
+				title: "Sketch and explain your solutions",
+				content: "You have 5 different canvasses and text fields to sketch and explain your solutions. We are looking for high level sketches, like you would make on a whiteboard. Your sketches can be simple. However, try to make sketches that help others to understand your solutions.",
+				target: '#toolView2',
+				placement: 'left',
+			},
+			{
+				title: "Submitting your work",
+				content: "When you are finished, you can review and submit your ideas by clicking on REVIEW & SUBMIT. If you'd like to quit the HIT, please use this quit button and leave some feedback why you feel this HIT is not for you. Each of these buttons gives you a chance to cancel, so feel free to try them out",
+				target: "#intro3",
+				placement: 'right'
+			}
+		]
+	};
 
-		},
-		{
-			element: "#intro1",
-			intro: "When you are finished, you can review and submit your ideas by clicking on REVIEW & SUBMIT. If you'd like to quit the HIT, please use this quit button and leave some feedback why you feel this HIT is not for you. Each of these buttons gives you a chance to cancel, so feel free to try them out",
-			position: 'bottom-middle-aligned'
-		}
-	];
-
+	tourWithOthers = {
+		id: "hello-hopscotch2",
+		steps: [
+			{
+				yOffset: 200,
+				title: "Here is your task description",
+				content: "Try to cover as many requirements in your solutions. Do not worry about coming up with a perfect solution. We want you to explore the problem at a high level and offer a few different solutions you think could work.",
+				target: '#intro1',
+				placement: 'right'
+			},
+			{
+				yOffset: 200,
+				xOffset: 150,
+				title: "Sketch and explain your solutions",
+				content: "You have 5 different canvasses and text fields to sketch and explain your solutions. We are looking for high level sketches, like you would make on a whiteboard. Your sketches can be simple. However, try to make sketches that help others to understand your solutions.",
+				target: '#toolView2',
+				placement: 'left',
+			},
+			{
+				title: "Scroll down for other people's work",
+				content: "Turkers before you have already submitted some solutions for this problem, you can use them as inspiration. You are allowed to copy elements from other people's work and improve or change it.",
+				target: "#othersWork",
+				placement: 'top',
+				onNext: function () {
+					changeSizeClass();
+				},
+			},
+			{
+				yOffset: 800,
+				delay: 2000,
+				title: "Using the work of others",
+				content: "You can click on the work of others or the grey icon in the top to get a more detailed view of the solutions. Not only can you then read the description and title of the solutions but you can also duplicate the entire canvas, or a selection of objects, to one of your own 5 canvasses.",
+				target: "#intro3",
+				placement: 'top',
+				onNext: function () {
+					changeSizeClass();
+				}
+			},
+			{
+				delay: 1000,
+				title: "Submitting your work",
+				content: "When you are finished, you can review and submit your ideas by clicking on REVIEW & SUBMIT. If you'd like to quit the HIT, please use this quit button and leave some feedback why you feel this HIT is not for you. Each of these buttons gives you a chance to cancel, so feel free to try them out",
+				target: "#intro3",
+				placement: 'right'
+			}
+		]
+	};
 
 	Template.tool.helpers({
 		allowedToContinueWorking: function () {
@@ -273,6 +328,9 @@ if (Meteor.isClient) {
 				return mainConfiguration.shouldShowOthersWork
 			}
 		},
+		//TODO at least one helper
+
+
 		showingOthersWork: function () {
 			return Session.get("showingOthersWork") == true;
 		},
@@ -314,18 +372,17 @@ if (Meteor.isClient) {
 		},
 		"click #tutorialRequest": function () {
 			hideAllTooltips();
-			introJs().setOptions({
-				"scrollToElement": true,
-				"showStepNumbers": false,
-				"showProgress": true,
-				"showBullets": false,
-				"exitOnOverlayClick": false,
-				"disableInteraction": true,
-				steps: tutorialSteps
-			}).start();
+			var mainConfiguration;
 
+			if (Configurations.findOne(1)) {
+				mainConfiguration = Configurations.findOne(1);
 
-			$(".introjs-tooltiptext").css("text-align", "center");
+			}
+			if (mainConfiguration.shouldShowOthersWork){
+				hopscotch.startTour(tourWithOthers);
+			}else{
+				hopscotch.startTour(tour);
+			}
 		},
 		"click #tipsRequest": function () {
 
@@ -530,6 +587,23 @@ if (Meteor.isClient) {
 		otherWorkCanvases = [];
 
 	});
+
+	Template.decisionPointInformationPanel.rendered = function () {
+		var mainConfiguration;
+
+		if (Configurations.findOne(1)) {
+			 mainConfiguration = Configurations.findOne(1);
+
+		}
+		if (mainConfiguration.shouldShowOthersWork){
+			hopscotch.configure({showCloseButton: false});
+			hopscotch.startTour(tourWithOthers);
+		}else{
+			hopscotch.configure({showCloseButton: false});
+			hopscotch.startTour(tour);
+		}
+
+	};
 
 	// GLOBAL HELPER METHODS
 	hideAllTooltips = function () {
