@@ -329,8 +329,9 @@ if (Meteor.isClient) {
 				return mainConfiguration.shouldShowOthersWork
 			}
 		},
-		//TODO at least one helper
-
+		atLeastOneWorkOfOthers: function () {
+			return atLeastoneOtherWork();
+		},
 
 		showingOthersWork: function () {
 			return Session.get("showingOthersWork") == true;
@@ -379,7 +380,7 @@ if (Meteor.isClient) {
 				mainConfiguration = Configurations.findOne(1);
 
 			}
-			if (mainConfiguration.shouldShowOthersWork){
+			if (mainConfiguration.shouldShowOthersWork && atLeastoneOtherWork()){
 				hopscotch.startTour(tourWithOthers);
 			}else{
 				hopscotch.startTour(tour);
@@ -458,6 +459,16 @@ if (Meteor.isClient) {
 		var toolView1 = $("#toolView1");
 		toolView1.scrollTop(0);
 		toolView2ScrollTarget = CDIndex;
+	};
+
+	atLeastoneOtherWork = function () {
+		return Solutions.findOne({
+			submitted: true,
+			status: {$ne: "rejected"},
+			decisionPointId: this._id,
+			complexity: {$gt: 1},
+			workerId: {$ne: Session.get("ticket")}
+		});
 	};
 
 	Template.tool.onRendered(function () {
@@ -595,9 +606,9 @@ if (Meteor.isClient) {
 
 		if (Configurations.findOne(1)) {
 			 mainConfiguration = Configurations.findOne(1);
-
 		}
-		if (mainConfiguration.shouldShowOthersWork){
+		if (mainConfiguration.shouldShowOthersWork && atLeastoneOtherWork())
+		{
 			//hopscotch.configure({showCloseButton: false});
 			hopscotch.startTour(tourWithOthers);
 		}else{
