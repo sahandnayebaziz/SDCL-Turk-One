@@ -330,7 +330,13 @@ if (Meteor.isClient) {
 			}
 		},
 		atLeastOneWorkOfOthers: function () {
-			return atLeastoneOtherWork();
+			return Solutions.findOne({
+				submitted: true,
+				status: {$ne: "rejected"},
+				decisionPointId: this._id,
+				complexity: {$gt: 1},
+				workerId: {$ne: Session.get("ticket")}
+			});
 		},
 
 		showingOthersWork: function () {
