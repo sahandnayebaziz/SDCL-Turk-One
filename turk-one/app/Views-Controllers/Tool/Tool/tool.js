@@ -609,10 +609,10 @@ if (Meteor.isClient) {
 		}
 		if (mainConfiguration.shouldShowOthersWork && atLeastoneOtherWork())
 		{
-			//hopscotch.configure({showCloseButton: false});
+			hopscotch.configure({showCloseButton: false});
 			hopscotch.startTour(tourWithOthers);
 		}else{
-			//hopscotch.configure({showCloseButton: false});
+			hopscotch.configure({showCloseButton: false});
 			hopscotch.startTour(tour);
 		}
 
