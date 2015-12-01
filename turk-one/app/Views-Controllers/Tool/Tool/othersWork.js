@@ -7,6 +7,7 @@ if (Meteor.isClient) {
 		otherSolutions: function () {
 			return Solutions.find({
 						submitted: true,
+						rejected: {$ne: true},
 						decisionPointId: this._id,
 						complexity: {$gt: 1},
 						workerId: {$ne: Session.get("ticket")},
