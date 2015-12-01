@@ -232,7 +232,7 @@ if (Meteor.isClient) {
 			return WorkerTickets.findOne(this._id);
 		},
 		decisionPoint: function () {
-			return DecisionPoints.find({_id: this.decisionPointId.toString()}).fetch()[0];
+			return DecisionPoints.findOne({_id: this.decisionPointId});
 		},
 		solutions: function () {
 			return Solutions.find({workerId: Session.get("ticket")}, {sort: {canvasNumber: 1}});

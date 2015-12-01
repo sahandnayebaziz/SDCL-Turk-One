@@ -217,6 +217,9 @@ if (Meteor.isClient) {
 		},
 		exitSurvey: function () {
 			return ExitSurveys.findOne({workerTicket: this._id});
+		},
+		solutionForReference: function (id) {
+			return Solutions.findOne(id);
 		}
 	});
 
