@@ -172,21 +172,20 @@ if (Meteor.isServer) {
 				if (!error) {
 					console.log("added reference to solution");
 				}
-		});
-	;
-},
-	logAllSolutionIdsAvailableToWorker: function (ticket, solutions) {
-		WorkerTickets.update(ticket, {
-			$set: {
-				referencesAvailable: solutions
-			}
-		}, function (error) {
-			if (!error) {
-				console.log("added references available");
-			}
-		});
-	}
-})
+			});
+		},
+		logAllSolutionIdsAvailableToWorker: function (ticket, solutions) {
+			WorkerTickets.update(ticket, {
+				$set: {
+					referencesAvailable: solutions
+				}
+			}, function (error) {
+				if (!error) {
+					console.log("added references available");
+				}
+			});
+		}
+	})
 	;
 
 	Meteor.publish("solutions", function () {
