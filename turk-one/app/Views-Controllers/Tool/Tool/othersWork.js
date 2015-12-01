@@ -33,25 +33,27 @@ if (Meteor.isClient) {
 	});
 
 	Template.othersWorkImages.onRendered(function () {
-		var solutions = Solutions.find({
-				submitted: true,
-				decisionPointId: this.data._id,
-				complexity: {$gt: 1},
-				workerId: {$ne: Session.get("ticket")}
-			},
-			{
-				sort: {dateUpdated: -1}
-			}).fetch();
-		var solutionIds = $.map(solutions, function(s) {
-			return s._id
-		});
-
-		Meteor.call("logAllSolutionIdsAvailableToWorker", Session.get("ticket"), solutionIds, function(e,r) {
-			if (!e) {
-				console.log("logged available solutions");
-			}
-		})
-
+		if (Session.get("savedSet" + Session.get("ticket")) != true) {
+			var solutions = Solutions.find({
+						submitted: true,
+						decisionPointId: this.data._id,
+						complexity: {$gt: 1},
+						workerId: {$ne: Session.get("ticket")}
+					},
+					{
+						sort: {dateUpdated: -1}
+					}).fetch();
+			var solutionIds = $.map(solutions, function(s) {
+				return s._id
+			});
+			Meteor.call("logAllSolutionIdsAvailableToWorker", Session.get("ticket"), solutionIds, function(e,r) {
+				if (!e) {
+					Session.setPersistent("savedSet" + Session.get("ticket"), true);
+				} else {
+					console.log(e);
+				}
+			})
+		}
 	});
 
 
