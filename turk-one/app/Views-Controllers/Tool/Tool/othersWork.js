@@ -40,12 +40,11 @@ if (Meteor.isClient) {
 			steps: [
 				{
 					delay: 500,
-					yOffset: 100,
 					title: "Using the work of others",
 					content: "You can click on the work of others or the grey icon in the top to get a more detailed view of the solutions. Not only can you then read the description and title of the solutions but you can also duplicate the entire canvas, or a selection of objects, to one of your own 5 canvasses.",
 					target: "#intro4",
 					multipage: true,
-					placement: 'bottom',
+					placement: 'top',
 					fixedElement: true,
 					onNext: function () {
 
