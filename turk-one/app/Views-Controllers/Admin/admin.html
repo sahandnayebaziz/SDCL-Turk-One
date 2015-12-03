@@ -15,6 +15,12 @@
 				<li class="nav-item">
 					<a class="nav-link {{#if isActivePath '/admin/Surveys'}} active {{/if}}" href="/admin/Surveys">Surveys</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link {{#if isActivePath '/admin/Configuration'}} active {{/if}}" href="/admin/Configuration">Configuration</a>
+				</li>
+                <li class="nav-item">
+                    <a class="nav-link {{#if isActivePath '/admin/Quality Review'}} active {{/if}}" href="/admin/QualityReview">Quality Review</a>
+                </li>
 			</ul>
 			<!--<form class="form-inline navbar-form pull-right">-->
 				<!--<input class="form-control" type="text" placeholder="Search">-->
@@ -26,7 +32,6 @@
 
 <template name="admin">
 	{{> adminNav}}
-
 	<div class="container-fluid top-buffer-25">
 		<div class="row">
 			<div class="col-xs-10 col-xs-offset-1">

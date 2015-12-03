@@ -70,13 +70,13 @@ if (Meteor.isClient) {
 							});
 							break;
 						case "in-progress":
-								conditionalsToAllow.push({
-									$and: [
-										{"reviewed": {$exists: false}},
-										{"submitted": {$exists: false}},
-										{"quit": {$exists: false}}
-									]
-								});
+							conditionalsToAllow.push({
+								$and: [
+									{"reviewed": {$exists: false}},
+									{"submitted": {$exists: false}},
+									{"quit": {$exists: false}}
+								]
+							});
 							break;
 						case "quit":
 							conditionalsToAllow.push({"quit": true});
@@ -217,6 +217,9 @@ if (Meteor.isClient) {
 		},
 		exitSurvey: function () {
 			return ExitSurveys.findOne({workerTicket: this._id});
+		},
+		solutionForReference: function (id) {
+			return Solutions.findOne(id);
 		}
 	});
 
@@ -253,6 +256,9 @@ if (Meteor.isClient) {
 		},
 		timeInMinutes: function () {
 			return parseInt(this.time / 60);
+		},
+		solutionForReference: function (id) {
+			return Solutions.findOne(id);
 		}
 	});
 

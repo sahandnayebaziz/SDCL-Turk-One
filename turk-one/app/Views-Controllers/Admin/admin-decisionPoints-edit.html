@@ -1,0 +1,62 @@
+<template name="adminDecisionPointsEdit">
+	{{> adminNav}}
+	<div class="container top-buffer-25">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="btn-group pull-right">
+					<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown"
+					        aria-haspopup="true" aria-expanded="false">
+						manage
+					</button>
+					<div class="dropdown-menu">
+						<a class="dropdown-item disabled" href="#" disabled="true" data-container="body" data-toggle="popover"
+						   data-placement="left" data-trigger="hover"
+						   data-content="Coming soon.">archive</a>
+
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item delete" href="#"><span class="text-danger">delete</span></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row top-buffer-10">
+			<div class="col-md-6">
+				<h6>edit decision point</h6>
+
+				<div class="row top-buffer-25">
+					<div class="col-xs-10">
+						<form id="editForm">
+							<fieldset class="form-group">
+								<input type="text" class="form-control" name="name" placeholder="name" value="{{name}}">
+							</fieldset>
+							<fieldset class="form-group">
+								<input type="text" class="form-control" name="id" placeholder="id" value="{{_id}}" readonly
+								       data-container="body" data-toggle="popover" data-placement="right" data-trigger="focus"
+								       data-content="If you would like to change the id attribute of a decision point, please delete this decision point
+							and create a new one.">
+							</fieldset>
+							<fieldset class="form-group">
+								<input type="text" class="form-control" name="type" placeholder="type" value="{{type}}">
+							</fieldset>
+							<fieldset class="form-group">
+							<textarea id="descriptionInput" class="form-control" name="description" rows="10"
+							          placeholder="description">{{description}}</textarea>
+							</fieldset>
+							<div class="btn-group pull-right top-buffer-10">
+								<button type="submit" class="btn btn-primary">save changes</button>
+								<a href="/admin/DecisionPoints" class="btn btn-secondary">cancel</a>
+							</div>
+						</form>
+
+						<script>
+							$('[data-toggle="popover"]').popover()
+						</script>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				{{>adminDecisionPointsMarkdownPreview}}
+			</div>
+		</div>
+	</div>
+</template>

@@ -6,19 +6,30 @@ if (Meteor.isClient) {
 		var canvasNumber = this.data.canvasNumber;
 		var savedCanvasState = this.data.state;
 
-
 		var idForNewCanvas = "canvas-" + canvasNumber;
 		var element = $("#" + idForNewCanvas);
 		var canvasHeightShouldBe = 500;
 		var canvasWidthShouldBe = $("#col-sketch").width();
+
+		// limit canvas width to 1000px wide
+		if (canvasWidthShouldBe > 1000) {
+			canvasWidthShouldBe = 1000;
+		}
+
 		$(element).attr({"height": canvasHeightShouldBe, "width": canvasWidthShouldBe});
 
-		var canvas = new fabric.Canvas(idForNewCanvas, {stateful:false, renderOnAddRemove:false }); //for faster performance
-		//var canvas = new fabric.Canvas(idForNewCanvas);
+		var canvas = new fabric.Canvas(idForNewCanvas);
 		canvas.CDIndex = canvasNumber;
+		canvas.CDID = this.data._id;
 
 		// add references to this canvas
+		for (var i = 0; i < canvases.length; i++) {
+			if (canvases[i].CDIndex === canvas.CDIndex) {
+				canvases.splice(i, 1);
+			}
+		}
 		canvases.push(canvas);
+
 		canvasHistory[canvas.CDIndex] = {backStates: [], forwardStates: [], recording: true};
 
 		var stopwatch = new Stopwatch();

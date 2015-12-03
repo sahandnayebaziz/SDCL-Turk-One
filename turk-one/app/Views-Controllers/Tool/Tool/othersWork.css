@@ -1,0 +1,50 @@
+#othersWorkDuplicateContainer {
+    min-height: 50px;
+    width: inherit !IMPORTANT;
+    position: fixed;
+    bottom: 0px;
+}
+
+.othersWorkDuplicateButton {
+    width: 180px;
+    height: 100px;
+    background-color: white;
+    margin-top: 0px;
+    margin-bottom: 16px;
+    margin-left: 20px;
+    border-radius: 4px;
+    box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.33);
+    transition: box-shadow .24s ease-in-out, margin-top .1s ease-in-out, margin-bottom .1s ease-in-out, opacity .24s ease-in-out!IMPORTANT;
+    cursor: pointer!IMPORTANT;
+}
+
+#othersWorkDuplicateButton:hover {
+    margin-top: -4px;
+    margin-bottom: 4px;
+    transition: opacity .24s ease-in-out;
+    /*box-shadow: 0px 12px 28px 0px rgba(0, 0, 0, 0.24);*/
+}
+
+#duplicatePlus {
+    font-size: 48px;
+    color: rgb(64, 64, 64);
+    line-height:69px;
+}
+
+.duplicateTextContainer {
+    margin-top: -10px;
+}
+
+#duplicateText {
+    font-weight: 500;
+}
+
+.othersWorkInteractive {
+    opacity: 0.4;
+    transition: opacity .24s ease-in-out;
+}
+
+.button-lg-enabled {
+    opacity: 1!IMPORTANT;
+    transition: opacity .24s ease-in-out;
+}

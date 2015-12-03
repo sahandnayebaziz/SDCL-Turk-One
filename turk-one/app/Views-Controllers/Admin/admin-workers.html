@@ -7,7 +7,7 @@
 				<tr>
 					<th>time</th>
 					<th>worker</th>
-					<!--<th>session</th>-->
+					<th>session</th>
 					<th># of solutions</th>
 					<th>decision point</th>
 					<th>status</th>
@@ -53,7 +53,7 @@
 	<tr class="{{viewStatus}}">
 		<td>{{timeFormatted}}</td>
 		<td>{{workerId}}</td>
-		<!--<td>{{sessionId}}</td>-->
+		<td>{{sessionId}}</td>
 		<td>{{numberOfSolutionsComplexEnough}}</td>
 		<td>{{decisionPoint.name}}</td>
 		<td><span class="label {{viewStatusLabelClass}}">{{viewStatusLabelMessage}}</span></td>
@@ -94,7 +94,7 @@
 
 <template name="worker">
 	{{> adminNav}}
-	<div class="container-fluid top-buffer-50">
+	<div class="container-fluid top-buffer-50 bottom-buffer-100">
 		<div class="row">
 			<div class="col-xs-10 col-xs-offset-1">
 				<div class="row bottom-buffer-25">
@@ -141,7 +141,8 @@
 							{{/if}}
 							{{#if exitSurvey}}
 								<li class="list-group-item"><span class="text-muted">task difficulty: </span> {{exitSurvey.task}}</li>
-								<li class="list-group-item"><span class="text-muted">decision difficulty: </span> {{exitSurvey.decision}}</li>
+								<li class="list-group-item"><span
+									class="text-muted">decision difficulty: </span> {{exitSurvey.decision}}</li>
 								<li class="list-group-item"><span class="text-muted">tool difficulty: </span> {{exitSurvey.tool}}</li>
 								<li class="list-group-item"><span class="text-muted">exit feedback: </span> {{exitSurvey.feedback}}</li>
 							{{/if}}
@@ -161,6 +162,24 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-xs-10 col-xs-offset-1">
+				<div class="row top-buffer-50">
+					<div class="col-xs-12">
+						<h6 class="bottom-buffer-25">References available</h6>
+						<div class="row">
+							<div class="col-md-6">
+								{{#each referencesAvailable}}
+									{{#with solutionForReference this}}
+										<a href="/worker/{{workerId}}">{{> solutionVisualImage}}</a>
+									{{/with}}
+								{{/each}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 <template name="solutionReviewModule">
@@ -176,35 +195,64 @@
 				<p><span class="text-muted">time spent name:</span> {{timeInName}}s</p>
 
 				<p><span class="text-muted">time spent explain:</span> {{timeInExplain}}s</p>
-				<canvas id="canvas-{{canvasNumber}}" class="canvas-sketch"></canvas>
+				{{#if ../submitted}}
+					<div class="row top-buffer-25 bottom-buffer-25">
+						<div class="col-xs-12">
+							<div class="btn-group pull-left">
+								<button type="button" class="btn btn-success btn-continue accept">accept</button>
+								<button type="button" class="btn btn-secondary btn-continue cancel">cancel</button>
+							</div>
+							<button type="button" class="btn btn-danger btn-continue pull-right reject">reject</button>
+						</div>
+					</div>
+				{{/if}}
+				{{> solutionVisualImage}}
 			</div>
 		</div>
-		{{#if ../submitted}}
-			<div class="row top-buffer-25 bottom-buffer-25">
-				<div class="col-xs-12">
-					<div class="btn-group pull-left">
-						<button type="button" class="btn btn-success btn-continue accept">accept</button>
-						<button type="button" class="btn btn-secondary btn-continue cancel">cancel</button>
+		{{#if references}}
+			<h6>references</h6>
+
+			<div class="row">
+				{{#each references}}
+					<div class="col-xs-6">
+						{{#with solutionForReference id}}
+							<a href="/worker/{{workerId}}">{{> solutionVisualImage}}</a>
+						{{/with}}
+						<p>{{type}}</p>
 					</div>
-					<button type="button" class="btn btn-danger btn-continue pull-right reject">reject</button>
-				</div>
+				{{/each}}
+			</div>
+		{{/if}}
+		{{#if referencedBy}}
+			<h6>referenced by</h6>
+
+			<div class="row">
+				{{#each referencedBy}}
+					<div class="col-xs-6">
+						{{#with solutionForReference id}}
+							<a href="/worker/{{workerId}}">{{> solutionVisualImage}}</a>
+						{{/with}}
+						<p>{{type}}</p>
+					</div>
+				{{/each}}
 			</div>
 		{{/if}}
 
-		<script>
-			var canvasId = "canvas-" + {{canvasNumber}};
-			var element = $("#" + canvasId);
-			var canvasHeightShouldBe = 500;
-			var canvasWidthShouldBe = $("#col-sketch").width() - 50;
-			$(element).attr({"height": canvasHeightShouldBe, "width": canvasWidthShouldBe});
 
-			var canvas = new fabric.Canvas(canvasId);
-			canvas.loadFromJSON({{state}}).renderAll();
-			canvas.selection = false;
-			canvas.forEachObject(function (o) {
-				o.selectable = false;
-			});
+		<!--<script>-->
+		<!--var canvasId = "canvas-" + {{canvasNumber}};-->
+		<!--var element = $("#" + canvasId);-->
+		<!--var canvasHeightShouldBe = 500;-->
+		<!--var canvasWidthShouldBe = $("#col-sketch").width() - 50;-->
+		<!--$(element).attr({"height": canvasHeightShouldBe, "width": canvasWidthShouldBe});-->
 
-		</script>
+		<!--var canvas = new fabric.Canvas(canvasId);-->
+		<!--canvas.loadFromJSON({{state}}).renderAll();-->
+		<!--canvas.selection = false;-->
+		<!--canvas.forEachObject(function (o) {-->
+		<!--o.selectable = false;-->
+		<!--});-->
+
+		<!--</script>-->
 	</li>
 </template>

@@ -5,6 +5,7 @@ Router.configure({
 	trackPageView: true
 });
 
+// main app flow
 Router.route('/:_sessionId/:_workerId/:_decisionPointId', function () {
 	this.render('Home', {
 		data: function () {
@@ -16,19 +17,6 @@ Router.route('/:_sessionId/:_workerId/:_decisionPointId', function () {
 		}
 	});
 	document.title = "Introduction";
-});
-
-Router.route('/help/:_id', function () {
-	this.render('Help', {
-		data: function () {
-			return WorkerTickets.findOne(this.params._id);
-		},
-		action: function () {
-			// render all templates and regions for this route
-			if (this.ready()) this.render()
-		}
-	});
-	document.title = "Tutorial";
 });
 
 Router.route('/tool/:_id', function () {
@@ -58,6 +46,7 @@ Router.route('/end/:_id', function () {
 	document.title = "Thank you for your participation";
 });
 
+// admin
 Router.route('/admin', function () {
 	if (Meteor.user() && Meteor.user().username === 'admin') {
 		this.render('Admin');
@@ -76,6 +65,20 @@ Router.route('/admin/:innerName', function () {
 	document.title = "Crowd Design Admin " + this.params.innerName;
 });
 
+Router.route('/admin/DecisionPoints/edit/:_id', function () {
+	if (Meteor.user() && Meteor.user().username === 'admin') {
+		this.render('adminDecisionPointsEdit', {
+			data: function () {
+				return DecisionPoints.findOne(this.params._id);
+			}
+		});
+		document.title = "Worker Review";
+	} else {
+		this.render("unauth");
+	}
+	document.title = "Crowd Design Admin " + this.params.innerName;
+});
+
 Router.route('/secretlogin', function () {
 	this.render('secretlogin');
 	document.title = "Crowd Design Admin";
@@ -87,5 +90,5 @@ Router.route('/worker/:_id', function () {
 			return WorkerTickets.findOne(this.params._id);
 		}
 	});
-	document.title = "Worker Review";
+	document.title = "Worker Review - " + this.params._id;
 });

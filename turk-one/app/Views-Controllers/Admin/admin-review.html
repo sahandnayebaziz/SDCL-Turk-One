@@ -1,0 +1,65 @@
+<template name="adminQualityReview">
+{{> adminNav}}
+<div class="container-fluid top-buffer-25">
+    <div class="row">
+        <div class="col-xs-10 col-xs-offset-1">
+            {{> adminQualityReviewInterior}}
+        </div>
+    </div>
+</div>
+</template>
+
+<template name="adminQualityReviewInterior">
+    <div role="tabpanel" class="tab-pane" id="solutions">
+
+        <ul class="nav nav-tabs" role="tablist">
+            {{#each decisionPoints}}
+                <li class="nav-item">
+                    <a class="nav-link" href="#id{{type}}" role="tab" data-toggle="tab">{{name}}</a>
+                </li>
+            {{/each}}
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            {{#each decisionPoints}}
+                    <div role="tabpanel" class="tab-pane" id="id{{type}}">
+                        <div class="row top-buffer-25">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <p>{{#markdown}}###Decision point {{name}}: {{/markdown}}</p>
+                                        <br>
+                                        <p>{{#markdown}}{{description}}{{/markdown}}</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <div class="col-xs-12 top-buffer-25">
+                                {{#each solutions}}
+                                    {{> solutionQualityReviewModule}}
+                                    <br>
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+            {{/each}}
+        </div>
+
+    </div>
+</template>
+
+<template name="solutionQualityReviewModule">
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-xs-12">
+                <p><span class="text-muted">SolutionId: </span> {{_id}}</p>
+
+                <p><span class="text-muted">name: </span> {{name}}</p>
+
+                <p><span class="text-muted">explanation: </span> {{explain}}</p>
+
+                {{> solutionVisualImage}}
+            </div>
+        </div>
+    </li>
+</template>

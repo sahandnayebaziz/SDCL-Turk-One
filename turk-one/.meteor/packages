@@ -18,7 +18,6 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 
 iron:router
 chuikoff:bootstrap-4
-ryanswapp:fabricjs
 natestrauser:animate-css
 altapp:aes
 keyboardjs:keyboardjs
@@ -35,3 +34,5 @@ mizzao:bootboxjs
 zimme:active-route
 yogiben:spinkit
 markdown
+mikkelking:meteor-hopscotch
+ryanswapp:fabricjs

@@ -14,7 +14,7 @@ if (Meteor.isServer) {
 				sessionId: s,
 				decisionPointId: d,
 				visited: v,
-				run: "ART1MT"
+				run: "UIT2MT"
 			});
 			console.log("created new workerTicket");
 			return newDoc;
@@ -36,7 +36,7 @@ if (Meteor.isClient) {
 	Template.home.helpers({
 		decisionPointText: function () {
 			if (DecisionPoints.findOne(this.decisionPointId)) {
-				if (DecisionPoints.findOne().decisionPointType == 'UI') {
+				if (DecisionPoints.findOne(this.decisionPointId).type == 'UI') {
 					return "The decision point on which you are asked to work concerns the user interface of the simulator. That is, you will need to design the visual elements and interaction that the user has with the program for that decision point."
 				} else {
 					return "The decision point on which you are asked to work concerns the implementation of the simulator. That is, you will need to design the classes and interfaces that the programmer will need to implement for that decision point."

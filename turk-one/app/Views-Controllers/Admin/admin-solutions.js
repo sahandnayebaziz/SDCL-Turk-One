@@ -15,7 +15,7 @@ if (Meteor.isServer) {
 if (Meteor.isClient) {
 	Template.adminSolutionsInterior.helpers({
 		solutions: function () {
-			return Solutions.find({complexity: {$gt: 0}}, {sort: {workerId: 1}});
+			return Solutions.find({complexity: {$gt: 1}}, {sort: {dateUpdated: -1}});
 		}
 	});
 	Template.adminSolutionsInterior.events({
@@ -38,12 +38,6 @@ if (Meteor.isClient) {
 					}
 				}
 			});
-		}
-	});
-
-	Template.decisionPreview.events({
-		"click .delete": function () {
-			Meteor.call("deleteDecisionPoint", this._id);
 		}
 	});
 }
