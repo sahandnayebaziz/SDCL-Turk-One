@@ -108,6 +108,9 @@ if (Meteor.isClient) {
 		numberOfSolutionsAccepted: function () {
 			return Solutions.find({workerId: this._id, status: "accepted"}).count();
 		},
+		numberOfSolutionsRejected: function () {
+			return Solutions.find({workerId: this._id, status: "rejected"}).count();
+		},
 		decisionPoint: function () {
 			return DecisionPoints.findOne(this.decisionPointId);
 		},
@@ -145,7 +148,7 @@ if (Meteor.isClient) {
 		},
 		timeFormatted: function () {
 			moment.tz.setDefault("America/Los_Angeles");
-			return moment(this.visited.toString()).calendar();
+			return moment(this.visited.toString()).format("MM/DD/YYYY HH:mm:ss");
 		}
 	});
 
@@ -203,14 +206,14 @@ if (Meteor.isClient) {
 		isComplexEnough: function () {
 			return this.complexity > 0;
 		},
-		timeInToolInMinutes: function () {
-			return parseInt(this.timeInTool / 60);
+		_timeInTool: function () {
+			return moment.duration(this.timeInTool, "seconds").format("hh:mm:ss", { trim: false });
 		},
-		timeOnHomeInMinutes: function () {
-			return parseInt(this.homeTime / 60);
+		_homeTime: function () {
+			return moment.duration(this.homeTime, "seconds").format("hh:mm:ss", { trim: false });
 		},
-		timeOnInfoInMinutes: function () {
-			return parseInt(this.infoModalTime / 60);
+		_infoModalTime: function () {
+			return moment.duration(this.infoModalTime, "seconds").format("hh:mm:ss", { trim: false });
 		},
 		quitSurvey: function () {
 			return QuitSurveys.findOne({workerTicket: this._id});
@@ -254,8 +257,14 @@ if (Meteor.isClient) {
 					return "";
 			}
 		},
-		timeInMinutes: function () {
-			return parseInt(this.time / 60);
+		_time: function () {
+			return moment.duration(this.time, "seconds").format("hh:mm:ss", { trim: false });
+		},
+		_timeInName: function () {
+			return moment.duration(this.timeInName, "seconds").format("hh:mm:ss", { trim: false });
+		},
+		_timeInExplain: function () {
+			return moment.duration(this.timeInExplain, "seconds").format("hh:mm:ss", { trim: false });
 		},
 		solutionForReference: function (id) {
 			return Solutions.findOne(id);
