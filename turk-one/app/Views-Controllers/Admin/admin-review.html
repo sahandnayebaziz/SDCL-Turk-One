@@ -25,26 +25,28 @@
             {{#each decisionPoints}}
                     <div role="tabpanel" class="tab-pane" id="id{{type}}">
                         <div class="row top-buffer-25">
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <p>{{#markdown}}###Decision point {{name}}: {{/markdown}}</p>
-                                        <br>
-                                        <p>{{#markdown}}{{description}}{{/markdown}}</p>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <p>{{#markdown}}{{description}}{{/markdown}}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
+                                </li>
+                            <div class="col-xs-12 text-center">
+                                <p class="lead">Number of solutions to review for this decision point: {{numberOfSolutions}}</p>
+                            </div>
                             <div class="col-xs-12 top-buffer-25">
                                 {{#each solutions}}
                                     {{> solutionQualityReviewModule}}
                                     <br>
                                 {{/each}}
+
+                                <!--add numbers to each sketch-->
                             </div>
                         </div>
                     </div>
             {{/each}}
         </div>
-
     </div>
 </template>
 
@@ -62,4 +64,116 @@
             </div>
         </div>
     </li>
+</template>
+
+<template name="solutionReview">
+    <form id="qualityReviewForm{{_id}}">
+        <div class="row">
+            <fieldset class="row top-buffer-10 text-center">
+                <label>How understandable is the proposed solution?</label>
+                <p class="col-md-10 col-md-offset-1"> not understandable at all -
+                    <label class="radio-inline">
+                        <input type="radio" name="understandability" value="1"> 1
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="understandability" value="2"> 2
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="understandability" value="3"> 3
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="understandability" value="4"> 4
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="understandability" value="5"> 5
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="understandability" value="6"> 6
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="understandability" value="7"> 7
+                    </label>
+                    - very understandable
+                    <!--$("#exitForm input[name=taskDifficulty]:checked").val()-->
+                </p>
+            </fieldset>
+
+            <fieldset class="row top-buffer-10 text-center">
+                <label>How complete is the solution? </label>
+                <p class="col-md-10 col-md-offset-1"> Not complete at all -
+                    <label class="radio-inline">
+                        <input type="radio" name="completeness" value="1"> 1
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="completeness" value="2"> 2
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="completeness" value="3"> 3
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="completeness" value="4"> 4
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="completeness" value="5"> 5
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="completeness" value="6"> 6
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="completeness" value="7"> 7
+                    </label>
+                    - very complete
+                </p>
+            </fieldset>
+
+            <fieldset class="row top-buffer-10 text-center">
+                <label>How feasible is the solution?</label>
+                <p class="col-md-10 col-md-offset-1"> not at all feasible -
+                    <label class="radio-inline">
+                        <input type="radio" name="feasibility" value="1"> 1
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="feasibility" value="2"> 2
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="feasibility" value="3"> 3
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="feasibility" value="4"> 4
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="feasibility" value="5"> 5
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="feasibility" value="6"> 6
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="feasibility" value="7"> 7
+                    </label>
+                    - very feasible
+                </p>
+            </fieldset>
+
+            <fieldset class="row top-buffer-10 text-center">
+                <label>Do you miss context to understand/rate the quality of this solution?</label>
+                <p class="col-md-10 col-md-offset-1">
+                    <label class="radio-inline">
+                        <input type="radio" name="missingContext" value="1"> Yes
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="missingContext" value="0"> No
+                    </label>
+                </p>
+            </fieldset>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <button type="submit" id="saveReview{{_id}}" disabled="true" class="top-buffer-10 text-center btn btn-primary disabled btn-continue">
+                    SAVE QUALITY REVIEW
+                </button>
+            </div>
+        </div>
+    </form>
+
 </template>

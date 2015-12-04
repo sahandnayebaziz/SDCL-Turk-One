@@ -8,3 +8,4 @@ Solutions = new Mongo.Collection("solutions");
 ExitSurveys = new Mongo.Collection("exitSurveys");
 QuitSurveys = new Mongo.Collection("quitSurveys");
 Configurations = new Mongo.Collection("configurations");
+QualityReviews = new Mongo.Collection("qualityReview");
