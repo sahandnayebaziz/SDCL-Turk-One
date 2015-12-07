@@ -1,10 +1,10 @@
+# meteor build files
 .meteor/local
 .meteor/meteorite
 
-.idea/.name
-
-.idea/encodings.xml
-
-*.xml
-
-.idea/SDCL-Turk-One.iml
+# webstorm files
+**/.idea/.name
+**/.idea/encodings.xml
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+**/.idea/SDCL-Turk-One.iml
