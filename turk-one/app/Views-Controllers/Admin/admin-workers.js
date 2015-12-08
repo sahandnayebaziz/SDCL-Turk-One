@@ -206,13 +206,13 @@ if (Meteor.isClient) {
 		isComplexEnough: function () {
 			return this.complexity > 0;
 		},
-		_timeInTool: function () {
+		timeInToolFormatted: function () {
 			return moment.duration(this.timeInTool, "seconds").format("hh:mm:ss", { trim: false });
 		},
-		_homeTime: function () {
+		homeTimeFormatted: function () {
 			return moment.duration(this.homeTime, "seconds").format("hh:mm:ss", { trim: false });
 		},
-		_infoModalTime: function () {
+		infoModalTimeFormatted: function () {
 			return moment.duration(this.infoModalTime, "seconds").format("hh:mm:ss", { trim: false });
 		},
 		quitSurvey: function () {
@@ -257,13 +257,13 @@ if (Meteor.isClient) {
 					return "";
 			}
 		},
-		_time: function () {
+		timeFormatted: function () {
 			return moment.duration(this.time, "seconds").format("hh:mm:ss", { trim: false });
 		},
-		_timeInName: function () {
+		timeInNameFormatted: function () {
 			return moment.duration(this.timeInName, "seconds").format("hh:mm:ss", { trim: false });
 		},
-		_timeInExplain: function () {
+		timeInExplainFormatted: function () {
 			return moment.duration(this.timeInExplain, "seconds").format("hh:mm:ss", { trim: false });
 		},
 		solutionForReference: function (id) {
