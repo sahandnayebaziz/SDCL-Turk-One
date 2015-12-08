@@ -14,7 +14,11 @@ if (Meteor.isClient) {
 				},
 				{
 					sort: {dateUpdated: -1}
-				});
+				},
+				{
+					limit: 50
+				}
+			);
 		}
 	});
 
@@ -30,7 +34,11 @@ if (Meteor.isClient) {
 				},
 				{
 					sort: {dateUpdated: -1}
-				});
+				},
+				{
+					limit: 50
+				}
+			);
 		}
 	});
 
@@ -67,13 +75,18 @@ if (Meteor.isClient) {
 		if (Session.get("savedSet" + Session.get("ticket")) != true) {
 			var solutions = Solutions.find({
 					submitted: true,
+					status: {$ne: "rejected"},
 					decisionPointId: this.data._id,
 					complexity: {$gt: 1},
 					workerId: {$ne: Session.get("ticket")}
 				},
 				{
 					sort: {dateUpdated: -1}
-				}).fetch();
+				},
+				{
+					limit: 50
+				}
+			).fetch();
 			var solutionIds = $.map(solutions, function (s) {
 				return s._id
 			});
