@@ -220,7 +220,7 @@ if (Meteor.isClient) {
 				title: "Sketch and explain your solutions",
 				content: "You have 5 different canvasses and text fields to sketch and explain your solutions. We are looking for high level sketches, like you would make on a whiteboard. Your sketches can be simple. However, try to make sketches that help others to understand your solutions.",
 				target: '#toolView2',
-				placement: 'left',
+				placement: 'left'
 			},
 			{
 				title: "Submitting your work",

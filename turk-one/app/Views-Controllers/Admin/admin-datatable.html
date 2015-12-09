@@ -1,0 +1,129 @@
+<template name="adminDataTable">
+    {{> adminNav}}
+    <div class="container-fluid top-buffer-25">
+        <div class="row">
+            <div class="col-xs-10 col-xs-offset-1">
+                {{> workerDataTableControls}}
+                <div class="row">
+                    <div class="col-sm-12 top-buffer-25">
+                        <table class="table table-sm table-bordered table-striped" style="overflow: auto;">
+                            <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Worker ID</th>
+                                <th>Session ID</th>
+                                <th>Ticket ID</th>
+                                <th>Decision point</th>
+                                <th>Status</th>
+                                <th># of solutions</th>
+                                <th># accepted</th>
+                                <th># rejected</th>
+                                <th>Total time - Overall</th>
+                                <th>Total time - Home</th>
+                                <th>Total time - Sketching</th>
+                                <th>Total time - Info</th>
+                                <th>Average - Solution time</th>
+                                <th>Average - Solution sketch complexity</th>
+                                <th>Average - Solution explanation length</th>
+                                <th>Exit Survey - Feedback</th>
+                                <th>Solution 1 - ID</th>
+                                <th>Solution 1 - Sketch time</th>
+                                <th>Solution 1 - Sketch complexity</th>
+                                <th>Solution 1 - Description length</th>
+                                <th>Solution 1 - Description</th>
+                                <th>Solution 2 - ID</th>
+                                <th>Solution 2 - Sketch time</th>
+                                <th>Solution 2 - Sketch complexity</th>
+                                <th>Solution 2 - Description length</th>
+                                <th>Solution 2 - Description</th>
+                                <th>Solution 3 - ID</th>
+                                <th>Solution 3 - Sketch time</th>
+                                <th>Solution 3 - Sketch complexity</th>
+                                <th>Solution 3 - Description length</th>
+                                <th>Solution 3 - Description</th>
+                                <th>Solution 4 - ID</th>
+                                <th>Solution 4 - Sketch time</th>
+                                <th>Solution 4 - Sketch complexity</th>
+                                <th>Solution 4 - Description length</th>
+                                <th>Solution 4 - Description</th>
+                                <th>Solution 5 - ID</th>
+                                <th>Solution 5 - Sketch time</th>
+                                <th>Solution 5 - Sketch complexity</th>
+                                <th>Solution 5 - Description length</th>
+                                <th>Solution 5 - Description</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#each workerTickets}}
+                                {{> workerDataTableRow}}
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>
+<template name="workerDataTableControls">
+    <div class="row">
+        <div class="col-xs-12">
+			<span class="pull-right">
+				<p>
+                    <span class="small">showing </span>
+                    <span class="label label-default {{filterShownClass "in-progress"}} filter-control"
+                          data-filter="in-progress">in-progress</span>
+                    <span class="label label-primary {{filterShownClass "submitted"}} filter-control"
+                          data-filter="submitted">submitted</span>
+                    <span class="label label-danger {{filterShownClass "quit"}} filter-control"
+                          data-filter="quit">quit</span>
+                    <span class="label label-success {{filterShownClass "reviewed"}} filter-control"
+                          data-filter="reviewed">reviewed</span>
+                </p>
+			</span>
+        </div>
+    </div>
+    <style>
+        .shown-filter {
+            opacity: 1;
+        }
+
+        .hidden-filter {
+            opacity: 0.4;
+        }
+    </style>
+</template>
+<template name="workerDataTableRow">
+    <tr class="{{viewStatus}}">
+        <td>{{timeFormatted}}</td>
+        <td>{{workerId}}</td>
+        <td>{{sessionId}}</td>
+        <td>{{_id}}</td>
+        <td>{{decisionPoint.name}}</td>
+        <td><span class="label {{viewStatusLabelClass}}">{{viewStatusLabelMessage}}</span></td>
+        <td>{{numberOfSolutionsComplexEnough}}</td>
+        {{#if reviewed}}
+            <td>{{numberOfSolutionsAccepted}}</td>
+            <td>{{numberOfSolutionsRejected}}</td>
+        {{else}}
+            <td></td>
+            <td></td>
+        {{/if}}
+        <td>{{timeInToolFormatted}}</td>
+        <td>{{homeTimeFormatted}}</td>
+        <td>{{totalSketchingTimeFormatted}}</td>
+        <td>{{infoModalTimeFormatted}}</td>
+        <td>{{averageSolutionTime}}</td>
+        <td>{{averageSketchComplexity}}</td>
+        <td>{{averageExplanationLength}}</td>
+        <td>{{exitSurvey.feedback}}</td>
+        {{#each solutions}}
+            <td>{{_id}}</td>
+            <td>{{time}}</td>
+            <td>{{complexity}}</td>
+            <td>{{explain.length}}</td>
+            <td>{{explain}}</td>
+        {{/each}}
+    </tr>
+</template>
