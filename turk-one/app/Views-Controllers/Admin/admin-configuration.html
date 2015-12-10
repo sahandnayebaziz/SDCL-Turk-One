@@ -29,6 +29,38 @@
 					</div>
 				</div>
 			</div>
+            <div class="col-xs-10 col-xs-offset-1">
+                <div class="row top-buffer-50">
+                    <div class="col-xs-6">
+                        <h6>Database options</h6>
+                        <td>
+                            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modalDelete">delete solutions without workers</button>
+                        </td>
+                        <!--delete modal-->
+                        <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="modalDelete"
+                             aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            <span class="sr-only">Close</span>
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel">Are you sure?</h4>
+                                    </div>
+                                    <div class="modal-body text-danger">
+                                        You are about to delete all the solutions with unknown workertickets.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">cancel</button>
+                                        <button type="button" class="btn btn-danger delete">delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 		</div>
 	</div>
 </template>

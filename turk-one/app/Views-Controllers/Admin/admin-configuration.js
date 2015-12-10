@@ -18,7 +18,22 @@ if (Meteor.isServer) {
 						}
 					}
 			)
+		},
+		deleteSolutions: function () {
+			var workers = WorkerTickets.find({}).fetch();
+			var tickets = _.chain(workers)
+					.pluck('_id')
+					.flatten()
+					.uniq()
+					.value();
+			console.log("All known worker tickets: " +tickets);
+
+			var ownerlessSolutions = Solutions.find({workerId: {$nin: tickets}}).count();
+			console.log("ownerless solutions deleted: " +ownerlessSolutions);
+
+			Solutions.remove({workerId: {$nin: tickets}})
 		}
+
 	});
 }
 
@@ -35,6 +50,11 @@ if (Meteor.isClient) {
 					notify("Configuration saved.", "success");
 				}
 			});
+		},
+		"click .delete": function () {
+			$("#modalDelete").on('hidden.bs.modal', function () {
+				Meteor.call("deleteSolutions");
+			}).modal('hide')
 		}
 	})
 
