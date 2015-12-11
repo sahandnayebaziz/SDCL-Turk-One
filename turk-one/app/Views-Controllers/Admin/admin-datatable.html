@@ -13,7 +13,8 @@
                                 <th>Worker ID</th>
                                 <th>Session ID</th>
                                 <th>Ticket ID</th>
-                                <th>Decision point</th>
+                                <th>Decision point - Name</th>
+                                <th>Decision point - Type</th>
                                 <th>Status</th>
                                 <th># of solutions</th>
                                 <th># accepted</th>
@@ -25,6 +26,9 @@
                                 <th>Average - Solution time</th>
                                 <th>Average - Solution sketch complexity</th>
                                 <th>Average - Solution explanation length</th>
+                                <th>Exit Survey - Task Rating</th>
+                                <th>Exit Survey - DP Rating</th>
+                                <th>Exit Survey - Tool Rating</th>
                                 <th>Exit Survey - Feedback</th>
                                 <th>Solution 1 - ID</th>
                                 <th>Solution 1 - Sketch time</th>
@@ -101,6 +105,7 @@
         <td>{{sessionId}}</td>
         <td>{{_id}}</td>
         <td>{{decisionPoint.name}}</td>
+        <td>{{decisionPoint.type}}</td>
         <td><span class="label {{viewStatusLabelClass}}">{{viewStatusLabelMessage}}</span></td>
         <td>{{numberOfSolutionsComplexEnough}}</td>
         {{#if reviewed}}
@@ -117,6 +122,9 @@
         <td>{{averageSolutionTime}}</td>
         <td>{{averageSketchComplexity}}</td>
         <td>{{averageExplanationLength}}</td>
+        <td>{{exitSurvey.task}}</td>
+        <td>{{exitSurvey.decision}}</td>
+        <td>{{exitSurvey.tool}}</td>
         <td>{{exitSurvey.feedback}}</td>
         {{#each solutions}}
             <td>{{_id}}</td>
