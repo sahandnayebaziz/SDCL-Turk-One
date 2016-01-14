@@ -10,16 +10,18 @@
 						<table class="table table-sm table-bordered top-buffer-25 bg-white">
 							<thead>
 							<tr>
+                                <th>time</th>
 								<th>worker</th>
+                                <th>run</th>
 								<th>reason</th>
 								<th>feedback</th>
 								<th>actions</th>
 							</tr>
 							</thead>
 							<tbody>
-							{{#each quitSurveys}}
-								{{> quitSurveyRow}}
-							{{/each}}
+                            {{#each workerTicketsQuit}}
+                                {{> quitSurveyRow}}
+                            {{/each}}
 							</tbody>
 						</table>
 					</div>
@@ -29,7 +31,9 @@
 						<table class="table table-sm table-bordered top-buffer-25 bg-white">
 							<thead>
 							<tr>
+                                <th>time</th>
 								<th>worker</th>
+                                <th>run</th>
 								<th>task difficulty</th>
 								<th>DP difficulty</th>
 								<th>tool difficulty</th>
@@ -38,9 +42,9 @@
 							</tr>
 							</thead>
 							<tbody>
-							{{#each exitSurveys}}
-								{{> exitSurveyRow}}
-							{{/each}}
+                            {{#each workerTicketsExit}}
+                                {{> exitSurveyRow}}
+                            {{/each}}
 							</tbody>
 						</table>
 					</div>
@@ -52,22 +56,26 @@
 
 <template name="quitSurveyRow">
 	<tr>
-		<td>{{workerTicket}}</td>
-		<td>{{reason}}</td>
-		<td>{{feedback}}</td>
+        <td>{{timeFormatted}}</td>
+		<td>{{_id}}</td>
+        <td>{{run}}</td>
+		<td>{{quitSurvey.reason}}</td>
+		<td>{{quitSurvey.feedback}}</td>
 		<td><button class="btn btn-sm btn-continue btn-danger delete">Delete</button></td>
 	</tr>
 </template>
 
 <template name="exitSurveyRow">
 	<tr>
-		<td>{{workerTicket}}</td>
-		<td>{{task}}</td>
-		<td>{{decision}}</td>
-		<td>{{tool}}</td>
-		<td>{{feedback}}</td>
+        <td>{{timeFormatted}}</td>
+		<td>{{_id}}</td>
+        <td>{{run}}</td>
+        <td>{{exitSurvey.task}}</td>
+        <td>{{exitSurvey.decision}}</td>
+        <td>{{exitSurvey.tool}}</td>
+        <td>{{exitSurvey.feedback}}</td>
 		<td>
-			<a href="/worker/{{workerTicket}}" class="btn btn-sm btn-continue btn-secondary">review</a>
+			<a href="/worker/{{_id}}" class="btn btn-sm btn-continue btn-secondary">review</a>
 			<button class="btn btn-danger btn-continue btn-sm delete">Delete</button>
 		</td>
 	</tr>

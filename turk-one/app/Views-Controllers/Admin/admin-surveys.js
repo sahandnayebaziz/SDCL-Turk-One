@@ -14,11 +14,21 @@ if (Meteor.isServer) {
 
 if (Meteor.isClient) {
 	Template.adminSurveys.helpers({
-		exitSurveys: function () {
-			return ExitSurveys.find({}, {sort: {_id: 1}});
+		workerTicketsQuit: function () {
+			return WorkerTickets.find({"quit": true}, {sort: {visited: -1}});
 		},
-		quitSurveys: function () {
-			return QuitSurveys.find({}, {sort: {_id: 1}});
+		workerTicketsExit: function () {
+			return WorkerTickets.find({"submitted": true}, {sort: {visited: -1}});
+		}
+	});
+
+	Template.quitSurveyRow.helpers({
+		quitSurvey: function () {
+			return QuitSurveys.findOne({workerTicket: this._id});
+		},
+		timeFormatted: function () {
+			moment.tz.setDefault("America/Los_Angeles");
+			return moment(this.visited.toString()).format("MM/DD/YYYY HH:mm:ss");
 		}
 	});
 
@@ -42,6 +52,16 @@ if (Meteor.isClient) {
 					}
 				}
 			});
+		}
+	});
+
+	Template.exitSurveyRow.helpers({
+		exitSurvey: function () {
+			return ExitSurveys.findOne({workerTicket: this._id});
+		},
+		timeFormatted: function () {
+			moment.tz.setDefault("America/Los_Angeles");
+			return moment(this.visited.toString()).format("MM/DD/YYYY HH:mm:ss");
 		}
 	});
 
