@@ -1,12 +1,12 @@
 <template name="adminQualityReview">
-{{> adminNav}}
-<div class="container-fluid top-buffer-25">
-    <div class="row">
-        <div class="col-xs-10 col-xs-offset-1">
-            {{> adminQualityReviewInterior}}
+    {{> adminNav}}
+    <div class="container-fluid top-buffer-25">
+        <div class="row">
+            <div class="col-xs-10 col-xs-offset-1">
+                {{> adminQualityReviewInterior}}
+            </div>
         </div>
     </div>
-</div>
 </template>
 
 <template name="adminQualityReviewInterior">
@@ -23,8 +23,9 @@
         <!-- Tab panes -->
         <div class="tab-content">
             {{#each decisionPoints}}
-                    <div role="tabpanel" class="tab-pane" id="id{{type}}">
-                        <div class="row top-buffer-25">
+                <div role="tabpanel" class="tab-pane" id="id{{type}}">
+                    <div class="row top-buffer-25 ">
+                        <div>
                             <li class="list-group-item">
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -34,17 +35,18 @@
                                     </div>
                                 </div>
                             </li>
-                            <div class="col-xs-12 top-buffer-25">
-                                {{#each solutions}}
+                        </div>
+                        <div class="col-xs-12">
+                            {{#each solutions}}
+                                <div class="top-buffer-25 bottom-buffer-25 no-break-inside">
                                     {{> solutionQualityReviewModule}}
-                                    <br>
-                                {{/each}}
-                            </div>
+                                </div>
+                            {{/each}}
                         </div>
                     </div>
+                </div>
             {{/each}}
         </div>
-
     </div>
 </template>
 
@@ -52,13 +54,17 @@
     <li class="list-group-item">
         <div class="row">
             <div class="col-xs-12">
-                <p><span class="text-muted">SolutionId: </span> {{_id}}</p>
+
+                <p><span class="text-muted">SolutionId: </span> {{_id}} </p>
 
                 <p><span class="text-muted">name: </span> {{name}}</p>
 
                 <p><span class="text-muted">explanation: </span> {{explain}}</p>
 
                 {{> solutionVisualImage}}
+
+                <p><a href="/worker/{{workerId}}">Context</a></p>
+
             </div>
         </div>
     </li>
