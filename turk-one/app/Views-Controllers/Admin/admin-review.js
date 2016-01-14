@@ -6,8 +6,6 @@ if (Meteor.isServer) {
 
 if (Meteor.isClient) {
 
-    reviewNumber = 2;
-
     Template.adminQualityReviewInterior.helpers({
 
         solutions: function () {
