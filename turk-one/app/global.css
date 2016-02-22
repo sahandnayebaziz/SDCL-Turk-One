@@ -15,6 +15,18 @@ body {
     }
 }
 
+@media print {
+    .break-page-before {
+        page-break-before: always;
+    }
+    .break-page-after {
+        page-break-after: always;
+    }
+    .no-break-inside {
+        page-break-inside: avoid;
+    }
+}
+
 .btn-continue {
     letter-spacing: 3px;
     text-transform: uppercase;

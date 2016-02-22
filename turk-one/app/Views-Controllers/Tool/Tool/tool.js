@@ -391,12 +391,10 @@ if (Meteor.isClient) {
 			console.log(otherSolutionsCount + " many solutions");
 
 			if (otherSolutionsCount > 0) {
-				//hopscotch.startTour(tourWithOthers);
-				hopscotch.startTour(tour);
+				hopscotch.startTour(tourWithOthers);
 			} else {
 				hopscotch.startTour(tour);
 			}
-
 		},
 		"click #tipsRequest": function () {
 
@@ -623,9 +621,9 @@ if (Meteor.isClient) {
 		}).fetch().length;
 
 		hopscotch.configure({showCloseButton: false});
+
 		if (otherSolutionsCount > 0) {
-			//hopscotch.startTour(tourWithOthers);
-			hopscotch.startTour(tour);
+			hopscotch.startTour(tourWithOthers);
 		} else {
 			hopscotch.startTour(tour);
 		}

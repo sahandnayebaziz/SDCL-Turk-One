@@ -6,6 +6,7 @@
 				<thead>
 				<tr>
 					<th>time</th>
+                    <th>run</th>
 					<th>worker</th>
 					<th>session</th>
 					<th># of solutions</th>
@@ -53,6 +54,7 @@
 <template name="workerTicketRow">
 	<tr class="{{viewStatus}}">
 		<td>{{timeFormatted}}</td>
+        <td>{{run}}</td>
 		<td>{{workerId}}</td>
 		<td>{{sessionId}}</td>
 		<td>{{numberOfSolutionsComplexEnough}}</td>
